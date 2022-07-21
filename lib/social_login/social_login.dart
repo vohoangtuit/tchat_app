@@ -64,6 +64,7 @@ class SocialLoin{
       userModel.address='';
       userModel.createdAt=DateTime.now().millisecondsSinceEpoch.toString();
       userModel.updatedAt=DateTime.now().millisecondsSinceEpoch.toString();
+      userModel.lastLogin=DateTime.now().millisecondsSinceEpoch.toString();
       userModel.isOnline=false;
       userModel.socialIdType=1;
       user(userModel);
@@ -104,6 +105,7 @@ class SocialLoin{
         userModel.address='';
         userModel.createdAt=DateTime.now().millisecondsSinceEpoch.toString();
         userModel.updatedAt=DateTime.now().millisecondsSinceEpoch.toString();
+        userModel.lastLogin=DateTime.now().millisecondsSinceEpoch.toString();
         userModel.isOnline=false;
         userModel.socialIdType=2;
         user_(userModel);

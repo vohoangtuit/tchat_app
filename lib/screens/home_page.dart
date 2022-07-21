@@ -12,6 +12,8 @@ import 'package:tchat/allWidgets/loading_view.dart';
 import 'package:tchat/models/chat_user.dart';
 import 'package:tchat/providers/auth_provider.dart';
 import 'package:tchat/providers/home_provider.dart';
+import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/account/login_screen.dart';
 import 'package:tchat/screens/chat_page.dart';
 import 'package:tchat/screens/login_page.dart';
 import 'package:tchat/screens/profile_page.dart';
@@ -28,14 +30,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends TChatScreen<HomePage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final ScrollController scrollController = ScrollController();
 
   int _limit = 20;
   final int _limitIncrement = 20;
   String _textSearch = "";
-  bool isLoading = false;
+
 
   late AuthProvider authProvider;
   late String currentUserId;
@@ -46,9 +48,10 @@ class _HomePageState extends State<HomePage> {
   TextEditingController searchTextEditingController = TextEditingController();
 
   Future<void> googleSignOut() async {
-    authProvider.googleSignOut();
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const LoginPage()));
+   // authProvider.googleSignOut();
+    replaceScreen(const LoginScreen());
+    // Navigator.push(
+    //     context, MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 
   Future<bool> onBackPress() {
@@ -146,14 +149,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    log('asadas');
     authProvider = context.read<AuthProvider>();
     homeProvider = context.read<HomeProvider>();
     if (authProvider.getFirebaseUserId()?.isNotEmpty == true) {
       currentUserId = authProvider.getFirebaseUserId()!;
     } else {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-          (Route<dynamic> route) => false);
+      log('asadas awdacac');
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(builder: (context) => const LoginScreen()),
+      //     (Route<dynamic> route) => false);
     }
 
     scrollController.addListener(scrollListener);
@@ -222,7 +227,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Positioned(
                 child:
-                    isLoading ? const LoadingView() : const SizedBox.shrink(),
+                    isLoading! ? const LoadingView() : const SizedBox.shrink(),
               ),
             ],
           ),

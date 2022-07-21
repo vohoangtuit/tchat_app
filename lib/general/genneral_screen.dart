@@ -120,6 +120,7 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
       return value;
     });
   }
+
   // todo addScreen with name
   backToScreen() {
     if(mounted){

@@ -14,6 +14,8 @@ import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/providers/auth_provider.dart';
 import 'package:tchat/providers/chat_provider.dart';
 import 'package:tchat/providers/profile_provider.dart';
+import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/account/login_screen.dart';
 import 'package:tchat/screens/login_page.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -38,7 +40,7 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends TChatScreen<ChatPage> {
   late String currentUserId;
 
   List<QueryDocumentSnapshot> listMessages = [];
@@ -48,7 +50,7 @@ class _ChatPageState extends State<ChatPage> {
   String groupChatId = '';
 
   File? imageFile;
-  bool isLoading = false;
+
   bool isShowSticker = false;
   String imageUrl = '';
 
@@ -91,9 +93,10 @@ class _ChatPageState extends State<ChatPage> {
     if (authProvider.getFirebaseUserId()?.isNotEmpty == true) {
       currentUserId = authProvider.getFirebaseUserId()!;
     } else {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-          (Route<dynamic> route) => false);
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(builder: (context) => const LoginPage()),
+      //     (Route<dynamic> route) => false);
+      replaceScreen(const LoginScreen());
     }
     if (currentUserId.compareTo(widget.peerId) > 0) {
       groupChatId = '$currentUserId - ${widget.peerId}';

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allConstants/text_field_constants.dart';
+import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/home_page.dart';
 import 'package:tchat/social_login/social_login.dart';
 import 'package:tchat/utilities/colors.dart';
 import 'package:tchat/widgets/general_widget.dart';
@@ -48,44 +50,41 @@ class _LoginScreenState extends TChatScreen<LoginScreen> {
               vertical50,
               Center(child: Image.asset('assets/images/back.png')),
               vertical50,
-              // GestureDetector(
-              //   onTap: () async {
-              //     bool isSuccess = await authProvider.handleGoogleSignIn();
-              //     if (isSuccess) {
-              //       Navigator.pushReplacement(
-              //           context,
-              //           MaterialPageRoute(
-              //               builder: (context) => const HomePage()));
-              //     }
-              //   },
-              //   child: Image.asset('assets/images/google_login.jpg'),
-              // ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: buttonSubmitWithColorIcon(
-                        'Google', 'google_plus', AppColor.red, () {
-                      socialLoin.loginGoogle((user) {
-                        // analytics.loginBySocial(user.SocialId!,'google');
-                       // _postLogin(user);
-                        log('user ${user.toString()}');
-                      });
-                    }),
-                  ),
-                  spaceWidth(20),
-                 Expanded(
-                    child: buttonSubmitWithColorIcon(
-                        'Facebook', 'facebook', Colors.blue[800]!, () {
-                      socialLoin.loginFB((user) {
-                        //analytics.loginBySocial(user.SocialId!,'facebook');
-                        log('user ${user.toString()}');
-                       // _postLogin(user);
-                      });
-                    }),
-                  ),
-                ],
+              Container(width: 200,
+              child: buttonSubmitWithColorIcon(
+                  'Google', 'google_plus', AppColor.red, () {
+                socialLoin.loginGoogle((user) {
+                  log('user ${user.toString()}');
+                  //_logInSuccess(user);
+                });
+              }),
               )
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Expanded(
+              //       child: buttonSubmitWithColorIcon(
+              //           'Google', 'google_plus', AppColor.red, () {
+              //         socialLoin.loginGoogle((user) {
+              //           // analytics.loginBySocial(user.SocialId!,'google');
+              //          // _postLogin(user);
+              //           log('user ${user.toString()}');
+              //         });
+              //       }),
+              //     ),
+              //     spaceWidth(20),
+              //    Expanded(
+              //       child: buttonSubmitWithColorIcon(
+              //           'Facebook', 'facebook', Colors.blue[800]!, () {
+              //         socialLoin.loginFB((user) {
+              //           //analytics.loginBySocial(user.SocialId!,'facebook');
+              //           log('user ${user.toString()}');
+              //          // _postLogin(user);
+              //         });
+              //       }),
+              //     ),
+              //   ],
+              // )
             ],
           ),
 
@@ -98,5 +97,14 @@ class _LoginScreenState extends TChatScreen<LoginScreen> {
     // TODO: implement initState
     super.initState();
     socialLoin =SocialLoin.getInstance(context: this);
+  }
+  _logInSuccess(UserModel user)async{
+    await realTimeDatabase.loginAccount(user);
+  //  replaceScreen(const HomePage());
+  //  addScreen(const HomePage());
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const HomePage()));
   }
 }

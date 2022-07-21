@@ -7,6 +7,7 @@ class UserModel{
   String? fullName;
   String? createdAt;
   String? updatedAt;
+  String? lastLogin;
   String? photoUrl ;
   String? deviceToken ;
   String? address ;
@@ -21,6 +22,7 @@ class UserModel{
       this.fullName,
       this.createdAt,
       this.updatedAt,
+      this.lastLogin,
       this.photoUrl,
       this.deviceToken,
       this.address,
@@ -35,6 +37,7 @@ class UserModel{
     fullName = json['fullName'] ?? "";
     createdAt = json['createdAt'] ?? "";
     updatedAt = json['updatedAt'] ?? "";
+    lastLogin = json['lastLogin'] ?? "";
     photoUrl = json['photoUrl'] ?? "";
     deviceToken = json['deviceToken'] ?? "";
     address = json['address'] ?? "";
@@ -50,6 +53,7 @@ class UserModel{
     data['fullName'] = fullName;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
+    data['lastLogin'] = lastLogin;
     data['photoUrl'] = photoUrl;
     data['deviceToken'] = deviceToken;
     data['address'] = address;
@@ -62,6 +66,6 @@ class UserModel{
 
   @override
   String toString() {
-    return '{idDB: $idDB, id: $id, email: $email, fullName: $fullName, createdAt: $createdAt, updatedAt: $updatedAt, photoUrl: $photoUrl, deviceToken: $deviceToken, address: $address, phone: $phone, birthday: $birthday, isOnline: $isOnline, socialIdType: $socialIdType}';
+    return '{idDB: $idDB, id: $id, email: $email, fullName: $fullName, createdAt: $createdAt, updatedAt: $updatedAt, lastLogin: $lastLogin, photoUrl: $photoUrl, deviceToken: $deviceToken, address: $address, phone: $phone, birthday: $birthday, isOnline: $isOnline, socialIdType: $socialIdType}';
   }
 }

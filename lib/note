@@ -25,36 +25,6 @@ Swich sdk
  dart pub outdated --mode=null-safety
  dart migrate
 
-4. login social
-path project: /Users/vohoangtuit/DATA/DEVELOP/Vietravel/PROJECT/Mobile/Document/Android Keystore/VietTravel
-
-FACEBOOK
-het key hash for facebook using comment line
-// https://stackoverflow.com/questions/23674131/android-facebook-integration-with-invalid-key-hash
-// debug: run : keytool -exportcert -alias androiddebugkey -keystore "/Users/vohoangtuit/.android/debug.keystore" | openssl sha1 -binary | openssl base64
-pass: android
-=> MYvTerGCLlKjYlvLPZW5lLj3uNY=
-// debug: run : keytool -exportcert -alias androiddebugkey -keystore "/Users/admin/.android/debug.keystore" | openssl sha1 -binary | openssl base64
-=> 62PZvjwRCG78phseuNxM7YkbDVk=
-// release run: keytool -exportcert -alias "viettravel" -keystore "/Users/vohoangtuit/DATA/DEVELOP/Vietravel/PROJECT/Mobile/Document/Android Keystore/VietTravel" | openssl sha1 -binary | openssl base64
-pass: viettravel
-=> iwvrfFbaUZ4QTWYWtKjRUoPBosA=
-// máy cty
-// keytool -exportcert -alias "viettravel" -keystore "/Users/admin/VO_HOANG_TU/dev/AppMobile/Document/Android Keystore/VietTravel" | openssl sha1 -binary | openssl base64
-=> kenX5UmmllpHaIRCtFW6DOpVgs4=
-//GOOGLE
-// keytool -keystore path-to-debug-or-production-keystore -list -v
-
-For Mac OS User: ~/.android/debug.keystore
-After you will get SHAH1 by below command using Command Prompt:
-//debug run: keytool -list -v -keystore "/Users/vohoangtuit/.android/debug.keystore" -alias androiddebugkey -storepass android -keypass android
-=> 31:8B:D3:7A:B1:82:2E:52:A3:62:5B:CB:3D:95:B9:94:B8:F7:B8:D6
-//debug run: keytool -list -v -keystore "/Users/admin/.android/debug.keystore" -alias androiddebugkey -storepass android -keypass android
-=> EB:63:D9:BE:3C:11:08:6E:FC:A6:1B:1E:B8:DC:4C:ED:89:1B:0D:59
-
-release run: keytool -list -v -keystore "/Users/vohoangtuit/DATA/DEVELOP/Vietravel/PROJECT/Mobile/Document/Android Keystore/VietTravel" -alias viettravel -storepass viettravel -keypass viettravel
-=>: 91:E9:D7:E5:49:A6:96:5A:47:68:84:42:B4:55:BA:0C:EA:55:82:CE
-
 
 // L@ngvtv123
 // Vietravel@0522

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tchat/firebase/database/realtime_database.dart';
 import 'package:tchat/general/genneral_screen.dart';
 
 abstract class TChatScreen  <T extends StatefulWidget> extends GeneralScreen<T> {
@@ -7,7 +8,7 @@ abstract class TChatScreen  <T extends StatefulWidget> extends GeneralScreen<T> 
   bool firstLoad = true;
   bool endData = false;
 
-  //FirebaseDB? firebaseDatabase;
+  late RealTimeDatabase realTimeDatabase;
   bool isLogin = false;
   Dialog? dialog;
   //late NotificationController notificationController;
@@ -18,7 +19,7 @@ abstract class TChatScreen  <T extends StatefulWidget> extends GeneralScreen<T> 
     super.initAll();
   }
   initFireBase() async {
-
+    realTimeDatabase =RealTimeDatabase.getInstance(context: context);
   }
   @override
   void disposeAll() {
