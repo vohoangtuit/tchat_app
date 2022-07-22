@@ -116,4 +116,5 @@ class AuthProvider extends ChangeNotifier {
     await googleSignIn.disconnect();
     await googleSignIn.signOut();
   }
+
 }

@@ -8,6 +8,8 @@ import 'package:tchat/social_login/social_login.dart';
 import 'package:tchat/utilities/colors.dart';
 import 'package:tchat/widgets/general_widget.dart';
 
+import '../home/home_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -54,8 +56,8 @@ class _LoginScreenState extends TChatScreen<LoginScreen> {
               child: buttonSubmitWithColorIcon(
                   'Google', 'google_plus', AppColor.red, () {
                 socialLoin.loginGoogle((user) {
-                  log('user ${user.toString()}');
-                  //_logInSuccess(user);
+                  //log('user ${user.toString()}');
+                  _logInSuccess(user);
                 });
               }),
               )
@@ -100,11 +102,9 @@ class _LoginScreenState extends TChatScreen<LoginScreen> {
   }
   _logInSuccess(UserModel user)async{
     await realTimeDatabase.loginAccount(user);
-  //  replaceScreen(const HomePage());
+    await saveUser(user);
+    replaceScreen(const HomeScreen());
   //  addScreen(const HomePage());
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const HomePage()));
+    //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const HomeScreen()));
   }
 }

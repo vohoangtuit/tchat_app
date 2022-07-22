@@ -48,10 +48,8 @@ class _HomePageState extends TChatScreen<HomePage> {
   TextEditingController searchTextEditingController = TextEditingController();
 
   Future<void> googleSignOut() async {
-   // authProvider.googleSignOut();
-    replaceScreen(const LoginScreen());
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => const LoginPage()));
+
+
   }
 
   Future<bool> onBackPress() {
@@ -149,16 +147,13 @@ class _HomePageState extends TChatScreen<HomePage> {
   @override
   void initState() {
     super.initState();
-    log('asadas');
+
     authProvider = context.read<AuthProvider>();
     homeProvider = context.read<HomeProvider>();
     if (authProvider.getFirebaseUserId()?.isNotEmpty == true) {
       currentUserId = authProvider.getFirebaseUserId()!;
     } else {
-      log('asadas awdacac');
-      // Navigator.of(context).pushAndRemoveUntil(
-      //     MaterialPageRoute(builder: (context) => const LoginScreen()),
-      //     (Route<dynamic> route) => false);
+
     }
 
     scrollController.addListener(scrollListener);
@@ -169,10 +164,10 @@ class _HomePageState extends TChatScreen<HomePage> {
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: const Text('Smart Talk'),
+            title: const Text('TChat'),
             actions: [
               IconButton(
-                  onPressed: () => googleSignOut(),
+                  onPressed: () =>  logOut(),
                   icon: const Icon(Icons.logout)),
               IconButton(
                   onPressed: () {

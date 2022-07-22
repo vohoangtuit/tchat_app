@@ -31,7 +31,7 @@ class UserModel{
       this.isOnline,
       this.socialIdType
   });
-  UserModel.fromJson(Map<String, dynamic> json) {
+  UserModel.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     email = json['email'] ?? "";
     fullName = json['fullName'] ?? "";

@@ -5,6 +5,7 @@ import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/providers/auth_provider.dart';
 import 'package:tchat/screens/TChatScreen.dart';
 import 'package:tchat/screens/account/login_screen.dart';
+import 'package:tchat/screens/home/home_screen.dart';
 import 'package:tchat/screens/home_page.dart';
 import 'package:tchat/screens/login_page.dart';
 
@@ -20,19 +21,20 @@ class _SplashPageState extends TChatScreen<SplashPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     Future.delayed(const Duration(seconds: 5), () {
       checkSignedIn();
     });
   }
 
   void checkSignedIn() async {
-    AuthProvider authProvider = context.read<AuthProvider>();
-    bool isLoggedIn = await authProvider.isLoggedIn();
-    if (isLoggedIn) {
-      addScreen( const HomePage());
+    String? id =await getIdAccount();
+    if (id==null||id.isEmpty) {
+      addScreen( const LoginScreen());
       return;
     }
-    addScreen( const LoginScreen());
+    addScreen( const HomeScreen());
+
   }
 
   @override

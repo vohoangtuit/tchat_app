@@ -51,4 +51,23 @@ class RealTimeDatabase extends  ChangeNotifier{
       }
     });
   }
+  Future<List<UserModel>> getListUser() async {
+    List<UserModel> list =<UserModel>[];
+    var postsSnapshot =  databaseReference.child(tagUser);//limitToFirst(3)
+    await  postsSnapshot.get().then(( snapshot)  {
+      if(snapshot.children.isNotEmpty){
+        Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
+        //print('snapshot.children ${snapshot.children.toString()}');
+       // print('values ${values.toString()}');
+        values.forEach((key, value) {
+       //   print('key ${key.toString()}');
+        //  print('value ${value.toString()}');
+          UserModel item =UserModel.fromJson(value);
+          list.add(item);
+        });
+      }
+    });
+    return list;
+
+  }
 }
