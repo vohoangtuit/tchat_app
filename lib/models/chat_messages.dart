@@ -6,7 +6,7 @@ class ChatMessages {
   String idTo;
   String timestamp;
   String content;
-  int type;
+  int? type;
 
   ChatMessages(
       {required this.idFrom,
@@ -38,5 +38,18 @@ class ChatMessages {
         timestamp: timestamp,
         content: content,
         type: type);
+  }
+  factory ChatMessages.fromJson(Map<dynamic, dynamic> json) {
+  String  idFrom = json[FirestoreConstants.idFrom];
+  String idTo = json[FirestoreConstants.idTo];
+  String  timestamp = json[FirestoreConstants.timestamp];
+  String  content = json[FirestoreConstants.content];
+  int  type = json[FirestoreConstants.type];
+  return ChatMessages(
+      idFrom: idFrom,
+      idTo: idTo,
+      timestamp: timestamp,
+      content: content,
+      type: type);
   }
 }

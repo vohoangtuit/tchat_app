@@ -33,7 +33,7 @@ class _SplashPageState extends TChatScreen<SplashPage> {
       addScreen( const LoginScreen());
       return;
     }
-    addScreen( const HomeScreen());
+    replaceScreen( const HomeScreen());
 
   }
 

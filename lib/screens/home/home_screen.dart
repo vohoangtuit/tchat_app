@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tchat/allConstants/color_constants.dart';
-import 'package:tchat/allConstants/firestore_constants.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allWidgets/loading_view.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/chat_page.dart';
 import 'package:tchat/screens/profile_page.dart';
 import 'package:tchat/utilities/debouncer.dart';
+import 'package:tchat/widgets/items/item_user.dart';
 
 import '../../allConstants/text_field_constants.dart';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -27,6 +27,8 @@ class _HomeScreenState extends TChatScreen<HomeScreen> {
 
   Debouncer searchDebouncer = Debouncer(milliseconds: 300);
   StreamController<bool> buttonClearController = StreamController<bool>();
+  UserModel? account;
+  String _textSearch = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,37 +54,7 @@ class _HomeScreenState extends TChatScreen<HomeScreen> {
                 children: [
                   buildSearchBar(),
                   Expanded(
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: homeProvider.getFirestoreData(
-                          FirestoreConstants.pathUserCollection,
-                          _limit,
-                          _textSearch),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          if ((snapshot.data?.docs.length ?? 0) > 0) {
-                            return ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) => buildItem(
-                                  context, snapshot.data?.docs[index]),
-                              controller: scrollController,
-                              separatorBuilder:
-                                  (BuildContext context, int index) =>
-                              const Divider(),
-                            );
-                          } else {
-                            return const Center(
-                              child: Text('No user found...'),
-                            );
-                          }
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    ),
+                    child: _listUser(),
                   ),
                 ],
               ),
@@ -101,15 +73,24 @@ class _HomeScreenState extends TChatScreen<HomeScreen> {
     _init();
   }
   _init()async{
+    await getMeAccount().then((acc) => {
+      setState((){
+        account =acc;
+    })
+    });
     await initFireBase();
     _getListUsers();
   }
   _getListUsers()async{
     realTimeDatabase.getListUser().then((value) {
       log('${value.length}');
-      list.addAll(value);
+      setState((){
+        list.addAll(value);
+      });
+
     });
   }
+
   Widget buildSearchBar() {
     return Container(
       margin: const EdgeInsets.all(Sizes.dimen_10),
@@ -178,6 +159,19 @@ class _HomeScreenState extends TChatScreen<HomeScreen> {
         ],
       ),
     );
+  }
+  Widget _listUser(){
+    return list.isNotEmpty?ListView.separated(
+      shrinkWrap: true,
+      itemCount: list.length,
+      itemBuilder: (context, index) => ItemUser(
+        user:  list[index], me: account!, onSelected: () {
+     addScreen(ChatPage(peerNickname: list[index].fullName!, peerAvatar: list[index].photoUrl!, peerId: list[index].id!, userAvatar: account!.photoUrl!));
+      },),
+      separatorBuilder:
+          (BuildContext context, int index) =>
+      const Divider(),
+    ):Container();
   }
   Future<bool> onBackPress() {
     openDialog();

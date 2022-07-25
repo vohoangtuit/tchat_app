@@ -104,7 +104,6 @@ class _LoginScreenState extends TChatScreen<LoginScreen> {
     await realTimeDatabase.loginAccount(user);
     await saveUser(user);
     replaceScreen(const HomeScreen());
-  //  addScreen(const HomePage());
-    //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const HomeScreen()));
+
   }
 }

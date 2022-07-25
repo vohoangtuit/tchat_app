@@ -55,7 +55,23 @@ abstract class TChatScreen  <T extends StatefulWidget> extends GeneralScreen<T> 
     }
   }
   Future<String?> getIdAccount()async{
+    await initFireBase();
     return  prefs.getString(FirestoreConstants.id);
+  }
+  Future<String?> getMePhotoUrl()async{
+    await initFireBase();
+    return  prefs.getString(FirestoreConstants.photoUrl);
+  }
+  Future<UserModel>getMeAccount()async {
+    await initFireBase();
+  UserModel getMe =UserModel();
+  String? id = prefs.getString(FirestoreConstants.id)??"";
+  String? photoUel = prefs.getString(FirestoreConstants.photoUrl)??"";
+  String? fullName = prefs.getString(FirestoreConstants.displayName)??"";
+    getMe.id =id;
+    getMe.fullName =fullName;
+    getMe.photoUrl =photoUel;
+    return getMe;
   }
   void logOut()async{
      await  prefs.clear();
