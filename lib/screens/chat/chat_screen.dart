@@ -75,13 +75,28 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
       ),
     );
   }
+  Widget _buildListMessageStream() {
+    return Flexible(
+      child: listMessage.isNotEmpty
+          ? ListView.builder(
+          padding: const EdgeInsets.all(10),
+          itemCount: listMessage.length,
+          //reverse: true,
+          controller: scrollController,
+          itemBuilder: (context, index) =>
+              ItemMessage(item: listMessage[index],me: widget.meAccount,toUser: widget.toUser,))
+          : Center(
+        child: Container(),
+      ),
+    );
+  }
   Widget _buildListMessage() {
     return Flexible(
       child: listMessage.isNotEmpty
           ? ListView.builder(
           padding: const EdgeInsets.all(10),
           itemCount: listMessage.length,
-          reverse: true,
+        //  reverse: true,
           controller: scrollController,
           itemBuilder: (context, index) =>
               ItemMessage(item: listMessage[index],me: widget.meAccount,toUser: widget.toUser,))
@@ -158,13 +173,19 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
      //
      //   }}
     // realTimeDatabase.
-     await  realTimeDatabase.getListChat_(widget.meAccount.id!, widget.toUser.id!);
-     //chat =realTimeDatabase.dataChatStream;
-    // print('chat.toString() ${chat.toString()}');
-     list =realTimeDatabase.dataChatStream as List<ChatMessages>;
-     print('event.toString() ${list.toString()}');
-
-
+      realTimeDatabase.databaseReference.child('Messages/${widget.meAccount.id!}/${widget.toUser.id}').onChildAdded.listen((event) {
+       Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
+       ChatMessages item =ChatMessages.fromJson(values);
+       log('item ${item.content}');
+       List<ChatMessages> list =[];
+       //list.add(item);
+      // listMessage.add(item);
+       setState(() {
+         listMessage.add(item);
+      //   listMessage =List.from(listMessage.reversed);
+      });
+     // log('listMessage ${listMessage.length}');
+     });
   }
   void onSendMessage(String content, int type) {
     if(content.trim().isEmpty){
