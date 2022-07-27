@@ -7,13 +7,16 @@ class ChatMessages {
   String timestamp;
   String content;
   int? type;
+  int? status;
 
   ChatMessages(
       {required this.idFrom,
       required this.idTo,
       required this.timestamp,
       required this.content,
-      required this.type});
+      required this.type,
+      required this.status
+      });
 
   Map<String, dynamic> toJson() {
     return {
@@ -22,6 +25,7 @@ class ChatMessages {
       FirestoreConstants.timestamp: timestamp,
       FirestoreConstants.content: content,
       FirestoreConstants.type: type,
+      FirestoreConstants.status: status,
     };
   }
 
@@ -31,13 +35,17 @@ class ChatMessages {
     String timestamp = documentSnapshot.get(FirestoreConstants.timestamp);
     String content = documentSnapshot.get(FirestoreConstants.content);
     int type = documentSnapshot.get(FirestoreConstants.type);
+    int status = documentSnapshot.get(FirestoreConstants.status);
 
     return ChatMessages(
         idFrom: idFrom,
         idTo: idTo,
         timestamp: timestamp,
         content: content,
-        type: type);
+        type: type,
+      status: status,
+
+    );
   }
   factory ChatMessages.fromJson(Map<dynamic, dynamic> json) {
   String  idFrom = json[FirestoreConstants.idFrom];
@@ -45,11 +53,24 @@ class ChatMessages {
   String  timestamp = json[FirestoreConstants.timestamp];
   String  content = json[FirestoreConstants.content];
   int  type = json[FirestoreConstants.type];
+  int  status = json[FirestoreConstants.status];
   return ChatMessages(
       idFrom: idFrom,
       idTo: idTo,
       timestamp: timestamp,
       content: content,
-      type: type);
+      type: type,
+    status: status,
+  );
+  }
+  Map<String, dynamic> toJson_() {
+    final data = <String, dynamic>{};
+    data['idFrom'] = idFrom;
+    data['idTo'] = idTo;
+    data['timestamp'] = timestamp;
+    data['content'] = content;
+    data['type'] = type;
+    data['status'] = status;
+    return data;
   }
 }

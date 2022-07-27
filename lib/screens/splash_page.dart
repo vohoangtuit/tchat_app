@@ -16,7 +16,7 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends TChatScreen<SplashPage> {
+class _SplashPageState extends TChatBaseScreen<SplashPage> {
   @override
   void initState() {
     // TODO: implement initState

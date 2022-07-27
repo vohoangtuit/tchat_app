@@ -18,7 +18,7 @@ class SocialLoin{
   // todo facebook
   //FacebookAuth _facebookAuth=FacebookAuth.instance;
   AccessToken? _accessToken;
-  final TChatScreen? context;
+  final TChatBaseScreen? context;
   SocialLoin.getInstance({this.context}){
    // _innitFacebook();
     _initGoogle();

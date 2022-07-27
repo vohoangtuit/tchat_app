@@ -16,7 +16,6 @@ import 'package:tchat/providers/chat_provider.dart';
 import 'package:tchat/providers/profile_provider.dart';
 import 'package:tchat/screens/TChatScreen.dart';
 import 'package:tchat/screens/account/login_screen.dart';
-import 'package:tchat/screens/login_page.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,7 +39,7 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends TChatScreen<ChatPage> {
+class _ChatPageState extends TChatBaseScreen<ChatPage> {
   late String currentUserId;
 
   List<QueryDocumentSnapshot> listMessages = [];
@@ -180,7 +179,6 @@ class _ChatPageState extends TChatScreen<ChatPage> {
           msg: 'Nothing to send', backgroundColor: Colors.grey);
     }
   }
-
   // checking if received message
   bool isMessageReceived(int index) {
     if ((index > 0 &&

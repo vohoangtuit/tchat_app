@@ -6,6 +6,7 @@ import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allWidgets/loading_view.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/chat/chat_screen.dart';
 import 'package:tchat/screens/chat_page.dart';
 import 'package:tchat/screens/profile_page.dart';
 import 'package:tchat/utilities/debouncer.dart';
@@ -21,7 +22,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends TChatScreen<HomeScreen> {
+class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
   List<UserModel> list =<UserModel>[];
   var searchTextEditingController = TextEditingController();
 
@@ -166,7 +167,7 @@ class _HomeScreenState extends TChatScreen<HomeScreen> {
       itemCount: list.length,
       itemBuilder: (context, index) => ItemUser(
         user:  list[index], me: account!, onSelected: () {
-     addScreen(ChatPage(peerNickname: list[index].fullName!, peerAvatar: list[index].photoUrl!, peerId: list[index].id!, userAvatar: account!.photoUrl!));
+     addScreen(ChatScreen(meAccount: account!, toUser: list[index]));
       },),
       separatorBuilder:
           (BuildContext context, int index) =>

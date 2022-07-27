@@ -17,7 +17,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends TChatScreen<LoginScreen> {
+class _LoginScreenState extends TChatBaseScreen<LoginScreen> {
   late SocialLoin socialLoin;
   @override
   Widget build(BuildContext context) {

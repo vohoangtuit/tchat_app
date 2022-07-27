@@ -7,7 +7,7 @@ import 'package:tchat/screens/account/login_screen.dart';
 
 import '../allConstants/firestore_constants.dart';
 
-abstract class TChatScreen  <T extends StatefulWidget> extends GeneralScreen<T> {
+abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen<T> {
   bool isOnline = true;
   bool? isLoading = false;
   bool firstLoad = true;
@@ -20,12 +20,11 @@ abstract class TChatScreen  <T extends StatefulWidget> extends GeneralScreen<T> 
   late SharedPreferences prefs;
   @override
   void initAll() {
-
     super.initAll();
     initFireBase();
   }
   initFireBase() async {
-    realTimeDatabase =RealTimeDatabase.getInstance(context: context);
+    realTimeDatabase = RealTimeDatabase.getInstance(context: context);
     prefs = await SharedPreferences.getInstance();
   }
   @override

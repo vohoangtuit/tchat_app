@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends TChatScreen<HomePage> {
+class _HomePageState extends TChatBaseScreen<HomePage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final ScrollController scrollController = ScrollController();
 

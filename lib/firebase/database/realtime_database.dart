@@ -1,9 +1,14 @@
+
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/user_model.dart';
+import 'package:tchat/providers/chat_provider.dart';
 
 class RealTimeDatabase extends  ChangeNotifier{
   String tagTChatApp = 'TChatApp';
@@ -75,22 +80,78 @@ class RealTimeDatabase extends  ChangeNotifier{
 
   Future<List<ChatMessages>> getListChat(String idFrom,String idTo) async {
     List<ChatMessages> list =<ChatMessages>[];
-    var postsSnapshot =  databaseReference.child('$tagMessage/$idFrom/$idTo');
-    await  postsSnapshot.get().then(( snapshot)  {
-      if(snapshot.children.isNotEmpty){
-        Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
-        //print('snapshot.children ${snapshot.children.toString()}');
-        // print('values ${values.toString()}');
-        values.forEach((key, value) {
-          //   print('key ${key.toString()}');
-          //  print('value ${value.toString()}');
-          ChatMessages item =ChatMessages.fromJson(value);
-          list.add(item);
-        });
-      }
+    // var postsSnapshot =  databaseReference.child('$tagMessage/$idFrom/$idTo').limitToFirst(10);
+    // await  postsSnapshot.get().then(( snapshot)  {
+    //   if(snapshot.children.isNotEmpty){
+    //     Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
+    //   //  print('snapshot.children ${snapshot.children.toString()}');
+    //      print('values ${values.toString()}');
+    //     values.forEach((key, value) {
+    //       //   print('key ${key.toString()}');
+    //       //  print('value ${value.toString()}');
+    //       ChatMessages item =ChatMessages.fromJson(value);
+    //       list.add(item);
+    //     });
+    //   }
+    // });
+    // var postsSnapshot= databaseReference.child('$tagMessage/$idFrom/$idTo').onChildAdded.listen((event) {
+    //   Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
+    //   ChatMessages item =ChatMessages.fromJson(values);
+    //   list.add(item);
+    //   print('item ${item.content}');
+    // });
+    var postsSnapshot= databaseReference.child('$tagMessage/$idFrom/$idTo').onChildAdded;
+    await postsSnapshot.listen((event) {
+      Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
     });
+    print('list ${list.length}');
     return list;
-
   }
+  final PublishSubject<List<ChatMessages>> getDataChat = PublishSubject<List<ChatMessages>>();
+  Stream<List<ChatMessages>> get dataChatStream => getDataChat.stream;
+  Future<void>getListChat_(String idFrom,String idTo)  async{
+    List<ChatMessages> list =<ChatMessages>[];
+    // var postsSnapshot =  databaseReference.child('$tagMessage/$idFrom/$idTo').limitToFirst(10);
+    // await  postsSnapshot.get().then(( snapshot)  {
+    //   if(snapshot.children.isNotEmpty){
+    //     Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
+    //   //  print('snapshot.children ${snapshot.children.toString()}');
+    //      print('values ${values.toString()}');
+    //     values.forEach((key, value) {
+    //       //   print('key ${key.toString()}');
+    //       //  print('value ${value.toString()}');
+    //       ChatMessages item =ChatMessages.fromJson(value);
+    //       list.add(item);
+    //     });
+    //   }
+    // });
+    // var postsSnapshot= databaseReference.child('$tagMessage/$idFrom/$idTo').onChildAdded.listen((event) {
+    //   Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
+    //   ChatMessages item =ChatMessages.fromJson(values);
+    //   list.add(item);
+    //   print('item ${item.content}');
+    // });
+    databaseReference.child('$tagMessage/$idFrom/$idTo').onChildAdded.listen((event) {
+      Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
+            ChatMessages item =ChatMessages.fromJson(values);
+      list.add(item);
 
+    });
+    getDataChat.sink.add(list);
+  }
+  sendMessage(UserModel me,UserModel to, String content,int type) async {
+    var timestamp =DateTime.now().millisecondsSinceEpoch.toString();
+    ChatMessages send =ChatMessages(idFrom: me.id!,idTo: to.id!,timestamp: timestamp,content: content,type: type,status: MessageStatus.sending);
+    databaseReference
+       // .child('$tagMessage/${me.id!}/${to.id}').push()// todo .push(): id tự generate từ firebase
+        .child('$tagMessage/${me.id!}/${to.id}/$timestamp')//
+        .set(send.toJson_())
+        .then((value) => {});
+
+    databaseReference
+    // .child('$tagMessage/${me.id!}/${to.id}').push()// todo .push(): id tự generate từ firebase
+        .child('$tagMessage/${to.id!}/${me.id}/$timestamp')//
+        .set(send.toJson_())
+        .then((value) => {});
+  }
 }

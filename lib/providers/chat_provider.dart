@@ -53,7 +53,9 @@ class ChatProvider {
         idTo: peerId,
         timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
         content: content,
-        type: type);
+        type: type,
+      status: MessageStatus.sending
+    );
 
     FirebaseFirestore.instance.runTransaction((transaction) async {
       transaction.set(documentReference, chatMessages.toJson());
@@ -65,4 +67,9 @@ class MessageType {
   static const text = 0;
   static const image = 1;
   static const sticker = 2;
+}
+class MessageStatus {
+  static const sending = 0;
+  static const sent = 1;
+  static const read = 2;
 }
