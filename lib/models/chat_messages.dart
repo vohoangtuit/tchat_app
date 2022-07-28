@@ -2,6 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tchat/allConstants/firestore_constants.dart';
 
 class ChatMessages {
+
+  static const messageIdFrom ='idFrom';
+  static const messageIdTo ='idTo';
+  static const messageTimestamp ='timestamp';
+  static const messageContent ='content';
+  static const messageType ='type';
+  static const messageStatus ='status';
+
   String idFrom;
   String idTo;
   String timestamp;

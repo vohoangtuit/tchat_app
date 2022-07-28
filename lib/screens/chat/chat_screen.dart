@@ -1,5 +1,8 @@
+import 'dart:ffi';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tchat/allConstants/color_constants.dart';
@@ -21,6 +24,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProviderStateMixin {
+
   late AnimationController _controller;
   File? imageFile;
 
@@ -32,7 +36,9 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
   final FocusNode focusNode = FocusNode();
   List<ChatMessages> listMessage =<ChatMessages>[];
   Stream? chat;
-  List<ChatMessages>? list;
+
+  List<ChatMessages> list =<ChatMessages>[];
+   Stream<QuerySnapshot>? querySnapshot;
   @override
   void initState() {
     super.initState();
@@ -64,6 +70,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
         child: Padding(
           padding:  const EdgeInsets.symmetric(horizontal: Sizes.dimen_8),
           child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
             children: [
                _buildListMessage(),
                 _buildMessageInput(),
@@ -76,27 +83,49 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
     );
   }
   Widget _buildListMessageStream() {
-    return Flexible(
-      child: listMessage.isNotEmpty
-          ? ListView.builder(
-          padding: const EdgeInsets.all(10),
-          itemCount: listMessage.length,
-          //reverse: true,
-          controller: scrollController,
-          itemBuilder: (context, index) =>
-              ItemMessage(item: listMessage[index],me: widget.meAccount,toUser: widget.toUser,))
-          : Center(
-        child: Container(),
-      ),
-    );
+    return Text('');
   }
+  //   return Flexible(child: const Text('')
+  //     //child: StreamBuilder(
+  //       // stream: chat.onValue,
+  //       // builder: (context, AsyncSnapshot<Event> snapshot) {
+  //       //   if (snapshot.hasData && !event.hasError &&
+  //       //       event.data.snapshot.value != null) {
+  //       //     print("Error on the way");
+  //       //     lists.clear();
+  //       //     DataSnapshot dataValues = snapshot.data.snapshot;
+  //       //     Map<dynamic, dynamic> values = dataValues.value;
+  //       //     values.forEach((key, values) {
+  //       //       lists.add(values);
+  //       //     });
+  //       //     return new ListView.builder(
+  //       //       shrinkWrap: true,
+  //       //       itemCount: lists.length,
+  //       //       itemBuilder: (BuildContext context, int index) {
+  //       //         return Card(
+  //       //           child: Column(
+  //       //             crossAxisAlignment: CrossAxisAlignment.start,
+  //       //             children: <Widget>[
+  //       //               Text("Name: " + lists[index]["smartID"]),
+  //       //               Text("Image: " + lists[index]["plantname"]),
+  //       //             ],
+  //       //           ),
+  //       //         );
+  //       //       },
+  //       //     );
+  //       //   }
+  //       //   return Container(child: Text("Add Plants"));
+  //      // },
+  //     )
+  //   );
+  // }
   Widget _buildListMessage() {
     return Flexible(
       child: listMessage.isNotEmpty
           ? ListView.builder(
           padding: const EdgeInsets.all(10),
           itemCount: listMessage.length,
-        //  reverse: true,
+           reverse: true,
           controller: scrollController,
           itemBuilder: (context, index) =>
               ItemMessage(item: listMessage[index],me: widget.meAccount,toUser: widget.toUser,))
@@ -161,32 +190,53 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
    await initFireBase();
     _getListMessage();
   }
+  //timestamp
    _getListMessage()async {
-     // await realTimeDatabase.getListChat(widget.meAccount.id!, widget.toUser.id!).then((value) => {
-     //   setState((){
-     //     listMessage.addAll(value);
-     // })
+// final Stream<QuerySnapshot> _bookingStream = FirebaseFirestore.instance.collection('BookTourNotification').orderBy('monthDayYear',descending: true).limit(50).snapshots();
+     DatabaseReference ref= FirebaseDatabase.instance.ref("TChatApp/Messages/${widget.meAccount.id!}/${widget.toUser.id}");
+    ref.limitToLast(10).onValue.listen((event) {
+      Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
+      if(values.isNotEmpty){
+        values.forEach((key, value) {
+          log(value['content']);
+        });
+      }
+
+    });
+     // List<ChatMessages> messsage =<ChatMessages>[];
+     // stream.listen((DatabaseEvent event) {
+     //   Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
+     //   List<dynamic> list = values.values.toList()..sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+     //   messsage.clear();
+     //   for(var element in list){
+     //     ChatMessages item =ChatMessages.fromJson(element);
+     //     log(item.content);
+     //     // messsage.add(item);
+     //     setState(() {
+     //       listMessage.add(item);
+     //     });
+     //   }
      // });
-     // if(listMessage.isNotEmpty){
-     //   for (var item in listMessage) {
-     //  log(item.content);
+
+     // FirebaseDatabase.instance
+     //     .ref("TChatApp/Messages/${widget.meAccount.id!}/${widget.toUser.id}").limitToLast(100)
+     //    .get().then((snapshot)  {
+     //   // Map<dynamic, dynamic> map = snapshot.value as Map<dynamic, dynamic>;
+     //   // List<dynamic> list = map.values.toList()..sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+     //   // for (var element in list) {
+     //   //   ChatMessages item =ChatMessages.fromJson(element);
+     //   //   setState(() {
+     //   //     listMessage.add(item);
+     //   //   });
+     //   //
+     //   // }
+     //   setState(() {
+     //     chat =snapshot as Stream?;
      //
-     //   }}
-    // realTimeDatabase.
-      realTimeDatabase.databaseReference.child('Messages/${widget.meAccount.id!}/${widget.toUser.id}').onChildAdded.listen((event) {
-       Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
-       ChatMessages item =ChatMessages.fromJson(values);
-       log('item ${item.content}');
-       List<ChatMessages> list =[];
-       //list.add(item);
-      // listMessage.add(item);
-       setState(() {
-         listMessage.add(item);
-      //   listMessage =List.from(listMessage.reversed);
-      });
-     // log('listMessage ${listMessage.length}');
-     });
-  }
+     //   });
+     // });
+
+   }
   void onSendMessage(String content, int type) {
     if(content.trim().isEmpty){
       return;

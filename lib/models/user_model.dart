@@ -1,10 +1,27 @@
 import 'dart:core';
 
 class UserModel{
+  static const userId ='id';
+  static const userEmail ='email';
+  static const userFullName ='fullName';
+  static const userGender ='gender';
+  static const userCreatedAt ='createdAt';
+  static const userUpdatedAt ='updatedAt';
+  static const userLastLogin ='lastLogin';
+  static const userPhotoUrl ='photoUrl';
+  static const userDeviceToken ='deviceToken';
+  static const userAddress ='address';
+  static const userPhone ='phone';
+  static const userBirthday ='birthday';
+  static const userIsOnline ='isOnline';
+  static const userSocialIdType ='socialIdType';
+
+
   int? idDB;
   String? id;
   String? email;
   String? fullName;
+  String? gender;
   String? createdAt;
   String? updatedAt;
   String? lastLogin;
