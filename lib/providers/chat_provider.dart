@@ -48,18 +48,18 @@ class ChatProvider {
         .doc(groupChatId)
         .collection(groupChatId)
         .doc(DateTime.now().millisecondsSinceEpoch.toString());
-    ChatMessages chatMessages = ChatMessages(
-        idFrom: currentUserId,
-        idTo: peerId,
-        timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-        content: content,
-        type: type,
-      status: MessageStatus.sending
-    );
-
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      transaction.set(documentReference, chatMessages.toJson());
-    });
+    // ChatMessages chatMessages = ChatMessages(
+    //     idSender: currentUserId,
+    //     idReceiver: peerId,
+    //     timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+    //     content: content,
+    //     type: type,
+    //   status: MessageStatus.sending
+    // );
+    //
+    // FirebaseFirestore.instance.runTransaction((transaction) async {
+    //   transaction.set(documentReference, chatMessages.toJson());
+    // });
   }
 }
 

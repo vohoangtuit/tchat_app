@@ -39,26 +39,16 @@ class FirebaseDataFunc{
     String fileName =DateTime.now().millisecondsSinceEpoch.toString();
     return '/$uid/$storePhoto/$fileName';
   }
-  getAllUser()async{
-    // return firebaseFirestore
-    //     .collection(firebaseUsers).snapshots();
-     // var ref = firebaseFirestore.collection(firebaseUsers);
-     // QuerySnapshot querySnapshot = await ref.get();
-
-    //Stream user =firebaseFirestore.collection(firebaseUsers).snapshots();
-
-
-    // QuerySnapshot a=await ref.snapshots();
-    return firebaseFirestore.collection(firebaseUsers);
-
+  Future<Stream<QuerySnapshot>>getAllUser()async{
+   return FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).snapshots();
   }
-  getMessageChat(String idSender, String idReceiver)async{
-    print('idSender $idSender idReceiver $idReceiver');
-    return await FirebaseFirestore.instance
+  Future<Stream<QuerySnapshot>>getMessageChat(String idSender, String idReceiver)async{
+    //print('idSender $idSender idReceiver $idReceiver');
+    return  FirebaseFirestore.instance
         .collection(firebaseMessages)
         .doc( idSender)
         .collection(idReceiver)
-        .orderBy(ChatMessages.messageTimestamp, descending: true)
+        .orderBy(ChatMessages.messageTimestamp, descending: false)
         .limit(20)
         .snapshots();
   }

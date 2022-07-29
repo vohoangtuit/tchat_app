@@ -1,18 +1,17 @@
-import 'dart:ffi';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tchat/allConstants/color_constants.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allConstants/text_field_constants.dart';
+import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/providers/chat_provider.dart';
 import 'package:tchat/screens/TChatScreen.dart';
 import 'package:tchat/widgets/items/item_message.dart';
+import 'package:tchat/widgets/items/item_user.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserModel meAccount;
@@ -34,11 +33,11 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
-  List<ChatMessages> listMessage =<ChatMessages>[];
-  Stream? chat;
+  List<ChatMessages> listMessage = <ChatMessages>[];
 
-  List<ChatMessages> list =<ChatMessages>[];
-   Stream<QuerySnapshot>? querySnapshot;
+  List<ChatMessages> list = <ChatMessages>[];
+  Stream<QuerySnapshot>? chats;
+
   @override
   void initState() {
     super.initState();
@@ -60,20 +59,19 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
         title: Text('${widget.toUser.fullName}'.trim()),
         actions: [
           IconButton(
-            onPressed: () {
-            },
+            onPressed: () {},
             icon: const Icon(Icons.phone),
           ),
         ],
       ),
       body: SafeArea(
         child: Padding(
-          padding:  const EdgeInsets.symmetric(horizontal: Sizes.dimen_8),
+          padding: const EdgeInsets.symmetric(horizontal: Sizes.dimen_8),
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-               _buildListMessage(),
-                _buildMessageInput(),
+              _buildListMessage(),
+              _buildMessageInput(),
               const SizedBox(height: 5,),
 
             ],
@@ -82,58 +80,32 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
       ),
     );
   }
-  Widget _buildListMessageStream() {
-    return Text('');
-  }
-  //   return Flexible(child: const Text('')
-  //     //child: StreamBuilder(
-  //       // stream: chat.onValue,
-  //       // builder: (context, AsyncSnapshot<Event> snapshot) {
-  //       //   if (snapshot.hasData && !event.hasError &&
-  //       //       event.data.snapshot.value != null) {
-  //       //     print("Error on the way");
-  //       //     lists.clear();
-  //       //     DataSnapshot dataValues = snapshot.data.snapshot;
-  //       //     Map<dynamic, dynamic> values = dataValues.value;
-  //       //     values.forEach((key, values) {
-  //       //       lists.add(values);
-  //       //     });
-  //       //     return new ListView.builder(
-  //       //       shrinkWrap: true,
-  //       //       itemCount: lists.length,
-  //       //       itemBuilder: (BuildContext context, int index) {
-  //       //         return Card(
-  //       //           child: Column(
-  //       //             crossAxisAlignment: CrossAxisAlignment.start,
-  //       //             children: <Widget>[
-  //       //               Text("Name: " + lists[index]["smartID"]),
-  //       //               Text("Image: " + lists[index]["plantname"]),
-  //       //             ],
-  //       //           ),
-  //       //         );
-  //       //       },
-  //       //     );
-  //       //   }
-  //       //   return Container(child: Text("Add Plants"));
-  //      // },
-  //     )
-  //   );
-  // }
+
   Widget _buildListMessage() {
-    return Flexible(
-      child: listMessage.isNotEmpty
-          ? ListView.builder(
-          padding: const EdgeInsets.all(10),
-          itemCount: listMessage.length,
-           reverse: true,
-          controller: scrollController,
-          itemBuilder: (context, index) =>
-              ItemMessage(item: listMessage[index],me: widget.meAccount,toUser: widget.toUser,))
-          : Center(
-        child: Container(),
-      ),
-    );
+    return Flexible(child: StreamBuilder<QuerySnapshot>(
+      stream: chats,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          listMessage.clear();
+          listMessage.addAll(
+              ChatMessages.listFromSnapshot(snapshot.data!.docs));
+          return ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(4.0),
+            itemCount: listMessage.length,
+            itemBuilder: (context, index) => ItemMessage(
+              item: listMessage[index],
+              me: widget.meAccount,
+              toUser: widget.toUser,),
+          );
+        } else {
+          return Container();
+        }
+      },
+
+    ));
   }
+
   Widget _buildMessageInput() {
     return SizedBox(
       width: double.infinity,
@@ -186,66 +158,88 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
       ),
     );
   }
-  _init()async{
-   await initDatabase();
+
+  _init() async {
+    await initDatabase();
     _getListMessage();
   }
+
   //timestamp
-   _getListMessage()async {
-// final Stream<QuerySnapshot> _bookingStream = FirebaseFirestore.instance.collection('BookTourNotification').orderBy('monthDayYear',descending: true).limit(50).snapshots();
-     DatabaseReference ref= FirebaseDatabase.instance.ref("TChatApp/Messages/${widget.meAccount.id!}/${widget.toUser.id}");
-    ref.limitToLast(10).onValue.listen((event) {
-      Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
-      if(values.isNotEmpty){
-        values.forEach((key, value) {
-          log(value['content']);
-        });
-      }
-
+  _getListMessage() async {
+    firebaseDataFunc.getMessageChat(widget.meAccount.id!, widget.toUser.id!)
+        .then((value) {
+      setState(() {
+        chats = value;
+      });
     });
-     // List<ChatMessages> messsage =<ChatMessages>[];
-     // stream.listen((DatabaseEvent event) {
-     //   Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
-     //   List<dynamic> list = values.values.toList()..sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
-     //   messsage.clear();
-     //   for(var element in list){
-     //     ChatMessages item =ChatMessages.fromJson(element);
-     //     log(item.content);
-     //     // messsage.add(item);
-     //     setState(() {
-     //       listMessage.add(item);
-     //     });
-     //   }
-     // });
-
-     // FirebaseDatabase.instance
-     //     .ref("TChatApp/Messages/${widget.meAccount.id!}/${widget.toUser.id}").limitToLast(100)
-     //    .get().then((snapshot)  {
-     //   // Map<dynamic, dynamic> map = snapshot.value as Map<dynamic, dynamic>;
-     //   // List<dynamic> list = map.values.toList()..sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
-     //   // for (var element in list) {
-     //   //   ChatMessages item =ChatMessages.fromJson(element);
-     //   //   setState(() {
-     //   //     listMessage.add(item);
-     //   //   });
-     //   //
-     //   // }
-     //   setState(() {
-     //     chat =snapshot as Stream?;
-     //
-     //   });
-     // });
-
-   }
-  void onSendMessage(String content, int type) {
-    if(content.trim().isEmpty){
-      return;
-    }
-    textEditingController.clear();
-
-    realTimeDatabase.sendMessage(widget.meAccount, widget.toUser, content, type);
   }
-  Future getImage() async {
+
+  onSendMessage(String content, int type) async {
+    // type: 0 = text, 1 = image, 2 = sticker
+    if (content
+        .trim()
+        .isNotEmpty) {
+      textEditingController.clear();
+      // if(groupChatId.length==0){
+      //   setState(() {
+      //     groupChatId =account.id+'-'+DateTime.now().millisecondsSinceEpoch.toString();
+      //   });
+      //   checkSocket();
+      // }
+      ChatMessages messages = ChatMessages(
+        idSender: widget.meAccount.id!,
+        nameSender: widget.meAccount.fullName!,
+        photoSender: widget.meAccount.photoUrl!,
+
+        idReceiver: widget.toUser.id!,
+        nameReceiver: widget.toUser.fullName!,
+        photoReceiver: widget.toUser.photoUrl!,
+        timestamp: DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString(),
+        content: content,
+        type: type,
+        status: 0,
+        // groupId: groupChatId
+      );
+      var from = FirebaseFirestore.instance
+          .collection(FirebaseDataFunc.firebaseMessages)
+          .doc(widget.meAccount.id!)
+          .collection(widget.toUser.id!)
+          .doc(); // end doc can use timestamp
+      var to = FirebaseFirestore.instance
+          .collection(FirebaseDataFunc.firebaseMessages)
+          .doc(widget.toUser.id!)
+          .collection(widget.meAccount.id!)
+          .doc(); // end doc can use timestamp
+      WriteBatch writeBatch = FirebaseFirestore.instance.batch();
+      writeBatch.set(from, messages.toJson_());
+      writeBatch.set(to, messages.toJson_());
+      writeBatch
+          .commit()
+          .then((value) => () => {print('Create message succree ')})
+          .catchError((onError) {
+        print(('create message error $onError'));
+      });
+      //  print('message insert '+messages.toString());
+      //   await floorDB.messageDao.insertMessage(messages);
+      //   print('toUser.isOnlineChat '+toUser.isOnlineChat.toString());
+      //   if(!toUser.isOnlineChat){
+      //     senNotificationNewMessage(toUser.id,account.fullName,account.id,content);
+      //   }
+      //   listScrollController.animateTo(0.0,
+      //       duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      // } else {
+      //   Fluttertoast.showToast(
+      //       msg: 'Nothing to send',
+      //       backgroundColor: Colors.black,
+      //       textColor: Colors.red);
+      // }
+    }
+  }
+
+  getImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? pickedFile;
     pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -255,7 +249,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
         setState(() {
           isLoading = true;
         });
-        uploadImageFile();
+        // uploadImageFile();
       }
     }
   }
@@ -274,6 +268,6 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
     //     isLoading = false;
     //   });
     //   Fluttertoast.showToast(msg: e.message ?? e.toString());
-   // }
+    // }
   }
 }

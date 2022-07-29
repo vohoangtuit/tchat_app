@@ -291,182 +291,183 @@ class _ChatPageState extends TChatBaseScreen<ChatPage> {
   }
 
   Widget buildItem(int index, DocumentSnapshot? documentSnapshot) {
-    if (documentSnapshot != null) {
-      ChatMessages chatMessages = ChatMessages.fromDocument(documentSnapshot);
-      if (chatMessages.idFrom == currentUserId) {
-        // right side (my message)
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                chatMessages.type == MessageType.text
-                    ? messageBubble(
-                        chatContent: chatMessages.content,
-                        color: AppColors.spaceLight,
-                        textColor: AppColors.white,
-                        margin: const EdgeInsets.only(right: Sizes.dimen_10),
-                      )
-                    : chatMessages.type == MessageType.image
-                        ? Container(
-                            margin: const EdgeInsets.only(
-                                right: Sizes.dimen_10, top: Sizes.dimen_10),
-                            child: chatImage(
-                                imageSrc: chatMessages.content, onTap: () {}),
-                          )
-                        : const SizedBox.shrink(),
-                isMessageSent(index)
-                    ? Container(
-                        clipBehavior: Clip.hardEdge,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Sizes.dimen_20),
-                        ),
-                        child: Image.network(
-                          widget.userAvatar,
-                          width: Sizes.dimen_40,
-                          height: Sizes.dimen_40,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (BuildContext ctx, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.burgundy,
-                                value: loadingProgress.expectedTotalBytes !=
-                                            null &&
-                                        loadingProgress.expectedTotalBytes !=
-                                            null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, object, stackTrace) {
-                            return const Icon(
-                              Icons.account_circle,
-                              size: 35,
-                              color: AppColors.greyColor,
-                            );
-                          },
-                        ),
-                      )
-                    : Container(
-                        width: 35,
-                      ),
-              ],
-            ),
-            isMessageSent(index)
-                ? Container(
-                    margin: const EdgeInsets.only(
-                        right: Sizes.dimen_50,
-                        top: Sizes.dimen_6,
-                        bottom: Sizes.dimen_8),
-                    child: Text(
-                      DateFormat('dd MMM yyyy, hh:mm a').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(chatMessages.timestamp),
-                        ),
-                      ),
-                      style: const TextStyle(
-                          color: AppColors.lightGrey,
-                          fontSize: Sizes.dimen_12,
-                          fontStyle: FontStyle.italic),
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ],
-        );
-      } else {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                isMessageReceived(index)
-                    // left side (received message)
-                    ? Container(
-                        clipBehavior: Clip.hardEdge,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Sizes.dimen_20),
-                        ),
-                        child: Image.network(
-                          widget.peerAvatar,
-                          width: Sizes.dimen_40,
-                          height: Sizes.dimen_40,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (BuildContext ctx, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.burgundy,
-                                value: loadingProgress.expectedTotalBytes !=
-                                            null &&
-                                        loadingProgress.expectedTotalBytes !=
-                                            null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, object, stackTrace) {
-                            return const Icon(
-                              Icons.account_circle,
-                              size: 35,
-                              color: AppColors.greyColor,
-                            );
-                          },
-                        ),
-                      )
-                    : Container(
-                        width: 35,
-                      ),
-                chatMessages.type == MessageType.text
-                    ? messageBubble(
-                        color: AppColors.burgundy,
-                        textColor: AppColors.white,
-                        chatContent: chatMessages.content,
-                        margin: const EdgeInsets.only(left: Sizes.dimen_10),
-                      )
-                    : chatMessages.type == MessageType.image
-                        ? Container(
-                            margin: const EdgeInsets.only(
-                                left: Sizes.dimen_10, top: Sizes.dimen_10),
-                            child: chatImage(
-                                imageSrc: chatMessages.content, onTap: () {}),
-                          )
-                        : const SizedBox.shrink(),
-              ],
-            ),
-            isMessageReceived(index)
-                ? Container(
-                    margin: const EdgeInsets.only(
-                        left: Sizes.dimen_50,
-                        top: Sizes.dimen_6,
-                        bottom: Sizes.dimen_8),
-                    child: Text(
-                      DateFormat('dd MMM yyyy, hh:mm a').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(chatMessages.timestamp),
-                        ),
-                      ),
-                      style: const TextStyle(
-                          color: AppColors.lightGrey,
-                          fontSize: Sizes.dimen_12,
-                          fontStyle: FontStyle.italic),
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ],
-        );
-      }
-    } else {
-      return const SizedBox.shrink();
-    }
+    // if (documentSnapshot != null) {
+    //   ChatMessages chatMessages = ChatMessages.fromDocument(documentSnapshot);
+    //   if (chatMessages.idSender == currentUserId) {
+    //     // right side (my message)
+    //     return Column(
+    //       crossAxisAlignment: CrossAxisAlignment.end,
+    //       children: [
+    //         Row(
+    //           mainAxisAlignment: MainAxisAlignment.end,
+    //           children: [
+    //             chatMessages.type == MessageType.text
+    //                 ? messageBubble(
+    //                     chatContent: chatMessages.content,
+    //                     color: AppColors.spaceLight,
+    //                     textColor: AppColors.white,
+    //                     margin: const EdgeInsets.only(right: Sizes.dimen_10),
+    //                   )
+    //                 : chatMessages.type == MessageType.image
+    //                     ? Container(
+    //                         margin: const EdgeInsets.only(
+    //                             right: Sizes.dimen_10, top: Sizes.dimen_10),
+    //                         child: chatImage(
+    //                             imageSrc: chatMessages.content, onTap: () {}),
+    //                       )
+    //                     : const SizedBox.shrink(),
+    //             isMessageSent(index)
+    //                 ? Container(
+    //                     clipBehavior: Clip.hardEdge,
+    //                     decoration: BoxDecoration(
+    //                       borderRadius: BorderRadius.circular(Sizes.dimen_20),
+    //                     ),
+    //                     child: Image.network(
+    //                       widget.userAvatar,
+    //                       width: Sizes.dimen_40,
+    //                       height: Sizes.dimen_40,
+    //                       fit: BoxFit.cover,
+    //                       loadingBuilder: (BuildContext ctx, Widget child,
+    //                           ImageChunkEvent? loadingProgress) {
+    //                         if (loadingProgress == null) return child;
+    //                         return Center(
+    //                           child: CircularProgressIndicator(
+    //                             color: AppColors.burgundy,
+    //                             value: loadingProgress.expectedTotalBytes !=
+    //                                         null &&
+    //                                     loadingProgress.expectedTotalBytes !=
+    //                                         null
+    //                                 ? loadingProgress.cumulativeBytesLoaded /
+    //                                     loadingProgress.expectedTotalBytes!
+    //                                 : null,
+    //                           ),
+    //                         );
+    //                       },
+    //                       errorBuilder: (context, object, stackTrace) {
+    //                         return const Icon(
+    //                           Icons.account_circle,
+    //                           size: 35,
+    //                           color: AppColors.greyColor,
+    //                         );
+    //                       },
+    //                     ),
+    //                   )
+    //                 : Container(
+    //                     width: 35,
+    //                   ),
+    //           ],
+    //         ),
+    //         isMessageSent(index)
+    //             ? Container(
+    //                 margin: const EdgeInsets.only(
+    //                     right: Sizes.dimen_50,
+    //                     top: Sizes.dimen_6,
+    //                     bottom: Sizes.dimen_8),
+    //                 child: Text(
+    //                   DateFormat('dd MMM yyyy, hh:mm a').format(
+    //                     DateTime.fromMillisecondsSinceEpoch(
+    //                       int.parse(chatMessages.timestamp),
+    //                     ),
+    //                   ),
+    //                   style: const TextStyle(
+    //                       color: AppColors.lightGrey,
+    //                       fontSize: Sizes.dimen_12,
+    //                       fontStyle: FontStyle.italic),
+    //                 ),
+    //               )
+    //             : const SizedBox.shrink(),
+    //       ],
+    //     );
+    //   } else {
+    //     return Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Row(
+    //           mainAxisAlignment: MainAxisAlignment.start,
+    //           children: [
+    //             isMessageReceived(index)
+    //                 // left side (received message)
+    //                 ? Container(
+    //                     clipBehavior: Clip.hardEdge,
+    //                     decoration: BoxDecoration(
+    //                       borderRadius: BorderRadius.circular(Sizes.dimen_20),
+    //                     ),
+    //                     child: Image.network(
+    //                       widget.peerAvatar,
+    //                       width: Sizes.dimen_40,
+    //                       height: Sizes.dimen_40,
+    //                       fit: BoxFit.cover,
+    //                       loadingBuilder: (BuildContext ctx, Widget child,
+    //                           ImageChunkEvent? loadingProgress) {
+    //                         if (loadingProgress == null) return child;
+    //                         return Center(
+    //                           child: CircularProgressIndicator(
+    //                             color: AppColors.burgundy,
+    //                             value: loadingProgress.expectedTotalBytes !=
+    //                                         null &&
+    //                                     loadingProgress.expectedTotalBytes !=
+    //                                         null
+    //                                 ? loadingProgress.cumulativeBytesLoaded /
+    //                                     loadingProgress.expectedTotalBytes!
+    //                                 : null,
+    //                           ),
+    //                         );
+    //                       },
+    //                       errorBuilder: (context, object, stackTrace) {
+    //                         return const Icon(
+    //                           Icons.account_circle,
+    //                           size: 35,
+    //                           color: AppColors.greyColor,
+    //                         );
+    //                       },
+    //                     ),
+    //                   )
+    //                 : Container(
+    //                     width: 35,
+    //                   ),
+    //             chatMessages.type == MessageType.text
+    //                 ? messageBubble(
+    //                     color: AppColors.burgundy,
+    //                     textColor: AppColors.white,
+    //                     chatContent: chatMessages.content,
+    //                     margin: const EdgeInsets.only(left: Sizes.dimen_10),
+    //                   )
+    //                 : chatMessages.type == MessageType.image
+    //                     ? Container(
+    //                         margin: const EdgeInsets.only(
+    //                             left: Sizes.dimen_10, top: Sizes.dimen_10),
+    //                         child: chatImage(
+    //                             imageSrc: chatMessages.content, onTap: () {}),
+    //                       )
+    //                     : const SizedBox.shrink(),
+    //           ],
+    //         ),
+    //         isMessageReceived(index)
+    //             ? Container(
+    //                 margin: const EdgeInsets.only(
+    //                     left: Sizes.dimen_50,
+    //                     top: Sizes.dimen_6,
+    //                     bottom: Sizes.dimen_8),
+    //                 child: Text(
+    //                   DateFormat('dd MMM yyyy, hh:mm a').format(
+    //                     DateTime.fromMillisecondsSinceEpoch(
+    //                       int.parse(chatMessages.timestamp),
+    //                     ),
+    //                   ),
+    //                   style: const TextStyle(
+    //                       color: AppColors.lightGrey,
+    //                       fontSize: Sizes.dimen_12,
+    //                       fontStyle: FontStyle.italic),
+    //                 ),
+    //               )
+    //             : const SizedBox.shrink(),
+    //       ],
+    //     );
+    //   }
+    // } else {
+    //   return const SizedBox.shrink();
+    // }
+    return const SizedBox.shrink();
   }
 
   Widget buildListMessage() {

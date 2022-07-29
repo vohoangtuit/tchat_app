@@ -34,7 +34,8 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
   UserModel? account;
   String _textSearch = "";
 
-  final Stream<QuerySnapshot> users =FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).snapshots();
+  // Stream<QuerySnapshot> users =FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).snapshots();
+   Stream<QuerySnapshot>? users;
   List<UserModel> listUser =<UserModel>[];
   @override
   Widget build(BuildContext context) {
@@ -89,12 +90,11 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
     _getListUsers();
   }
   _getListUsers()async{
-    //var query =firebaseDataFunc.getAllUser().
-    // FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).get().then((value){
-    //   if(value.docs.isNotEmpty){
-    //     log('value.docs ${value.docs.toString()}');
-    //   }
-    // });
+    firebaseDataFunc.getAllUser().then((value){
+      setState(() {
+        users =value;
+      });
+    });
 
   }
 

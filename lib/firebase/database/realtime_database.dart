@@ -128,26 +128,26 @@ class RealTimeDatabase extends  ChangeNotifier{
     //   print('item ${item.content}');
     // });
     databaseReference.child('$tagMessage/$idFrom/$idTo').onChildAdded.listen((event) {
-      Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
-            ChatMessages item =ChatMessages.fromJson(values);
-      list.add(item);
+      // Map<dynamic, dynamic> values = event.snapshot.value as Map<dynamic, dynamic>;
+      //       ChatMessages item =ChatMessages.fromJson_(values);
+      // list.add(item);
 
     });
     getDataChat.sink.add(list);
   }
   sendMessage(UserModel me,UserModel to, String content,int type) async {
-    var timestamp =DateTime.now().millisecondsSinceEpoch.toString();
-    ChatMessages send =ChatMessages(idFrom: me.id!,idTo: to.id!,timestamp: timestamp,content: content,type: type,status: MessageStatus.sending);
-    databaseReference
-       // .child('$tagMessage/${me.id!}/${to.id}').push()// todo .push(): id tự generate từ firebase
-        .child('$tagMessage/${me.id!}/${to.id}/$timestamp')//
-        .set(send.toJson_())
-        .then((value) => {});
-
-    databaseReference
-    // .child('$tagMessage/${me.id!}/${to.id}').push()// todo .push(): id tự generate từ firebase
-        .child('$tagMessage/${to.id!}/${me.id}/$timestamp')//
-        .set(send.toJson_())
-        .then((value) => {});
+    // var timestamp =DateTime.now().millisecondsSinceEpoch.toString();
+    // ChatMessages send =ChatMessages(idSender: me.id!,idReceiver: to.id!,timestamp: timestamp,content: content,type: type,status: MessageStatus.sending);
+    // databaseReference
+    //    // .child('$tagMessage/${me.id!}/${to.id}').push()// todo .push(): id tự generate từ firebase
+    //     .child('$tagMessage/${me.id!}/${to.id}/$timestamp')//
+    //     .set(send.toJson_())
+    //     .then((value) => {});
+    //
+    // databaseReference
+    // // .child('$tagMessage/${me.id!}/${to.id}').push()// todo .push(): id tự generate từ firebase
+    //     .child('$tagMessage/${to.id!}/${me.id}/$timestamp')//
+    //     .set(send.toJson_())
+    //     .then((value) => {});
   }
 }
