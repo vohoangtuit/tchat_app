@@ -64,11 +64,7 @@ class RealTimeDatabase extends  ChangeNotifier{
     await  postsSnapshot.get().then(( snapshot)  {
       if(snapshot.children.isNotEmpty){
         Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
-        //print('snapshot.children ${snapshot.children.toString()}');
-       // print('values ${values.toString()}');
         values.forEach((key, value) {
-       //   print('key ${key.toString()}');
-        //  print('value ${value.toString()}');
           UserModel item =UserModel.fromJson(value);
           list.add(item);
         });

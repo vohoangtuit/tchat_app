@@ -101,9 +101,9 @@ class _LoginScreenState extends TChatBaseScreen<LoginScreen> {
     socialLoin =SocialLoin.getInstance(context: this);
   }
   _logInSuccess(UserModel user)async{
-    await realTimeDatabase.loginAccount(user);
-    await saveUser(user);
-    replaceScreen(const HomeScreen());
+  await firebaseDataFunc.userLogin(user);
+  await saveUser(user);
+  replaceScreen(const HomeScreen());
 
   }
 }

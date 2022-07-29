@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tchat/allConstants/color_constants.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allWidgets/loading_view.dart';
+import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatScreen.dart';
 import 'package:tchat/screens/chat/chat_screen.dart';
 import 'package:tchat/screens/chat_page.dart';
 import 'package:tchat/screens/profile_page.dart';
 import 'package:tchat/utilities/debouncer.dart';
+import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/items/item_user.dart';
 
 import '../../allConstants/text_field_constants.dart';
@@ -30,6 +33,9 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
   StreamController<bool> buttonClearController = StreamController<bool>();
   UserModel? account;
   String _textSearch = "";
+
+  final Stream<QuerySnapshot> users =FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).snapshots();
+  List<UserModel> listUser =<UserModel>[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,17 +85,17 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
         account =acc;
     })
     });
-    await initFireBase();
+    await initDatabase();
     _getListUsers();
   }
   _getListUsers()async{
-    realTimeDatabase.getListUser().then((value) {
-      log('${value.length}');
-      setState((){
-        list.addAll(value);
-      });
+    //var query =firebaseDataFunc.getAllUser().
+    // FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).get().then((value){
+    //   if(value.docs.isNotEmpty){
+    //     log('value.docs ${value.docs.toString()}');
+    //   }
+    // });
 
-    });
   }
 
   Widget buildSearchBar() {
@@ -162,17 +168,27 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
     );
   }
   Widget _listUser(){
-    return list.isNotEmpty?ListView.separated(
-      shrinkWrap: true,
-      itemCount: list.length,
-      itemBuilder: (context, index) => ItemUser(
-        user:  list[index], me: account!, onSelected: () {
-     addScreen(ChatScreen(meAccount: account!, toUser: list[index]));
-      },),
-      separatorBuilder:
-          (BuildContext context, int index) =>
-      const Divider(),
-    ):Container();
+    return StreamBuilder<QuerySnapshot>(
+      stream: users,
+      builder: (context, snapshot) {
+        if(snapshot.hasData){
+          listUser.clear();
+          listUser.addAll(UserModel().listFromSnapshot(snapshot.data!.docs));
+          return ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(4.0),
+            itemCount: listUser.length,
+            itemBuilder: (context, index) => ItemUser(me: account!, user: listUser[index],onSelected: (){
+              addScreen(ChatScreen(meAccount: account!, toUser: listUser[index]));
+            },),
+          );
+
+        }else{
+          return Container();
+        }
+
+      },
+    );
   }
   Future<bool> onBackPress() {
     openDialog();

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tchat/database/floor_init.dart';
+import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/firebase/database/realtime_database.dart';
 import 'package:tchat/general/genneral_screen.dart';
 import 'package:tchat/models/user_model.dart';
@@ -14,6 +16,8 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   bool endData = false;
 
   late RealTimeDatabase realTimeDatabase;
+  FirebaseDataFunc firebaseDataFunc=FirebaseDataFunc.getInstance();
+  FloorInitialize floorDB = FloorInitialize();
   bool isLogin = false;
   Dialog? dialog;
   //late NotificationController notificationController;
@@ -21,9 +25,10 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   @override
   void initAll() {
     super.initAll();
-    initFireBase();
+    initDatabase();
   }
-  initFireBase() async {
+  initDatabase() async {
+    floorDB.init();
     realTimeDatabase = RealTimeDatabase.getInstance(context: context);
     prefs = await SharedPreferences.getInstance();
   }
@@ -44,6 +49,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
         FirestoreConstants.displayName, user.fullName ?? "");
     await prefs.setString(
         FirestoreConstants.photoUrl, user.photoUrl ?? "");
+    await floorDB.userDao!.insertUser(user);
   }
   Future<bool> isLoggedIn() async {
     String? id = prefs.getString(FirestoreConstants.id);
@@ -54,15 +60,15 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
     }
   }
   Future<String?> getIdAccount()async{
-    await initFireBase();
+    await initDatabase();
     return  prefs.getString(FirestoreConstants.id);
   }
   Future<String?> getMePhotoUrl()async{
-    await initFireBase();
+    await initDatabase();
     return  prefs.getString(FirestoreConstants.photoUrl);
   }
   Future<UserModel>getMeAccount()async {
-    await initFireBase();
+    await initDatabase();
   UserModel getMe =UserModel();
   String? id = prefs.getString(FirestoreConstants.id)??"";
   String? photoUel = prefs.getString(FirestoreConstants.photoUrl)??"";

@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/friends_model.dart';
 import 'package:tchat/models/user_model.dart';
@@ -17,6 +19,10 @@ class FirebaseDataFunc{
   static const storePhoto ='photo';
   static const storeCover ='cover';
   static const storeAvatar ='avatar';
+  late FirebaseFirestore firebaseFirestore;
+  FirebaseDataFunc.getInstance(){
+    firebaseFirestore =FirebaseFirestore.instance;
+  }
 
 
   String getStringPathAvatar(String uid){// user id
@@ -34,9 +40,17 @@ class FirebaseDataFunc{
     return '/$uid/$storePhoto/$fileName';
   }
   getAllUser()async{
-    return  FirebaseFirestore.instance
-        .collection(firebaseUsers)
-        .snapshots();
+    // return firebaseFirestore
+    //     .collection(firebaseUsers).snapshots();
+     // var ref = firebaseFirestore.collection(firebaseUsers);
+     // QuerySnapshot querySnapshot = await ref.get();
+
+    //Stream user =firebaseFirestore.collection(firebaseUsers).snapshots();
+
+
+    // QuerySnapshot a=await ref.snapshots();
+    return firebaseFirestore.collection(firebaseUsers);
+
   }
   getMessageChat(String idSender, String idReceiver)async{
     print('idSender $idSender idReceiver $idReceiver');
@@ -114,13 +128,41 @@ class FirebaseDataFunc{
     return  writeBatch.commit();
     // return  writeBatch;
   }
-  void updateUserInfo(UserModel user){
-    FirebaseFirestore.instance.collection(firebaseUsers).doc(user.id).update({UserModel.userFullName:  user.fullName,UserModel.userGender: user.gender,UserModel.userBirthday:user.birthday,UserModel.userUpdatedAt: user.updatedAt
-    }).then((data) async {
-     // FBCallBack(user,true);
-     // Fluttertoast.showToast(msg: "Update info success");
+   userLogin(UserModel user)async{
+     firebaseFirestore.collection(firebaseUsers).doc(user.id).get().then((value)  {
+       if(value.exists){
+         updateUser(user);
+       }else{
+         addUser(user);
+       }
+     });
+
+  }
+  addUser(UserModel user)async{
+    String time =DateTime.now().millisecondsSinceEpoch.toString();
+    user.createdAt=time;
+    user.lastUpdated=time;
+    user.lastLogin=time;
+    user.isLogin =true;
+    firebaseFirestore.collection(firebaseUsers).doc(user.id).set(user.toJson()).then((data) async {
     }).catchError((err) {
-     // Fluttertoast.showToast(msg: err.toString());
+      log('FirebaseDataFunc Error addUser ${err.toString()}');
     });
+
+  }
+  updateUser(UserModel user)async{
+    String time =DateTime.now().millisecondsSinceEpoch.toString();
+    user.lastUpdated=time;
+    user.lastLogin=time;
+    user.isLogin =true;
+    firebaseFirestore.collection(firebaseUsers).doc(user.id).update(user.toJson()).then((data) async {
+    }).catchError((err) {
+      log('FirebaseDataFunc Error updateUser ${err.toString()}');
+    });
+  }
+}
+void log(String msg){
+  if (kDebugMode) {
+    print(msg);
   }
 }

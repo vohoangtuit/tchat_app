@@ -187,7 +187,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
     );
   }
   _init()async{
-   await initFireBase();
+   await initDatabase();
     _getListMessage();
   }
   //timestamp

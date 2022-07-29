@@ -63,10 +63,10 @@ class SocialLoin{
       userModel.phone='';
       userModel.address='';
       userModel.createdAt=DateTime.now().millisecondsSinceEpoch.toString();
-      userModel.updatedAt=DateTime.now().millisecondsSinceEpoch.toString();
+      userModel.lastUpdated=DateTime.now().millisecondsSinceEpoch.toString();
       userModel.lastLogin=DateTime.now().millisecondsSinceEpoch.toString();
       userModel.isOnline=false;
-      userModel.socialIdType=1;
+      userModel.accountType=1;
       user(userModel);
 
     } else {
@@ -103,11 +103,7 @@ class SocialLoin{
         userModel.birthday='';
         userModel.phone='';
         userModel.address='';
-        userModel.createdAt=DateTime.now().millisecondsSinceEpoch.toString();
-        userModel.updatedAt=DateTime.now().millisecondsSinceEpoch.toString();
-        userModel.lastLogin=DateTime.now().millisecondsSinceEpoch.toString();
-        userModel.isOnline=false;
-        userModel.socialIdType=2;
+        userModel.accountType=2;
         user_(userModel);
         context!.showLoading(false);
       }

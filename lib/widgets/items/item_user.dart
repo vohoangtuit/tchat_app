@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/models/user_model.dart';
@@ -8,7 +9,7 @@ class ItemUser extends StatefulWidget {
   final UserModel me;
   final UserModel user;
   final VoidCallback onSelected;
-  const ItemUser({Key? key, required this.user, required this.onSelected, required this.me}) : super(key: key);
+  const ItemUser({Key? key, required this.me, required this.user, required this.onSelected}) : super(key: key);
 
   @override
   State<ItemUser> createState() => _ItemUserState();
@@ -17,6 +18,7 @@ class ItemUser extends StatefulWidget {
 class _ItemUserState extends State<ItemUser> {
   @override
   Widget build(BuildContext context) {
+
     return widget.user.id!.compareTo(widget.me.id!)==0?const SizedBox.shrink():TextButton(
       onPressed: () {
         if (KeyboardUtils.isKeyboardShowing()) {
