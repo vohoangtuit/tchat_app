@@ -5,14 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:tchat/allConstants/color_constants.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allWidgets/loading_view.dart';
-import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/models/user_model.dart';
-import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/chat/chat_screen.dart';
-import 'package:tchat/screens/chat_page.dart';
 import 'package:tchat/screens/profile_page.dart';
 import 'package:tchat/utilities/debouncer.dart';
-import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/items/item_user.dart';
 
 import '../../allConstants/text_field_constants.dart';
@@ -31,9 +28,7 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
 
   Debouncer searchDebouncer = Debouncer(milliseconds: 300);
   StreamController<bool> buttonClearController = StreamController<bool>();
-  UserModel? account;
   String _textSearch = "";
-
   // Stream<QuerySnapshot> users =FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).snapshots();
    Stream<QuerySnapshot>? users;
   List<UserModel> listUser =<UserModel>[];
@@ -80,13 +75,13 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
     super.initState();
     _init();
   }
+
   _init()async{
     await getMeAccount().then((acc) => {
       setState((){
         account =acc;
     })
     });
-    await initDatabase();
     _getListUsers();
   }
   _getListUsers()async{
@@ -178,8 +173,8 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
             shrinkWrap: true,
             padding: const EdgeInsets.all(4.0),
             itemCount: listUser.length,
-            itemBuilder: (context, index) => ItemUser(me: account!, user: listUser[index],onSelected: (){
-              addScreen(ChatScreen(meAccount: account!, toUser: listUser[index]));
+            itemBuilder: (context, index) => ItemUser(me: account, user: listUser[index],onSelected: (){
+              addScreen(ChatScreen(meAccount: account, toUser: listUser[index]));
             },),
           );
 
@@ -194,7 +189,6 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
     openDialog();
     return Future.value(false);
   }
-
   Future<void> openDialog() async {
     switch (await showDialog(
         context: context,

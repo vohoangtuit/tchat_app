@@ -2,6 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tchat/widgets/custom_text.dart';
+AppBar appBarWithTitle(BuildContext context, String title) {
+  return AppBar(
+    title: Text(title, style: textWhiteTitle()),
+    centerTitle: true,
+  );
+}
+SafeArea deviceScreen({required Widget child}) {
+  return SafeArea(
+    top: false,
+    bottom: Device.get().isIphoneX?true:false,
+    child: child,
+  );
+}
+Widget widgetLogo() {
+  return Image.asset(
+    'asset/images/logo.png',
+    width: 120,
+    height: 120,
+  );
+}
 BoxDecoration bgBorder(Color color, Color border, double radius) {
   return BoxDecoration(
       borderRadius: BorderRadius.circular(radius),

@@ -6,12 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tchat/controller/my_router.dart';
+import 'package:tchat/firebase/notification/notification_controller.dart';
 import 'package:tchat/providers/auth_provider.dart';
 import 'package:tchat/providers/chat_provider.dart';
 import 'package:tchat/providers/home_provider.dart';
 import 'package:tchat/providers/profile_provider.dart';
-import 'package:tchat/screens/splash_page.dart';
-import 'package:tchat/utilities/theme.dart';
+import 'package:tchat/screens/TChatBaseScreen.dart';
+import 'package:tchat/screens/check_login_screen.dart';
+
+import 'shared_preferences/shared_preference.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,42 +28,38 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final SharedPreferences prefs;
-  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-  MyApp({Key? key, required this.prefs}) : super(key: key);
+  const MyApp({Key? key, required this.prefs}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends TChatBaseScreen<MyApp> {
+  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthProvider>(
-            create: (_) => AuthProvider(
-                firebaseFirestore: firebaseFirestore,
-                prefs: prefs,
-                googleSignIn: GoogleSignIn(),
-                firebaseAuth: FirebaseAuth.instance)),
-        Provider<ProfileProvider>(
-            create: (_) => ProfileProvider(
-                prefs: prefs,
-                firebaseFirestore: firebaseFirestore,
-                firebaseStorage: firebaseStorage)),
-        Provider<HomeProvider>(
-            create: (_) => HomeProvider(firebaseFirestore: firebaseFirestore)),
-        Provider<ChatProvider>(
-            create: (_) => ChatProvider(
-                prefs: prefs,
-                firebaseStorage: firebaseStorage,
-                firebaseFirestore: firebaseFirestore))
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'TChat App',
-        theme: appTheme,
-        home: const SplashPage(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'TChat',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      onGenerateRoute: MyRouter.generateRoute,
+      home: const CheckLoginScreen(),
+
     );
+  }
+
+  @override
+  void initAll() {
+    super.initAll();
+    NotificationController.getInstance(baseScreen: this,context_: context);
+
   }
 }

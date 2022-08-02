@@ -678,8 +678,26 @@ Text textNameTourList(String text,int line) {
 }
 
 
+TextStyle textWhiteTitle() {
+  return const TextStyle(color: Colors.white, fontSize: 16);
+}
+TextStyle textHeaderBar() {
+  return const TextStyle(color: Colors.white, fontSize: 14,decoration: TextDecoration.none);
+}
 
-
-
-
+TextStyle textBlueSmall(){
+  return const TextStyle(color: Colors.blue, fontSize: 12);
+}
+TextStyle textBlueDefault(){
+  return const TextStyle(color: Colors.blue, fontSize: 14);
+}
+TextStyle textBlueMedium(){
+  return const TextStyle(color: Colors.blue, fontSize: 16);
+}
+TextStyle textBlueMediumBold(){
+  return const TextStyle(color: Colors.blue, fontSize: 16,fontWeight: FontWeight.bold);
+}
+TextStyle textBlueLarge(){
+  return const TextStyle(color: Colors.blue, fontSize: 18);
+}
 

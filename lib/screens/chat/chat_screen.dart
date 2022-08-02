@@ -9,7 +9,7 @@ import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/providers/chat_provider.dart';
-import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/widgets/items/item_message.dart';
 import 'package:tchat/widgets/items/item_user.dart';
 
@@ -160,7 +160,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
   }
 
   _init() async {
-    await initDatabase();
+  //  await initDatabase();
     _getListMessage();
   }
 

@@ -12,7 +12,7 @@ import 'package:tchat/allWidgets/loading_view.dart';
 import 'package:tchat/models/chat_user.dart';
 import 'package:tchat/providers/auth_provider.dart';
 import 'package:tchat/providers/home_provider.dart';
-import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/account/login_screen.dart';
 import 'package:tchat/screens/chat_page.dart';
 import 'package:tchat/screens/login_page.dart';

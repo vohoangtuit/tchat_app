@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tchat/allConstants/color_constants.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/providers/auth_provider.dart';
-import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/account/login_screen.dart';
 import 'package:tchat/screens/home/home_screen.dart';
 import 'package:tchat/screens/home_page.dart';

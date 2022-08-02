@@ -9,7 +9,7 @@ import 'dart:convert' as JSON;
 import 'package:http/http.dart' as http;
 import 'package:tchat/models/user_model.dart';
 
-import '../screens/TChatScreen.dart';
+import '../screens/TChatBaseScreen.dart';
 class SocialLoin{
   // todo google
   final GoogleSignIn _googleSignIn = GoogleSignIn();

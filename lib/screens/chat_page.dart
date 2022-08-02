@@ -14,7 +14,7 @@ import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/providers/auth_provider.dart';
 import 'package:tchat/providers/chat_provider.dart';
 import 'package:tchat/providers/profile_provider.dart';
-import 'package:tchat/screens/TChatScreen.dart';
+import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/account/login_screen.dart';
 
 import 'package:url_launcher/url_launcher.dart';

@@ -86,6 +86,9 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
     print('GeneralScreen dispose');
     super.dispose();
   }
+  String getNameScreenOpening(){
+    return context.widget.toString();
+  }
   void log(String data){
     if (kDebugMode) {
       print(data);

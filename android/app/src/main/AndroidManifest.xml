@@ -7,7 +7,9 @@
    <application
         android:label="TChat"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+       android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+       tools:targetApi="donut">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -38,7 +40,7 @@
             </intent-filter>
         </activity>
        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
-           android:exported="true">
+           >
            <intent-filter>
                <action android:name="android.intent.action.BOOT_COMPLETED"/>
                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
