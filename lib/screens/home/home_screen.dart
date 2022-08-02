@@ -75,13 +75,8 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
     super.initState();
     _init();
   }
-
   _init()async{
-    await getMeAccount().then((acc) => {
-      setState((){
-        account =acc;
-    })
-    });
+    await getAccountFromFloorDB();
     _getListUsers();
   }
   _getListUsers()async{

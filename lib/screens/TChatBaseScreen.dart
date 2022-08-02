@@ -25,6 +25,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
 
   late SharedPreferences prefs;
   late UserModel account;
+  // UserModel? myProfile;
   late SharedPre sharedPre;
 
   bool isLogin = false;
@@ -136,7 +137,9 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   }
 
   void logOut()async{
-     await  prefs.clear();
+     await initConfig();
+     await SharedPre.clearData();
+     await floorDB.user().deleteAllUsers();
      replaceScreen(const LoginScreen());
   }
 

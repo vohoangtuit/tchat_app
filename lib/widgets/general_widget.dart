@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tchat/widgets/custom_text.dart';
+
+import '../utilities/const.dart';
 AppBar appBarWithTitle(BuildContext context, String title) {
   return AppBar(
     title: Text(title, style: textWhiteTitle()),
@@ -63,5 +66,26 @@ SizedBox spaceHeight(double space) {
 SizedBox spaceWidth(double space) {
   return SizedBox(
     width: space,
+  );
+}
+
+CachedNetworkImage cachedImage (String url,double width, double height){
+  return CachedNetworkImage(
+    placeholder: (context, url) =>
+        Container(
+          width: width,
+          height: height,
+          padding: const EdgeInsets.all(20.0),
+          child: CircularProgressIndicator(
+            strokeWidth: 2.0,
+            valueColor:
+            AlwaysStoppedAnimation<Color>(
+                themeColor),
+          ),
+        ),
+    imageUrl: url,
+    width: width,
+    height: height,
+    fit: BoxFit.cover,
   );
 }

@@ -11,7 +11,12 @@ import 'package:tchat/widgets/toolbar_main.dart';
 
 class MainScreen extends StatefulWidget {
   final bool synData;
-  const MainScreen({Key? key, required this.synData}) : super(key: key);
+  final UserModel profile;
+  const MainScreen({
+    Key? key,
+    required this.synData,
+    required this.profile
+  }) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -40,11 +45,11 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
                         body:  TabBarView(
                           physics: const NeverScrollableScrollPhysics(), // todo: disable swip
                           controller: tabController,
-                          children:  const <Widget>[
+                          children:   <Widget>[
                             TabLastMessageScreen(),
                             TabContactScreen(),
                             TabTimeLineScreen(),
-                            TabProfileScreen()
+                            TabProfileScreen(profile: widget.profile)
                           ],
                         ),
                         bottomNavigationBar: Material(
@@ -81,7 +86,6 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
     super.initState();
 
     _init();
-
 
   }
   _init()async{

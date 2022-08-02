@@ -700,4 +700,12 @@ TextStyle textBlueMediumBold(){
 TextStyle textBlueLarge(){
   return const TextStyle(color: Colors.blue, fontSize: 18);
 }
-
+TextStyle textBlackMedium() {
+  return const TextStyle(color: Colors.black, fontSize: 16);
+}
+TextStyle textBlackNormal() {
+  return const TextStyle(color: Colors.black, fontSize: 14);
+}
+TextStyle textGraysSmall() {
+  return const TextStyle(color: Colors.grey, fontSize: 12);
+}

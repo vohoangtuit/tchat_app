@@ -110,6 +110,6 @@ class _LoginScreenState extends TChatBaseScreen<LoginScreen> {
   await saveAccountToDB(user);
   await SharedPre.saveBool(SharedPre.sharedPreIsLogin,true);
  // replaceScreen(const HomeScreen());
-  replaceScreen(const MainScreen(synData: false,));
+  replaceScreen( MainScreen(synData: false,profile: user,));
   }
 }

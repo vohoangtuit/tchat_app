@@ -25,8 +25,10 @@ class MyRouter {
 
       case myRouterMain:
         var synData = settings.arguments as bool;
+        var user = settings.arguments as UserModel;
         return MaterialPageRoute(
-            settings: settings, builder: (_) => MainScreen(synData:synData));
+
+            settings: settings, builder: (_) => MainScreen(synData:synData,profile: user,));
 
       case myRouterChat:
         var user = settings.arguments as UserModel;
