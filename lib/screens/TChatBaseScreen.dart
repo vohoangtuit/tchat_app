@@ -7,6 +7,7 @@ import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/firebase/database/realtime_database.dart';
 import 'package:tchat/firebase/notification/notification_controller.dart';
 import 'package:tchat/general/genneral_screen.dart';
+import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/account/login_screen.dart';
 import 'package:tchat/shared_preferences/shared_preference.dart';
@@ -24,7 +25,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   late  FloorDatabase floorDB;
 
   late SharedPreferences prefs;
-  late UserModel account;
+  late UserModel account=UserModel();
   // UserModel? myProfile;
   late SharedPre sharedPre;
 
@@ -37,9 +38,12 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
     //initConfig();
   }
   initConfig() async {
+
     floorDB = await FloorDatabase.getInstance();
     sharedPre = await SharedPre.getInstance();
     prefs = await SharedPreferences.getInstance();
+    log('initConfig');
+   // await  getAccountFromFloorDB();
   }
   @override
   void disposeAll() {
@@ -123,19 +127,32 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
 
   }
   Future<UserModel>getAccountFromFloorDB()async{
-    await floorDB.user().getSingleUser().then((value) {
-      if(value!=null){
-        account =value;
-        if(mounted){
-          setState(() {
-            account =value;
-          });
+    if(account.id==null){
+      await floorDB.user().getSingleUser().then((value) {
+        if(value!=null){
+          account =value;
+          if(mounted){
+            setState(() {
+              account =value;
+            });
+          }
         }
-      }
-    });
+      });
+    }
     return account;
   }
-
+   updateLastMessageByID(LastMessageModel message) async{
+    await floorDB.lastMessage().getLastMessageById(message.idReceiver).then((value){
+      if(value!=null){
+        message.idDB =value.idDB;
+        floorDB.lastMessage().updateLastMessageById(message).then((value) {
+        });
+      }else{
+        floorDB.lastMessage().insertMessage(message).then((value) => {
+        });
+      }
+    });
+  }
   void logOut()async{
      await initConfig();
      await SharedPre.clearData();

@@ -25,7 +25,7 @@ class FriendModel{
   int? actionConfirm=0;// todo: accept or denny
   FriendModel({this.id, this.fullName, this.photoURL,this.timeRequest, this.statusRequest,this.actionConfirm});
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data=  <String, dynamic>{};
     data[friendId] = id;
     data[friendFullName] = fullName;
     data[friendPhotoURL] = photoURL;

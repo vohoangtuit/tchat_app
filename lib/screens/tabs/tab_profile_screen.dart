@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/account/my_profile_screen.dart';
+import 'package:tchat/screens/friends/suggest_friends_screen.dart';
 import 'package:tchat/utilities/const.dart';
 import 'package:tchat/widgets/custom_row_setting.dart';
 import 'package:tchat/widgets/general_widget.dart';
@@ -16,9 +17,10 @@ class TabProfileScreen extends StatefulWidget {
   State<TabProfileScreen> createState() => _TabProfileScreenState();
 }
 
-class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> {
+class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _viewContent();
   }
   @override
@@ -101,7 +103,7 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> {
         ),
         CustomRowSetting(
           onPressed: () {
-           // openScreenWithName(SuggestFriendsScreen(account));
+            addScreen(SuggestFriendsScreen(profile: widget.profile,));
           },
           title: 'Suggest Friends',
           icon: 'assets/icons/ic_friends_light_blue.png',
@@ -129,7 +131,11 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> {
   }
   _getData()async{
     initConfig();
-    await getAccountFromFloorDB();
+   // await getAccountFromFloorDB();
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }

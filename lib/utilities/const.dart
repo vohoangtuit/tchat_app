@@ -7,22 +7,22 @@ final greyColor = Color(0xffaeaeae);
 final greyColor2 = Color(0xffE8E8E8);
 
 //final String SOCKET_URL ="http://192.168.29.148:5000";
-final String SOCKET_URL ="https://chatsocket2008.herokuapp.com";
+const String SOCKET_URL ="https://chatsocket2008.herokuapp.com";
 
 // todo Socket IO
-final String SOCKET_SUBSCRIBE ='subscribe';
-final String SOCKET_UNSUBSCRIBE ='unsubscribe';
-final String SOCKET_TYPING ='typing';
-final String SOCKET_STOP_TYPING ='stop_typing';
-final String SOCKET_QUERY_ID_CHAT ='idChat';
-final String SOCKET_SENDER_CHAT_ID ='senderChatID';
-final String SOCKET_RECEIVER_CHAT_ID ='receiverChatID';
-final String SOCKET_GROUP_CHAT_ID ='groupChatId';
-final String SOCKET_DISCONNECT ='disconnect';
-final String SOCKET_USER_JOINED ='user_joined';
-final String SOCKET_USER_LEFT ='user_left';
-final String SOCKET_USER_ID ='user_id';
-final String SOCKET_LIST_USERS ='list_users';
+const String SOCKET_SUBSCRIBE ='subscribe';
+const String SOCKET_UNSUBSCRIBE ='unsubscribe';
+const String SOCKET_TYPING ='typing';
+const String SOCKET_STOP_TYPING ='stop_typing';
+const String SOCKET_QUERY_ID_CHAT ='idChat';
+const String SOCKET_SENDER_CHAT_ID ='senderChatID';
+const String SOCKET_RECEIVER_CHAT_ID ='receiverChatID';
+const String SOCKET_GROUP_CHAT_ID ='groupChatId';
+const String SOCKET_DISCONNECT ='disconnect';
+const String SOCKET_USER_JOINED ='user_joined';
+const String SOCKET_USER_LEFT ='user_left';
+const String SOCKET_USER_ID ='user_id';
+const String SOCKET_LIST_USERS ='list_users';
 
 //---------todo MAIN SCREEN ACTION CLICK TABBAR------------
 const int mainClickSearch =1;
@@ -36,11 +36,11 @@ const int mainClickSettingTabMore =7;
 
 // todo update picture
 
-final int PICTURE_TYPE_AVATAR =1;
-final int PICTURE_TYPE_COVER =2;
-final int CHOOSE_PICTURE_CAMERA =1;
-final int CHOOSE_PICTURE_LIBRARY =2;
-final int CHOOSE_PICTURE_VIEW_PICTURE =3;
+const int PICTURE_TYPE_AVATAR =1;
+const int PICTURE_TYPE_COVER =2;
+const int CHOOSE_PICTURE_CAMERA =1;
+const int CHOOSE_PICTURE_LIBRARY =2;
+const int CHOOSE_PICTURE_VIEW_PICTURE =3;
 
 //
 const String pathAvatarNotAvailable ='images/avatar_not_available.png';
@@ -48,6 +48,24 @@ const String PATH_COVER_NOT_AVAILABLE ='images/cover.png';
 
 
 // todo route screen opening, using for notification
-final int ROUTE_DEFAULT =0;
-final int ROUTE_CHAT_SCREEN =1;
-final int ROUTE_USER_PROFILE_SCREEN =2;
+const int ROUTE_DEFAULT =0;
+const int ROUTE_CHAT_SCREEN =1;
+const int ROUTE_USER_PROFILE_SCREEN =2;
+
+const String messageModel ='MessageModel';
+const String messageCheckOnline ='CHECK_ONLINE';
+const String messageId ='id';
+
+const String messageIdSender ='idSender';
+const String messageNameSender ='nameSender';
+const String messagePhotoSender ='photoSender';
+
+const String messageIdReceiver ='idReceiver';
+const String messageNameReceiver ='nameReceiver';
+const String messagePhotoReceiver ='photoReceiver';
+
+const String messageTimestamp ='timestamp';
+const String messageContent ='content';
+const String messageType ='type';
+const String messageStatus ='status';
+const String messageGroupId ='groupId';

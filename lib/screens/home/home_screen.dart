@@ -172,7 +172,6 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
               addScreen(ChatScreen(meAccount: account, toUser: listUser[index]));
             },),
           );
-
         }else{
           return Container();
         }

@@ -22,7 +22,6 @@ class SharedPre {
     _instance ??= SharedPre();
     _preferences ??= await SharedPreferences.getInstance();
     if (kDebugMode) {
-      print('_preferences getInstance() ');
     }
     return _instance!;
   }

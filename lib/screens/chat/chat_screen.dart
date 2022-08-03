@@ -7,9 +7,11 @@ import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allConstants/text_field_constants.dart';
 import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/models/chat_messages.dart';
+import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/providers/chat_provider.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
+import 'package:tchat/utilities/const.dart';
 import 'package:tchat/widgets/items/item_message.dart';
 import 'package:tchat/widgets/items/item_user.dart';
 
@@ -160,8 +162,10 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
   }
 
   _init() async {
-  //  await initDatabase();
-    _getListMessage();
+    await initConfig();
+    await _getListMessage();
+
+    _listenerData();
   }
 
   //timestamp
@@ -238,7 +242,49 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
       // }
     }
   }
+   _listenerData() async{
+    var userQuery=  firebaseDataFunc.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
+    userQuery.snapshots().listen((data) {
+      // print("data size: "+data.size.toString());
+      //print("data document: "+data.docs.toString());
+      LastMessageModel message = LastMessageModel();
+      message.uid =account.id;
+      data.docs.forEach((change) {
+        // print('groupChatId $groupChatId');
+        // if(groupChatId.length==0){
+        //   if(change.data()[MESSAGE_GROUP_ID]!=null){
+        //     if(mounted){
+        //       setState(() {
+        //         groupChatId =change.data()[MESSAGE_GROUP_ID];
+        //       });
+        //     }
+        //   }
+        //   checkSocket();
+        // }
+        // print('groupChatId: $groupChatId');
+        if(widget.meAccount.id!.contains(change.data()[messageIdSender])){// todo: is me
+          //  print('message is me');
+          message.idReceiver =change.data()[messageIdReceiver];
+          message.nameReceiver =change.data()[messageNameReceiver];
+          message.photoReceiver =change.data()[messagePhotoReceiver];
+        }else{
+          //print('message not me');
+          message.idReceiver =widget.toUser.id;
+          message.nameReceiver =widget.toUser.fullName;
+          message.photoReceiver =widget.toUser.photoUrl;
+        }
+        message.timestamp =change.data()[messageTimestamp];
+        message.content =change.data()[messageContent];
+        message.type =change.data()[messageType];
+        message.status =change.data()[messageStatus];
+      });
+      updateLastMessageByID(message);
+      // if(mounted){
+      //   ProviderController(context).setReloadLastMessage(true);
+      // }
 
+    });
+  }
   getImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? pickedFile;

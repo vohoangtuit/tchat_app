@@ -46,7 +46,7 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
                           physics: const NeverScrollableScrollPhysics(), // todo: disable swip
                           controller: tabController,
                           children:   <Widget>[
-                            TabLastMessageScreen(),
+                            TabLastMessageScreen(profile: widget.profile),
                             TabContactScreen(),
                             TabTimeLineScreen(),
                             TabProfileScreen(profile: widget.profile)
