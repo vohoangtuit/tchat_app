@@ -34,8 +34,7 @@ class LastMessageModel{
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
-
+    final data = <String, dynamic>{};
     data[lastMessaeUid] = uid;
     data[lastMessageIdReceiver] = idReceiver;
     data[lastMessageNameReceiver] = nameReceiver;

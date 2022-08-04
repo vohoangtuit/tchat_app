@@ -89,11 +89,9 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
 
   }
   _init()async{
-    log('synData ${widget.synData}');
-    //await initDatabase();
-    _registerFBToken();
     tabController = TabController(length: 4, vsync: this);
     tabController!.addListener(handleTabSelection);
+    _registerFBToken();
   }
   List<Tab> listTab() {
     return <Tab>[
@@ -149,27 +147,18 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
     // }
   }
   _registerFBToken() async {
-    // if(notificationController==null){
-    //   log(' main_screen notificationController is null');
-    // }else{
-    //   log(' main_screen notificationController not null');
-    // }
-    log('_registerFBToken');
-    // await floorDB.user().getSingleUser().then((value){
-    //  log(value.toString());
-    // });
-    account = await getAccountFromSharedPre();
-    FirebaseMessaging.instance.getToken().then((token) {
-      log("token::: ${token!}");
-      if(token.isNotEmpty&&account.id!.isNotEmpty){
-        account.deviceToken =token;
-        firebaseDataFunc.firebaseFirestore.collection(FirebaseDataFunc.firebaseUsers).doc(account.id).update(
-            {
-              UserModel.userDeviceToken:token
-            }
-        );
-      }
+     Future.delayed( const Duration(seconds: 4), () {
+       FirebaseMessaging.instance.getToken().then((token) {
+         log("token::: ${token!}");
+         if(token.isNotEmpty&&widget.profile.id!.isNotEmpty){
+           widget.profile.deviceToken =token;
+           firebaseDataFunc.firebaseFirestore.collection(FirebaseDataFunc.firebaseUsers).doc(widget.profile.id).update(
+               {
+                 UserModel.userDeviceToken:token
+               }
+           );
+         }
+       });
     });
-
   }
 }

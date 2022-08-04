@@ -68,7 +68,17 @@ SizedBox spaceWidth(double space) {
     width: space,
   );
 }
-
+Widget loadingCenter() {
+  return Container(
+    color: Colors.white.withOpacity(0.5),
+    child: const Center(
+      child: CircularProgressIndicator(
+          strokeWidth: 2
+        // valueColor: AlwaysStoppedAnimation<Color>(AppColor.red),
+      ),
+    ),
+  );
+}
 CachedNetworkImage cachedImage (String url,double width, double height){
   return CachedNetworkImage(
     placeholder: (context, url) =>

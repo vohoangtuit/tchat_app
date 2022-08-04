@@ -31,9 +31,10 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
 
   bool isShowSticker = false;
   String imageUrl = '';
-
+  int _limit = 20;
+  final int _limitIncrement = 20;
   final TextEditingController textEditingController = TextEditingController();
-  final ScrollController scrollController = ScrollController();
+  final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
   List<ChatMessages> listMessage = <ChatMessages>[];
 
@@ -75,7 +76,6 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
               _buildListMessage(),
               _buildMessageInput(),
               const SizedBox(height: 5,),
-
             ],
           ),
         ),
@@ -139,7 +139,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
                 decoration:
                 kTextInputDecoration.copyWith(hintText: 'write here...'),
                 onSubmitted: (value) {
-                  onSendMessage(textEditingController.text, MessageType.text);
+                  _onSendMessage(textEditingController.text, MessageType.text);
                 },
               )),
           Container(
@@ -150,7 +150,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
             ),
             child: IconButton(
               onPressed: () {
-                onSendMessage(textEditingController.text, MessageType.text);
+                _onSendMessage(textEditingController.text, MessageType.text);
               },
               icon: const Icon(Icons.send_rounded),
               color: AppColors.white,
@@ -164,8 +164,9 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
   _init() async {
     await initConfig();
     await _getListMessage();
-
     _listenerData();
+    focusNode.addListener(_onFocusChange);
+    listScrollController.addListener(_scrollListener);
   }
 
   //timestamp
@@ -178,7 +179,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
     });
   }
 
-  onSendMessage(String content, int type) async {
+  _onSendMessage(String content, int type) async {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content
         .trim()
@@ -242,6 +243,21 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
       // }
     }
   }
+   _onFocusChange() {
+    if (focusNode.hasFocus) {
+      // Hide sticker when keyboard appear
+      setState(() {
+        isShowSticker = false;
+      });
+    }
+  }
+   _getSticker() {
+    // Hide keyboard when sticker appear
+    focusNode.unfocus();
+    setState(() {
+      isShowSticker = !isShowSticker;
+    });
+  }
    _listenerData() async{
     var userQuery=  firebaseDataFunc.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
     userQuery.snapshots().listen((data) {
@@ -262,6 +278,8 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
         //   checkSocket();
         // }
         // print('groupChatId: $groupChatId');
+        log('change ${change.toString()}');
+        //{idDB: 1, id: 8AC6oXq9WAcGm4pZgKjMtqV09d53, email: nhompro3@gmail.com, userName: null, fullName: Võ Hoàng Duy, birthday: , gender: null, photoUrl: https://lh3.googleusercontent.com/a-/AOh14GgTpwZVaZPpI3aP4liXuR8uSFVkaNVxD6wsFKKN=s96-c, cover: null, statusAccount: null, phone: , createdAt: null, lastUpdated: null, lastLogin: null, deviceToken: null, isLogin: null, address: , isOnline: null, accountType: 2, isOnlineChat: null, allowSearch: null, latitude: null, longitude: null}
         if(widget.meAccount.id!.contains(change.data()[messageIdSender])){// todo: is me
           //  print('message is me');
           message.idReceiver =change.data()[messageIdReceiver];
@@ -284,6 +302,25 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
       // }
 
     });
+  }
+  _scrollListener() {
+    if (listScrollController.offset >=
+        listScrollController.position.maxScrollExtent &&
+        !listScrollController.position.outOfRange) {
+      print("reach the bottom");
+      setState(() {
+        print("reach the bottom");
+        _limit += _limitIncrement;
+      });
+    }
+    if (listScrollController.offset <=
+        listScrollController.position.minScrollExtent &&
+        !listScrollController.position.outOfRange) {
+      print("reach the top");
+      setState(() {
+        print("reach the top");
+      });
+    }
   }
   getImage() async {
     ImagePicker imagePicker = ImagePicker();

@@ -8,6 +8,7 @@ import 'package:tchat/allWidgets/loading_view.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/chat/chat_screen.dart';
+import 'package:tchat/screens/chat/chat_screen1.dart';
 import 'package:tchat/screens/profile_page.dart';
 import 'package:tchat/utilities/debouncer.dart';
 import 'package:tchat/widgets/items/item_user.dart';
@@ -169,7 +170,7 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
             padding: const EdgeInsets.all(4.0),
             itemCount: listUser.length,
             itemBuilder: (context, index) => ItemUser(me: account, user: listUser[index],onSelected: (){
-              addScreen(ChatScreen(meAccount: account, toUser: listUser[index]));
+              addScreen(ChatScreen1(meAccount: account, toUser: listUser[index]));
             },),
           );
         }else{

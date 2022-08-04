@@ -709,3 +709,6 @@ TextStyle textBlackNormal() {
 TextStyle textGraysSmall() {
   return const TextStyle(color: Colors.grey, fontSize: 12);
 }
+TextStyle textGraySmaller() {
+  return const TextStyle(color: Colors.grey, fontSize: 11);
+}

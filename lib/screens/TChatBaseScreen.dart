@@ -22,12 +22,12 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
 
  // late RealTimeDatabase realTimeDatabase;
   FirebaseDataFunc firebaseDataFunc=FirebaseDataFunc.getInstance();
-  late  FloorDatabase floorDB;
+  FloorDatabase floorDB=FloorDatabase();
 
   late SharedPreferences prefs;
   late UserModel account=UserModel();
   // UserModel? myProfile;
-  late SharedPre sharedPre;
+   SharedPre sharedPre=SharedPre();
 
   bool isLogin = false;
   Dialog? dialog;
@@ -36,13 +36,13 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   void initAll() {
     super.initAll();
     //initConfig();
+    getAccountFromFloorDB();
   }
   initConfig() async {
-
-    floorDB = await FloorDatabase.getInstance();
-    sharedPre = await SharedPre.getInstance();
+    await  floorDB.getInstance();
+    await SharedPre.getInstance();
     prefs = await SharedPreferences.getInstance();
-    log('initConfig');
+    //log('initConfig');
    // await  getAccountFromFloorDB();
   }
   @override
@@ -105,20 +105,21 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   }
   saveAccountToDB(UserModel user)async{
     await SharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
-    await floorDB.user().findUserById(user.id!).then((value)  {
+    await floorDB.userDao!.findUserById(user.id!).then((value)  {
       if(value==null){
        // print('InsertUser');
-        floorDB.user().insertUser(user);
+        floorDB.userDao!.insertUser(user);
+
       }else{
      //   print('updateUser');
-        floorDB.user().updateUser(user);
+        floorDB.userDao!.updateUser(user);
       }
     });
     getAccountFromFloorDB();
   }
   updateUserDatabase(UserModel user)async{
     await SharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
-    floorDB.user().updateUser(user);
+    floorDB.userDao!.updateUser(user);
     if(mounted){
       setState(() {
         account =user;
@@ -126,9 +127,10 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
     }
 
   }
-  Future<UserModel>getAccountFromFloorDB()async{
+Future<UserModel>getAccountFromFloorDB()async{
+  await initConfig();
     if(account.id==null){
-      await floorDB.user().getSingleUser().then((value) {
+      await floorDB.userDao!.getSingleUser().then((value) {
         if(value!=null){
           account =value;
           if(mounted){
@@ -142,13 +144,13 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
     return account;
   }
    updateLastMessageByID(LastMessageModel message) async{
-    await floorDB.lastMessage().getLastMessageById(message.idReceiver).then((value){
+    await floorDB.lastMessageDao!.getLastMessageById(message.idReceiver!).then((value){
       if(value!=null){
         message.idDB =value.idDB;
-        floorDB.lastMessage().updateLastMessageById(message).then((value) {
+        floorDB.lastMessageDao!.updateLastMessageById(message).then((value) {
         });
       }else{
-        floorDB.lastMessage().insertMessage(message).then((value) => {
+        floorDB.lastMessageDao!.insertMessage(message).then((value) => {
         });
       }
     });
@@ -156,7 +158,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   void logOut()async{
      await initConfig();
      await SharedPre.clearData();
-     await floorDB.user().deleteAllUsers();
+     await floorDB.userDao!.deleteAllUsers();
      replaceScreen(const LoginScreen());
   }
 

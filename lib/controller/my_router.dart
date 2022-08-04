@@ -34,7 +34,7 @@ class MyRouter {
         var user = settings.arguments as UserModel;
         return MaterialPageRoute(
             //settings: settings, builder: (_) => ChatScreen(user));
-            settings: settings, builder: (_) => const ChatScreen1());
+            settings: settings, builder: (_) =>  ChatScreen1(toUser: user, meAccount: user,));
       case myRouterUserProfile:
         Map args = settings.arguments as Map;
         var myProfile = args['myProfile'] as UserModel;

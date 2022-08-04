@@ -387,7 +387,7 @@ class _$LastMessageDao extends LastMessageDao {
   }
 
   @override
-  Future<List<LastMessageModel?>> getSingleLastMessage(String uid) async {
+  Future<List<LastMessageModel>> getSingleLastMessage(String uid) async {
     return _queryAdapter.queryList(
         'SELECT * FROM LastMessageModel WHERE uid = ?1 GROUP BY idReceiver ORDER BY timestamp DESC',
         mapper: (Map<String, Object?> row) => LastMessageModel(idDB: row['idDB'] as int?, uid: row['uid'] as String?, idReceiver: row['idReceiver'] as String?, nameReceiver: row['nameReceiver'] as String?, photoReceiver: row['photoReceiver'] as String?, content: row['content'] as String?, type: row['type'] as int?, timestamp: row['timestamp'] as String?, status: row['status'] as int?),

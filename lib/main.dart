@@ -44,6 +44,7 @@ class _MyAppState extends TChatBaseScreen<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    Locale? myLocale;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'TChat',
@@ -52,7 +53,13 @@ class _MyAppState extends TChatBaseScreen<MyApp> {
       ),
       onGenerateRoute: MyRouter.generateRoute,
       home: const CheckLoginScreen(),
-
+        localeResolutionCallback: (deviceLocale, supportedLocales) {
+          myLocale = deviceLocale ; // here you make your app language similar to device language , but you should check whether the localization is supported by your app
+          // print(myLocale.countryCode);
+          //  print(myLocale.languageCode);
+          SharedPre.saveString(SharedPre.sharedPreLanguageCode, myLocale!.languageCode);
+          SharedPre.saveString(SharedPre.sharedPreCountryCode, myLocale!.countryCode!);
+        }
     );
   }
 

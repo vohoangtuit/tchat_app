@@ -21,36 +21,39 @@ class SharedPre {
   static Future<SharedPre> getInstance() async {
     _instance ??= SharedPre();
     _preferences ??= await SharedPreferences.getInstance();
-    if (kDebugMode) {
-    }
     return _instance!;
   }
 
 
   static Future<bool> saveBool(String key,bool value) async{
     //SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
     return await _preferences!.setBool(key, value);
   }
   static Future<bool> saveString(String key,String value) async{
-   // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
     return await _preferences!.setString(key, value);
   }
   static Future<bool> saveInt(String key,int value) async{
    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
     return await _preferences!.setInt(key, value);
   }
 
   static Future<bool?> getBoolKey(String key) async{
   //  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
     return  _preferences!.getBool(key);
   }
 
   static Future<String?> getStringKey(String key) async{
     //SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
     return  _preferences!.getString(key);
   }
   static Future<int?> getIntKey(String key) async{
  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
     return  _preferences!.getInt(key);
   }
   static Future<bool> clearKey(String key) async{
@@ -60,6 +63,7 @@ class SharedPre {
 
   static Future<void> clearData() async{
    // SharedPreferences preferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
     _preferences!.clear();
   }
 
