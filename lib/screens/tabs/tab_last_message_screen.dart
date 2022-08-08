@@ -69,7 +69,7 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
         setState(() {
           listMessage.addAll(value);
         });}
-      log('listMessage ${listMessage.toString()}');
+     // log('listMessage ${listMessage.toString()}');
 
     });
   }

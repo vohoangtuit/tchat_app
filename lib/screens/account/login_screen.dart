@@ -106,7 +106,7 @@ class _LoginScreenState extends TChatBaseScreen<LoginScreen> {
     initConfig();
   }
   _logInSuccess(UserModel user)async{
-  await firebaseDataFunc.userLogin(user);
+  await firebaseService.userLogin(user);
   await saveAccountToDB(user);
   await SharedPre.saveBool(SharedPre.sharedPreIsLogin,true);
  // replaceScreen(const HomeScreen());

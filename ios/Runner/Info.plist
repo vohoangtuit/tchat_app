@@ -27,19 +27,19 @@
     			<string>Editor</string>
     			<key>CFBundleURLSchemes</key>
     			<array>
-    				<string>fb757901591612156</string>
     				<string>com.googleusercontent.apps.521036740132-q7qrahmhm2c5hjs81neuhs886fvgpdsh</string>
+    				 <string>fb757901591612156</string>
     			</array>
     		</dict>
     	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
-    	<string>486170608123974</string>
+    	<string>fb757901591612156</string>
     	<key>FacebookClientToken</key>
     	<string>27d234a4bfac320faeea1be592945106</string>
     	<key>FacebookDisplayName</key>
-    	<string>Vietravel</string>
+    	<string>TChat</string>
     	<key>FirebaseAppDelegateProxyEnabled</key>
     	<false/>
     <key>LSApplicationQueriesSchemes</key>

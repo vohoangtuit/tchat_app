@@ -171,7 +171,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
 
   //timestamp
   _getListMessage() async {
-    firebaseDataFunc.getMessageChat(widget.meAccount.id!, widget.toUser.id!)
+    firebaseService.getMessageChat(widget.meAccount.id!, widget.toUser.id!)
         .then((value) {
       setState(() {
         chats = value;
@@ -209,12 +209,12 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
         // groupId: groupChatId
       );
       var from = FirebaseFirestore.instance
-          .collection(FirebaseDataFunc.firebaseMessages)
+          .collection(FirebaseService.firebaseMessages)
           .doc(widget.meAccount.id!)
           .collection(widget.toUser.id!)
           .doc(); // end doc can use timestamp
       var to = FirebaseFirestore.instance
-          .collection(FirebaseDataFunc.firebaseMessages)
+          .collection(FirebaseService.firebaseMessages)
           .doc(widget.toUser.id!)
           .collection(widget.meAccount.id!)
           .doc(); // end doc can use timestamp
@@ -259,7 +259,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> with SingleTickerProv
     });
   }
    _listenerData() async{
-    var userQuery=  firebaseDataFunc.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
+    var userQuery=  firebaseService.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
     userQuery.snapshots().listen((data) {
       // print("data size: "+data.size.toString());
       //print("data document: "+data.docs.toString());

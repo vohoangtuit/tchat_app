@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tchat/firebase/notification/data_model.dart';
+import 'package:tchat/firebase/notification/sent/notification_sent.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/friends_model.dart';
 import 'package:tchat/models/user_model.dart';
 
 
-class FirebaseDataFunc{
+class FirebaseService{
   static const firebaseID ='id';
 
   static const firebaseNotifications ='notifications';
@@ -20,7 +22,7 @@ class FirebaseDataFunc{
   static const storeCover ='cover';
   static const storeAvatar ='avatar';
   late FirebaseFirestore firebaseFirestore;
-  FirebaseDataFunc.getInstance(){
+  FirebaseService.getInstance(){
     firebaseFirestore =FirebaseFirestore.instance;
   }
 
@@ -40,7 +42,7 @@ class FirebaseDataFunc{
     return '/$uid/$storePhoto/$fileName';
   }
   Future<Stream<QuerySnapshot>>getAllUser()async{
-   return FirebaseFirestore.instance.collection(FirebaseDataFunc.firebaseUsers).snapshots();
+   return FirebaseFirestore.instance.collection(FirebaseService.firebaseUsers).snapshots();
   }
   Future<Stream<QuerySnapshot>>getMessageChat(String idSender, String idReceiver)async{
     //print('idSender $idSender idReceiver $idReceiver');
@@ -148,6 +150,25 @@ class FirebaseDataFunc{
     firebaseFirestore.collection(firebaseUsers).doc(user.id).update(user.toJson()).then((data) async {
     }).catchError((err) {
       log('FirebaseDataFunc Error updateUser ${err.toString()}');
+    });
+  }
+  sentNotificationRequestAddFriend(String toUid, String nameRequest, String formId)async {
+
+    WriteBatch writeBatch =  FirebaseFirestore.instance.batch();
+    DataNotifyModel data = DataNotifyModel(uid: formId, type: notificationTypeNewAddFriend, title: '', content: '',clickAction: 'FLUTTER_NOTIFICATION_CLICK');
+    NotificationSent sent = NotificationSent(toUId: toUid, title: nameRequest, body: 'Send you request add friend',clickAction: 'FLUTTER_NOTIFICATION_CLICK', data: data.toJson());
+   // todo: lấy user id làm id trên firebase
+    String time =DateTime.now().millisecondsSinceEpoch.toString();
+    log('sent ${sent.toString()}');
+    firebaseFirestore
+        .collection(firebaseNotifications)
+        .doc(toUid)
+        .collection(notificationAddFriend)
+   .doc(time).set(sent.toJson())
+        .then((value) {
+     log('sentNotificationRequestAddFriend ');
+    }).catchError((err) {
+      log('sentNotificationRequestAddFriend Error:  $err');
     });
   }
 }

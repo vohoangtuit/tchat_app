@@ -152,7 +152,7 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
          log("token::: ${token!}");
          if(token.isNotEmpty&&widget.profile.id!.isNotEmpty){
            widget.profile.deviceToken =token;
-           firebaseDataFunc.firebaseFirestore.collection(FirebaseDataFunc.firebaseUsers).doc(widget.profile.id).update(
+           firebaseService.firebaseFirestore.collection(FirebaseService.firebaseUsers).doc(widget.profile.id).update(
                {
                  UserModel.userDeviceToken:token
                }

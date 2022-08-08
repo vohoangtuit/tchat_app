@@ -6,6 +6,7 @@ import 'package:tchat/database/floor_init.dart';
 import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/firebase/database/realtime_database.dart';
 import 'package:tchat/firebase/notification/notification_controller.dart';
+import 'package:tchat/general/base_dialog.dart';
 import 'package:tchat/general/genneral_screen.dart';
 import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
@@ -21,7 +22,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   bool endData = false;
 
  // late RealTimeDatabase realTimeDatabase;
-  FirebaseDataFunc firebaseDataFunc=FirebaseDataFunc.getInstance();
+  FirebaseService firebaseService=FirebaseService.getInstance();
   FloorDatabase floorDB=FloorDatabase();
 
   late SharedPreferences prefs;
@@ -31,6 +32,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
 
   bool isLogin = false;
   Dialog? dialog;
+  BaseDialog? baseDialog;
 
   @override
   void initAll() {

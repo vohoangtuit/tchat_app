@@ -55,7 +55,8 @@ dependencies:
   country_code_picker: ^2.0.2
   url_launcher: ^6.1.5
   equatable: ^2.0.3
-  google_sign_in_web: ^0.10.2
+  #google_sign_in_web: ^0.10.2
+
 
   flutter_svg: ^1.1.1+1
   flutter_device_type: ^0.4.0

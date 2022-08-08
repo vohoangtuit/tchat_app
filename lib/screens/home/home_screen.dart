@@ -81,7 +81,7 @@ class _HomeScreenState extends TChatBaseScreen<HomeScreen> {
     _getListUsers();
   }
   _getListUsers()async{
-    firebaseDataFunc.getAllUser().then((value){
+    firebaseService.getAllUser().then((value){
       setState(() {
         users =value;
       });

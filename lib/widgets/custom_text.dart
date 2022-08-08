@@ -712,3 +712,6 @@ TextStyle textGraysSmall() {
 TextStyle textGraySmaller() {
   return const TextStyle(color: Colors.grey, fontSize: 11);
 }
+TextStyle textWhiteMedium() {
+  return const TextStyle(color: Colors.white, fontSize: 16);
+}

@@ -36,15 +36,15 @@ const int mainClickSettingTabMore =7;
 
 // todo update picture
 
-const int PICTURE_TYPE_AVATAR =1;
-const int PICTURE_TYPE_COVER =2;
-const int CHOOSE_PICTURE_CAMERA =1;
-const int CHOOSE_PICTURE_LIBRARY =2;
-const int CHOOSE_PICTURE_VIEW_PICTURE =3;
+const int pictureTypeAvatar =1;
+const int pictureTypeCover =2;
+const int choosePictureCamera =1;
+const int choosePictureLibrary =2;
+const int choosePictureViewPicture =3;
 
 //
-const String pathAvatarNotAvailable ='images/avatar_not_available.png';
-const String PATH_COVER_NOT_AVAILABLE ='images/cover.png';
+const String pathAvatarNotAvailable ='assets/images/avatar_not_available.png';
+const String PATH_COVER_NOT_AVAILABLE ='assets/images/cover.png';
 
 
 // todo route screen opening, using for notification

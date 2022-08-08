@@ -205,25 +205,25 @@ class NotificationController {
   }
   gotoDetailScreen(DataNotifyModel dataModel)async {
      //print('gotoDetailScreen dataModel ${dataModel.toString()}');
-    if(dataModel.typeNotification==1){// todo booking
-      switch (dataModel.typeBooking) {
-        case 1: //
-          print('tour detail');
-        //  Navigator.push(context!,MaterialPageRoute(builder: (context) => TourBookingDetail(notifyModel: dataModel,)));
-          break;
-        case 2: // new
-          print('hotel detail');
-          // Navigator.push(context!,MaterialPageRoute(builder: (context) => NewsDetailsScreen(newsId: dataModel.object_id, title: dataModel.title,)));
-          break;
-        default:
-          print('default detail');
-          break;
-      }
-    }else if(dataModel.typeNotification==2){// todo delete account
-
-     // Navigator.push(context!,MaterialPageRoute(builder: (context) => DeleteAccountDetailScreen( dataModel: dataModel,)));
-      //
-    }
+    // if(dataModel.typeNotification==1){// todo booking
+    //   switch (dataModel.typeBooking) {
+    //     case 1: //
+    //       print('tour detail');
+    //     //  Navigator.push(context!,MaterialPageRoute(builder: (context) => TourBookingDetail(notifyModel: dataModel,)));
+    //       break;
+    //     case 2: // new
+    //       print('hotel detail');
+    //       // Navigator.push(context!,MaterialPageRoute(builder: (context) => NewsDetailsScreen(newsId: dataModel.object_id, title: dataModel.title,)));
+    //       break;
+    //     default:
+    //       print('default detail');
+    //       break;
+    //   }
+    // }else if(dataModel.typeNotification==2){// todo delete account
+    //
+    //  // Navigator.push(context!,MaterialPageRoute(builder: (context) => DeleteAccountDetailScreen( dataModel: dataModel,)));
+    //   //
+    // }
 
   }
   void addCount(){

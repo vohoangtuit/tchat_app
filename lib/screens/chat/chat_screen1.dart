@@ -11,6 +11,7 @@ import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
+import 'package:tchat/screens/user_friend/user_profile_screen.dart';
 import 'package:tchat/utilities/const.dart';
 import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/general_widget.dart';
@@ -55,12 +56,11 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                textWhite(toUser==null?'':toUser!.fullName!),
+                textWhiteLarge(toUser==null?'':toUser!.fullName!),
               ],
             ),
             onTap: (){
-             // openScreenWithName(toUser!=null?UserProfileScreen(myProfile: account,user: toUser,):(){
-           //   });
+              addScreen(UserProfileScreen(myProfile: widget.meAccount, user: widget.toUser,));
             },
           ),
         ),
@@ -76,15 +76,15 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
                     IconButton(
                         icon:  Image.asset(
                           'assets/icons/phone_white.png',
-                          width: 28,
-                          height: 22,
+                          width: 26,
+                          height: 20,
                         ),
                         onPressed: () => _audioVideo()),
                     IconButton(
                         icon:  Image.asset(
                           'assets/icons/camera_white.png',
-                          width: 28,
-                          height: 28,
+                          width: 25,
+                          height: 25,
                         ),
                         onPressed: () => _callVideo()),
                   ],
@@ -329,7 +329,7 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
     await _getProfileUser();
   }
   _getProfileUser()async{
-    await firebaseDataFunc.getInfoUserProfile(widget.toUser.id!).then((value) {
+    await firebaseService.getInfoUserProfile(widget.toUser.id!).then((value) {
       if (value.data() != null) {
         Map<String, dynamic> json = value.data() as  Map<String, dynamic>;
         UserModel userModel = UserModel.fromJson(json);
@@ -397,7 +397,7 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
     }
   }
   _getMessage() async{
-    firebaseDataFunc.getMessageChat(widget.meAccount.id!, widget.toUser.id!)
+    firebaseService.getMessageChat(widget.meAccount.id!, widget.toUser.id!)
         .then((value) {
       setState(() {
         chats = value;
@@ -405,7 +405,7 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
     });
   }
   _listenerData() async{
-    var userQuery=  firebaseDataFunc.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
+    var userQuery=  firebaseService.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
     userQuery.snapshots().listen((data) {
       // print("data size: "+data.size.toString());
       //print("data document: "+data.docs.toString());
@@ -479,12 +479,12 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
         // groupId: groupChatId
       );
       var from = FirebaseFirestore.instance
-          .collection(FirebaseDataFunc.firebaseMessages)
+          .collection(FirebaseService.firebaseMessages)
           .doc(widget.meAccount.id!)
           .collection(widget.toUser.id!)
           .doc(); // end doc can use timestamp
       var to = FirebaseFirestore.instance
-          .collection(FirebaseDataFunc.firebaseMessages)
+          .collection(FirebaseService.firebaseMessages)
           .doc(widget.toUser.id!)
           .collection(widget.meAccount.id!)
           .doc(); // end doc can use timestamp

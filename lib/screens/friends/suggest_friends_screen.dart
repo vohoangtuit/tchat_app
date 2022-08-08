@@ -32,7 +32,7 @@ class _SuggestFriendsScreenState extends TChatBaseScreen<SuggestFriendsScreen> {
   }
   getData() async {
    await initConfig();
-   firebaseDataFunc.getAllUser().then((value){
+   firebaseService.getAllUser().then((value){
      setState(() {
        users =value;
      });
