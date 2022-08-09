@@ -1,12 +1,17 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/firebase/notification/data_model.dart';
+import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
+import 'package:tchat/screens/chat/chat_screen1.dart';
+import 'package:tchat/screens/user_friend/user_profile_screen.dart';
 
 
 class NotificationController {
@@ -18,17 +23,19 @@ class NotificationController {
   late AndroidNotificationChannel? channel;
   late FlutterLocalNotificationsPlugin? _flutterLocalNotificationsPlugin;
 
-  final BehaviorSubject<String?> selectNotificationSubject =
+   BehaviorSubject<String?> selectNotificationSubject =
       BehaviorSubject<String?>();
   late NotificationAppLaunchDetails? notificationAppLaunchDetails;
  static int count =-1;// todo check duplicate on tap on android
-  late TChatBaseScreen? tChatBaseScreen;
-  late BuildContext? context;
-  NotificationController.getInstance({TChatBaseScreen? baseScreen,BuildContext? context_}) {
-    context =context_;
-   tChatBaseScreen =baseScreen;
-    intiSetup();
-  }
+  final  TChatBaseScreen tChatBaseScreen;
+  final  BuildContext context;
+  NotificationController({required this.tChatBaseScreen,required this.context});
+  // NotificationController.getInstance({required this.baseScreen,required this.context_}) {
+  //  //  context =context_;
+  //  // tChatBaseScreen =baseScreen;
+  //  print('NotificationController getInstance');
+  //   intiSetup();
+  // }
   // TODO : getInstance kiểu này bị lõi khi vào detail  lần thứ 2 khi app opening
   // todo Consider canceling any active work during "dispose" or using the "mounted" getter to determine if the State is still active.
   // NotificationController.getInstance({this.vietravelScreen}) {
@@ -36,11 +43,12 @@ class NotificationController {
   // }
 
   intiSetup() async {
+    print('NotificationController intiSetup');
     _firebaseMessaging = FirebaseMessaging.instance;
      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     setupLocalNotification();
     handleFirebaseMessage();
-    FirebaseMessaging.instance.subscribeToTopic('Notification');// check firebase functions
+  // FirebaseMessaging.instance.subscribeToTopic('Notification');// check firebase functions
   }
 
   Future<String?> deviceToken() async {
@@ -93,17 +101,18 @@ class NotificationController {
           print('open app  getInitialMessage: ${message.data}');
         }
         // todo open screen
-        tChatBaseScreen!.showMessage('1: new open app');
+        tChatBaseScreen.showMessage('1: new open app');
      //   _getDataDetail(message);
-        if(Device.get().isAndroid){// todo android duplicate
-          addCount();
-          if(count==1){
-            _getDataDetail(message);
-            resetCount();
-          }
-        }else{
-          _getDataDetail(message);
-        }
+     //    if(Device.get().isAndroid){// todo android duplicate
+     //      addCount();
+     //      if(count==1){
+     //        _getDataDetail(message);
+     //        resetCount();
+     //      }
+     //    }else{
+     //      _getDataDetail(message);
+     //    }
+        _getDataDetail(message);
       }
     });
 
@@ -112,17 +121,20 @@ class NotificationController {
       if (kDebugMode) {
         print('App running in background onMessageOpenedApp: ${message.data}');
       }
-      tChatBaseScreen!.showMessage('2: app running background');
+      tChatBaseScreen.showMessage('2: app running background');
       // todo open screen
-      if(Device.get().isAndroid){
-        addCount();
-        if(count==1){
-          _getDataDetail(message);
-          resetCount();
-        }
-      }else{ // todo: ios same todo 1, duplicate
-       // _getDataDetail(message);
-       // resetCount();
+      // if(Device.get().isAndroid){
+      //   addCount();
+      //   if(count==1){
+      //     _getDataDetail(message);
+      //     resetCount();
+      //   }
+      // }else{ // todo: ios same todo 1, duplicate
+      //  // _getDataDetail(message);
+      //  // resetCount();
+      // }
+      if(Device.get().isAndroid){ // todo: ios same todo 1, duplicate
+        _getDataDetail(message);
       }
 
     });
@@ -130,15 +142,15 @@ class NotificationController {
     // todo 3: when app opening
     FirebaseMessaging.onMessage.listen((message) async{
       if (message.notification != null) {
-        tChatBaseScreen!.showMessage('3: opening');
+        tChatBaseScreen.showMessage('3: opening');
         if (kDebugMode) {
           print('App opening message : ${message.data}');
-          if(tChatBaseScreen!.mounted){
-            print('Screen opening : ${tChatBaseScreen!.getNameScreenOpening()}');
+          if(tChatBaseScreen.mounted){
+            print('Screen opening : ${tChatBaseScreen.getNameScreenOpening()}');
           }
         }
         selectNotificationSubject.add(message.data.toString());
-        display(message);
+        _display(message);
        // if(Device.get().isAndroid){
        //   addCount();
        //   if(count==1){
@@ -154,7 +166,7 @@ class NotificationController {
     });
   }
 
-  void display(RemoteMessage message) async {
+   _display(RemoteMessage message) async {
     try {
       final int id = DateTime.now().microsecondsSinceEpoch~/10000000;
       // const int id = 0;
@@ -204,27 +216,49 @@ class NotificationController {
     gotoDetailScreen(data);
   }
   gotoDetailScreen(DataNotifyModel dataModel)async {
-     //print('gotoDetailScreen dataModel ${dataModel.toString()}');
-    // if(dataModel.typeNotification==1){// todo booking
-    //   switch (dataModel.typeBooking) {
-    //     case 1: //
-    //       print('tour detail');
-    //     //  Navigator.push(context!,MaterialPageRoute(builder: (context) => TourBookingDetail(notifyModel: dataModel,)));
-    //       break;
-    //     case 2: // new
-    //       print('hotel detail');
-    //       // Navigator.push(context!,MaterialPageRoute(builder: (context) => NewsDetailsScreen(newsId: dataModel.object_id, title: dataModel.title,)));
-    //       break;
-    //     default:
-    //       print('default detail');
-    //       break;
-    //   }
-    // }else if(dataModel.typeNotification==2){// todo delete account
-    //
-    //  // Navigator.push(context!,MaterialPageRoute(builder: (context) => DeleteAccountDetailScreen( dataModel: dataModel,)));
-    //   //
-    // }
+     print('gotoDetailScreen dataModel ${dataModel.toString()}');
+     if(dataModel ==null){
+       return;
+     }
+     //getUserInfoAndOpenScreen()
+    switch (dataModel.type) {
+       case 1:// todo open chat
+         _getUserInfoAndOpenScreen(dataModel.uid!, 1);
+         break;
+       case 2:// todo open user profile
+         _getUserInfoAndOpenScreen(dataModel.uid!, 2);
+         break;
+       default:
+         break;
+     }
 
+  }
+  _getUserInfoAndOpenScreen(String userID, int type) async {
+    var meAccount =await tChatBaseScreen.getAccountFromFloorDB();
+    await FirebaseFirestore.instance.collection(FirebaseService.firebaseUsers).doc(userID).get().then((value){
+      if(value.data()!=null){
+        var json = value.data() as  Map<String, dynamic>;
+        UserModel user = UserModel.fromJson(json);
+       // print('user ${user.toString()}');
+        if(Navigator.canPop(context)){
+          print('canPop ');
+        }else{
+          print('cannot pop ');
+        }
+        if(user.id!.isNotEmpty){
+          if(type==1){
+            //Navigator.push(context!,MaterialPageRoute(builder: (context) => ChatScreen1(meAccount: meAccount, toUser: user,)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatScreen1(meAccount: meAccount, toUser: user,)));
+            //tChatBaseScreen.addScreen(ChatScreen1(meAccount: meAccount, toUser: user,));
+          }
+          if(type==2){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(myProfile: meAccount, user: user,)));
+         //   tChatBaseScreen.addScreen(UserProfileScreen(myProfile: meAccount, user: user,));
+          }
+        }
+      }
+
+    });
   }
   void addCount(){
     count=count+1;
@@ -234,13 +268,3 @@ class NotificationController {
   }
 }
 //
-// var bookingId =tour.bookingId;
-// var bookingNo =tour.bookingNo;
-// var totalAmount =tour.totalAmount;
-// var email =tour.email;
-// var monthDayYear =tour.monthDayYear;
-// var deviceType
-// var date =tour.date;
-// fullName: Tu
-// typeBooking: 1,// todo 1 is tour/combo : 2 hotel
-// 220714087606

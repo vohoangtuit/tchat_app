@@ -53,13 +53,13 @@ class DataNotifyModel{
     );
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
-    data[notificationUid] = uid;
-    data[notificationType] = type;
-    data[notificationTitle] = title;
-    data[notificationContent] =content;
-    data[notificationClickAction] =clickAction;
-    return data;
+    final  map =  <String, dynamic>{};
+    map[notificationUid] = uid;
+    map[notificationType] = type;
+    map[notificationTitle] = title;
+    map[notificationContent] =content;
+    map[notificationClickAction] =clickAction;
+    return map;
   }
   factory DataNotifyModel.dataFromIOS(Map<String, dynamic> message){
     var data= json.decode(message['data']);

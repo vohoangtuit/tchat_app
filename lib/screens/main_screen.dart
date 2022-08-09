@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:tchat/firebase/database/firestore_database.dart';
+import 'package:tchat/firebase/notification/notification_controller.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/tabs/tab_contact_screen.dart';
@@ -92,6 +93,7 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
     tabController = TabController(length: 4, vsync: this);
     tabController!.addListener(handleTabSelection);
     _registerFBToken();
+    NotificationController(tChatBaseScreen: this,context: context).intiSetup();
   }
   List<Tab> listTab() {
     return <Tab>[

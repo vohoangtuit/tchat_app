@@ -124,10 +124,11 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
           listMessage.addAll(
               ChatMessages.listFromSnapshot(snapshot.data!.docs));
           return ListView.builder(
-           //shrinkWrap: true,
             reverse: true,
+            controller: listScrollController,
             padding: const EdgeInsets.all(4.0),
             itemCount: listMessage.length,
+
             itemBuilder: (context, index) => ItemMessage(
               item: listMessage[index],
               me: widget.meAccount,
@@ -406,48 +407,56 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
   }
   _listenerData() async{
     var userQuery=  firebaseService.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
-    userQuery.snapshots().listen((data) {
-      // print("data size: "+data.size.toString());
-      //print("data document: "+data.docs.toString());
-      LastMessageModel message = LastMessageModel();
-      message.uid =account.id;
-      data.docs.forEach((change) {
-        // print('groupChatId $groupChatId');
-        // if(groupChatId.length==0){
-        //   if(change.data()[MESSAGE_GROUP_ID]!=null){
-        //     if(mounted){
-        //       setState(() {
-        //         groupChatId =change.data()[MESSAGE_GROUP_ID];
-        //       });
-        //     }
-        //   }
-        //   checkSocket();
-        // }
-        // print('groupChatId: $groupChatId');
-        log('change ${change.toString()}');
-        //{idDB: 1, id: 8AC6oXq9WAcGm4pZgKjMtqV09d53, email: nhompro3@gmail.com, userName: null, fullName: Võ Hoàng Duy, birthday: , gender: null, photoUrl: https://lh3.googleusercontent.com/a-/AOh14GgTpwZVaZPpI3aP4liXuR8uSFVkaNVxD6wsFKKN=s96-c, cover: null, statusAccount: null, phone: , createdAt: null, lastUpdated: null, lastLogin: null, deviceToken: null, isLogin: null, address: , isOnline: null, accountType: 2, isOnlineChat: null, allowSearch: null, latitude: null, longitude: null}
-        if(widget.meAccount.id!.contains(change.data()[messageIdSender])){// todo: is me
-          //  print('message is me');
-          message.idReceiver =change.data()[messageIdReceiver];
-          message.nameReceiver =change.data()[messageNameReceiver];
-          message.photoReceiver =change.data()[messagePhotoReceiver];
-        }else{
-          //print('message not me');
-          message.idReceiver =widget.toUser.id;
-          message.nameReceiver =widget.toUser.fullName;
-          message.photoReceiver =widget.toUser.photoUrl;
-        }
-        message.timestamp =change.data()[messageTimestamp];
-        message.content =change.data()[messageContent];
-        message.type =change.data()[messageType];
-        message.status =change.data()[messageStatus];
-      });
-      updateLastMessageByID(message);
-      // if(mounted){
-      //   ProviderController(context).setReloadLastMessage(true);
-      // }
+      userQuery.snapshots().listen((data) {
+            LastMessageModel message = LastMessageModel();
+            message.uid =account.id;
+            data.docs.forEach((change) {
+              // print('groupChatId $groupChatId');
+              // if(groupChatId.length==0){
+              //   if(change.data()[MESSAGE_GROUP_ID]!=null){
+              //     if(mounted){
+              //       setState(() {
+              //         groupChatId =change.data()[MESSAGE_GROUP_ID];
+              //       });
+              //     }
+              //   }
+              //   checkSocket();
+              // }
+              // print('groupChatId: $groupChatId');
+             log('change ${change.toString()}');
+              //{idDB: 1, id: 8AC6oXq9WAcGm4pZgKjMtqV09d53, email: nhompro3@gmail.com, userName: null, fullName: Võ Hoàng Duy, birthday: , gender: null, photoUrl: https://lh3.googleusercontent.com/a-/AOh14GgTpwZVaZPpI3aP4liXuR8uSFVkaNVxD6wsFKKN=s96-c, cover: null, statusAccount: null, phone: , createdAt: null, lastUpdated: null, lastLogin: null, deviceToken: null, isLogin: null, address: , isOnline: null, accountType: 2, isOnlineChat: null, allowSearch: null, latitude: null, longitude: null}
+              if(widget.meAccount.id!.contains(change.data()[messageIdSender])){// todo: is me
+                //  print('message is me');
+                message.idReceiver =change.data()[messageIdReceiver];
+                message.nameReceiver =change.data()[messageNameReceiver];
+                message.photoReceiver =change.data()[messagePhotoReceiver];
+              }else{
+                //print('message not me');
+                message.idReceiver =widget.toUser.id;
+                message.nameReceiver =widget.toUser.fullName;
+                message.photoReceiver =widget.toUser.photoUrl;
+              }
+              message.timestamp =change.data()[messageTimestamp];
+              message.content =change.data()[messageContent];
+              message.type =change.data()[messageType];
+              message.status =change.data()[messageStatus];
+            });
+           // log('message ${message.toString()}');
+            if(message.idReceiver!=null){
+              updateLastMessageByID(message);
+            }else{
+             // log('message null');
+            }
 
-    });
+
+            // if(mounted){
+            //   ProviderController(context).setReloadLastMessage(true);
+            // }
+
+
+      });
+
+
   }
   _onSendMessage(String content, int type) async {
     // type: 0 = text, 1 = image, 2 = sticker
@@ -501,7 +510,7 @@ class _ChatScreen1State extends TChatBaseScreen<ChatScreen1> {
         // await floorDB.me.insertMessage(messages);
       //   print('toUser.isOnlineChat '+toUser.isOnlineChat.toString());
       //   if(!toUser.isOnlineChat){
-      //     senNotificationNewMessage(toUser.id,account.fullName,account.id,content);
+      firebaseService.senNotificationNewMessage(widget.toUser.id!,widget.meAccount.fullName!,widget.meAccount.id!,content);
       //   }
         listScrollController.animateTo(0.0,
             duration: const Duration(milliseconds: 300), curve: Curves.easeOut);

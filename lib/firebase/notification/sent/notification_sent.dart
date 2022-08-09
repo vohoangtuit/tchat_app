@@ -33,13 +33,13 @@ class NotificationSent{
   }
 
   Map<String, dynamic> toJson() {
-    final  data =  <String, dynamic>{};
-    data[notificationUid] =toUId;
-    data[notificationTitle] = title;
-    data[notificationBody] = body;
-    data[notificationClickAction] = clickAction;
-    data[notificationData] = data;
-    return data;
+    final  map =  <String, dynamic>{};
+    map[notificationUid] =toUId;
+    map[notificationTitle] = title;
+    map[notificationBody] = body;
+    map[notificationClickAction] = clickAction;
+    map[notificationData] = data;
+    return map;
   }
 
   @override

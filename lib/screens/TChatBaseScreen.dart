@@ -21,6 +21,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
   bool firstLoad = true;
   bool endData = false;
 
+  late NotificationController notificationController;
  // late RealTimeDatabase realTimeDatabase;
   FirebaseService firebaseService=FirebaseService.getInstance();
   FloorDatabase floorDB=FloorDatabase();

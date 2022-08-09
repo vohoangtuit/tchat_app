@@ -51,7 +51,7 @@ class _MyAppState extends TChatBaseScreen<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      onGenerateRoute: MyRouter.generateRoute,
+     // onGenerateRoute: MyRouter.generateRoute,
       home: const CheckLoginScreen(),
         localeResolutionCallback: (deviceLocale, supportedLocales) {
           myLocale = deviceLocale ; // here you make your app language similar to device language , but you should check whether the localization is supported by your app
@@ -62,11 +62,10 @@ class _MyAppState extends TChatBaseScreen<MyApp> {
         }
     );
   }
-
-  @override
-  void initAll() {
-    super.initAll();
-    NotificationController.getInstance(baseScreen: this,context_: context);
-
+@override
+  void initState() {
+    super.initState();
+    //NotificationController(tChatBaseScreen: this,context: context).intiSetup();
   }
+
 }

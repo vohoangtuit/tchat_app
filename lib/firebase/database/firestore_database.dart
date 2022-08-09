@@ -48,10 +48,10 @@ class FirebaseService{
     //print('idSender $idSender idReceiver $idReceiver');
     return  FirebaseFirestore.instance
         .collection(firebaseMessages)
-        .doc( idSender)
+        .doc(idSender)
         .collection(idReceiver)
-        .orderBy(ChatMessages.messageTimestamp, descending: false)
-        .limit(20)
+        .orderBy(ChatMessages.messageTimestamp, descending: true)
+        .limit(50)
         .snapshots();
   }
   chatListenerData(String myID,String toID){
@@ -153,8 +153,6 @@ class FirebaseService{
     });
   }
   sentNotificationRequestAddFriend(String toUid, String nameRequest, String formId)async {
-
-    WriteBatch writeBatch =  FirebaseFirestore.instance.batch();
     DataNotifyModel data = DataNotifyModel(uid: formId, type: notificationTypeNewAddFriend, title: '', content: '',clickAction: 'FLUTTER_NOTIFICATION_CLICK');
     NotificationSent sent = NotificationSent(toUId: toUid, title: nameRequest, body: 'Send you request add friend',clickAction: 'FLUTTER_NOTIFICATION_CLICK', data: data.toJson());
    // todo: lấy user id làm id trên firebase
@@ -164,14 +162,31 @@ class FirebaseService{
         .collection(firebaseNotifications)
         .doc(toUid)
         .collection(notificationAddFriend)
-   .doc(time).set(sent.toJson())
+   .add(sent.toJson())
         .then((value) {
      log('sentNotificationRequestAddFriend ');
     }).catchError((err) {
       log('sentNotificationRequestAddFriend Error:  $err');
     });
   }
+
+  senNotificationNewMessage(String toUid, String nameRequest, String formId, String content) async{
+    DataNotifyModel data = DataNotifyModel(uid: formId, type: notificationTypeNewMessage, title: '', content: content,clickAction: 'FLUTTER_NOTIFICATION_CLICK');
+    NotificationSent sent = NotificationSent(
+        toUId: toUid,
+        title: nameRequest,
+        body: 'you have got a new message',
+        clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+        data: data.toJson());
+    firebaseFirestore
+        .collection(firebaseNotifications)
+        .doc(toUid)
+        .collection(notificationMessage)
+        .add(sent.toJson())
+        .then((value) {});
+  }
 }
+
 void log(String msg){
   if (kDebugMode) {
     print(msg);

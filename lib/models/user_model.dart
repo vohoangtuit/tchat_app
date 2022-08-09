@@ -163,6 +163,6 @@ class UserModel{
 
   @override
   String toString() {
-    return 'UserModel{idDB: $idDB, id: $id, email: $email, userName: $userName, fullName: $fullName, birthday: $birthday, gender: $gender, photoUrl: $photoUrl, cover: $cover, statusAccount: $statusAccount, phone: $phone, createdAt: $createdAt, lastUpdated: $lastUpdated, lastLogin: $lastLogin, deviceToken: $deviceToken, isLogin: $isLogin, address: $address, isOnline: $isOnline, accountType: $accountType, isOnlineChat: $isOnlineChat, allowSearch: $allowSearch, latitude: $latitude, longitude: $longitude}';
+    return '{idDB: $idDB, id: $id, email: $email, userName: $userName, fullName: $fullName, birthday: $birthday, gender: $gender, photoUrl: $photoUrl, cover: $cover, statusAccount: $statusAccount, phone: $phone, createdAt: $createdAt, lastUpdated: $lastUpdated, lastLogin: $lastLogin, deviceToken: $deviceToken, isLogin: $isLogin, address: $address, isOnline: $isOnline, accountType: $accountType, isOnlineChat: $isOnlineChat, allowSearch: $allowSearch, latitude: $latitude, longitude: $longitude}';
   }
 }
