@@ -86,5 +86,6 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
     super.onResume();
     _getListLastMessage();
   }
+
 }
 

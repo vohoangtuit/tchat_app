@@ -9,21 +9,16 @@ import '../widgets/loading_view.dart';
 
 abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with WidgetsBindingObserver{
   String currentUrl = '';
-  Resume resume = new Resume();
+  Resume resume =  Resume();
   bool _isPaused = false;
   LoadingView? loadingView;
   // todo check status screen
   void onResume() {}
   void onReady() {}
   void onPause() {}
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
 
   @override
   void initState() {
-
     initAll();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -79,11 +74,9 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
   }
   @override
   void dispose() {
-    print('GeneralScreen dispose');
     super.dispose();
   }
   String getNameScreenOpening(){
@@ -91,7 +84,7 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
   }
   void log(String data){
     if (kDebugMode) {
-      print(data);
+      print('TChat::::: $data');
     }
   }
   // todo handle open screens

@@ -97,9 +97,9 @@ class NotificationController {
     // todo 1: when app killed and user click notification
     FirebaseMessaging.instance.getInitialMessage().then((message) async{
       if (message != null) {
-        if (kDebugMode) {
-          print('open app  getInitialMessage: ${message.data}');
-        }
+        // if (kDebugMode) {
+        //   print('open app  getInitialMessage: ${message.data}');
+        // }
         // todo open screen
         tChatBaseScreen.showMessage('1: new open app');
      //   _getDataDetail(message);
@@ -112,16 +112,20 @@ class NotificationController {
      //    }else{
      //      _getDataDetail(message);
      //    }
-        _getDataDetail(message);
+        if(Device.get().isAndroid){
+          _getDataDetail(message);
+        }
+
       }
     });
 
     // todo 2: when the app running in background but  and user tap
      FirebaseMessaging.onMessageOpenedApp.listen((message) async{
-      if (kDebugMode) {
-        print('App running in background onMessageOpenedApp: ${message.data}');
-      }
+      // if (kDebugMode) {
+      //   print('App running in background onMessageOpenedApp: ${message.data}');
+      // }
       tChatBaseScreen.showMessage('2: app running background');
+      _getDataDetail(message);
       // todo open screen
       // if(Device.get().isAndroid){
       //   addCount();
@@ -133,9 +137,10 @@ class NotificationController {
       //  // _getDataDetail(message);
       //  // resetCount();
       // }
-      if(Device.get().isAndroid){ // todo: ios same todo 1, duplicate
-        _getDataDetail(message);
-      }
+
+      // if(Device.get().isAndroid){ // todo: ios same todo 1, duplicate
+      //   _getDataDetail(message);
+      // }
 
     });
 

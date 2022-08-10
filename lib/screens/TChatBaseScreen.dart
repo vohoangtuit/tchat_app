@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tchat/database/floor_init.dart';
 import 'package:tchat/firebase/database/firestore_database.dart';
-import 'package:tchat/firebase/database/realtime_database.dart';
 import 'package:tchat/firebase/notification/notification_controller.dart';
 import 'package:tchat/general/base_dialog.dart';
 import 'package:tchat/general/genneral_screen.dart';
@@ -28,7 +27,7 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
 
   late SharedPreferences prefs;
   late UserModel account=UserModel();
-  // UserModel? myProfile;
+  static UserModel? myProfile;
    SharedPre sharedPre=SharedPre();
 
   bool isLogin = false;
@@ -37,9 +36,10 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
 
   @override
   void initAll() {
+    getAccountFromFloorDB();
     super.initAll();
     //initConfig();
-    getAccountFromFloorDB();
+
   }
   initConfig() async {
     await  floorDB.getInstance();
@@ -57,7 +57,21 @@ abstract class TChatBaseScreen  <T extends StatefulWidget> extends GeneralScreen
     super.disposeAll();
   }
   void _disposeBloc(){
-
+  }
+   getAccount()async{
+    await initConfig();
+    await floorDB.userDao!.getSingleUser().then((value) {
+      if(value!=null){
+        account =value;
+        if(mounted){
+          setState(() {
+            account =value;
+            myProfile =value;
+          });
+        }
+      }
+    });
+    log('Main ac ${account.id}');
   }
   saveUser(UserModel user)async{
   await SharedPre.saveBool(SharedPre.sharedPreIsLogin,true);

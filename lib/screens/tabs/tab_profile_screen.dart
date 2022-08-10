@@ -111,7 +111,7 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with Auto
         CustomRowSetting(
           onPressed: () {
             // floorDB.messageDao.deleteAllMessage();
-            // floorDB.lastMessageDao.deleteAllLastMessage();
+             floorDB.lastMessageDao!.deleteAllLastMessage();
             // // todo handle clear on firebase
             // ProviderController(context).setReloadLastMessage(true);
           },
