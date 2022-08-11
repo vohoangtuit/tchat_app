@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tchat/allConstants/color_constants.dart';
-import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/allWidgets/common_widgets.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/user_model.dart';
-import 'package:tchat/providers/chat_provider.dart';
 
 class ItemMessage extends StatefulWidget {
   final ChatMessages item;
@@ -37,25 +35,24 @@ class _ItemMessageState extends State<ItemMessage> {
               chatContent: message.content,
               color: AppColors.spaceLight,
               textColor: AppColors.white,
-              margin: const EdgeInsets.only(right: Sizes.dimen_10),
+              margin: const EdgeInsets.only(right: 10),
             )
                 : message.type == MessageType.image
                 ? Container(
               margin: const EdgeInsets.only(
-                  right: Sizes.dimen_10, top: Sizes.dimen_10),
-              child: chatImage(
-                  imageSrc: message.content, onTap: () {}),
+                  right: 10, top: 10),
+              child: chatImage(imageSrc: message.content, onTap: () {}),
             )
                 : const SizedBox.shrink(),
             Container(
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Sizes.dimen_20),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Image.network(
                 widget.me.photoUrl!,
-                width: Sizes.dimen_40,
-                height: Sizes.dimen_40,
+                width: 40,
+                height: 40,
                 fit: BoxFit.cover,
                 loadingBuilder: (BuildContext ctx, Widget child,
                     ImageChunkEvent? loadingProgress) {
@@ -86,9 +83,9 @@ class _ItemMessageState extends State<ItemMessage> {
         ),
        Container(
           margin: const EdgeInsets.only(
-              right: Sizes.dimen_50,
-              top: Sizes.dimen_6,
-              bottom: Sizes.dimen_8),
+              right: 50,
+              top: 6,
+              bottom: 8),
           child: Text(
             DateFormat('dd MMM yyyy, hh:mm a').format(
               DateTime.fromMillisecondsSinceEpoch(
@@ -97,7 +94,7 @@ class _ItemMessageState extends State<ItemMessage> {
             ),
             style: const TextStyle(
                 color: AppColors.lightGrey,
-                fontSize: Sizes.dimen_12,
+                fontSize: 12,
                 fontStyle: FontStyle.italic),
           ),
         ),
@@ -114,12 +111,12 @@ class _ItemMessageState extends State<ItemMessage> {
             Container(
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Sizes.dimen_20),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Image.network(
                 widget.toUser.photoUrl!,
-                width: Sizes.dimen_40,
-                height: Sizes.dimen_40,
+                width: 40,
+                height: 40,
                 fit: BoxFit.cover,
                 loadingBuilder: (BuildContext ctx, Widget child,
                     ImageChunkEvent? loadingProgress) {
@@ -151,12 +148,12 @@ class _ItemMessageState extends State<ItemMessage> {
               color: AppColors.burgundy,
               textColor: AppColors.white,
               chatContent: message.content,
-              margin: const EdgeInsets.only(left: Sizes.dimen_10),
+              margin: const EdgeInsets.only(left: 10),
             )
                 : message.type == MessageType.image
                 ? Container(
               margin: const EdgeInsets.only(
-                  left: Sizes.dimen_10, top: Sizes.dimen_10),
+                  left: 10, top: 10),
               child: chatImage(
                   imageSrc: message.content, onTap: () {}),
             )
@@ -165,9 +162,9 @@ class _ItemMessageState extends State<ItemMessage> {
         ),
         Container(
           margin: const EdgeInsets.only(
-              left: Sizes.dimen_50,
-              top: Sizes.dimen_6,
-              bottom: Sizes.dimen_8),
+              left: 50,
+              top: 6,
+              bottom: 8),
           child: Text(
             DateFormat('dd MMM yyyy, hh:mm a').format(
               DateTime.fromMillisecondsSinceEpoch(
@@ -176,7 +173,7 @@ class _ItemMessageState extends State<ItemMessage> {
             ),
             style: const TextStyle(
                 color: AppColors.lightGrey,
-                fontSize: Sizes.dimen_12,
+                fontSize: 12,
                 fontStyle: FontStyle.italic),
           ),
         ),

@@ -10,7 +10,7 @@ import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/firebase/notification/data_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
-import 'package:tchat/screens/chat/chat_screen1.dart';
+import 'package:tchat/screens/chat/chat_screen.dart';
 import 'package:tchat/screens/user_friend/user_profile_screen.dart';
 
 
@@ -43,7 +43,6 @@ class NotificationController {
   // }
 
   intiSetup() async {
-    print('NotificationController intiSetup');
     _firebaseMessaging = FirebaseMessaging.instance;
      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     setupLocalNotification();
@@ -239,7 +238,7 @@ class NotificationController {
 
   }
   _getUserInfoAndOpenScreen(String userID, int type) async {
-    var meAccount =await tChatBaseScreen.getAccountFromFloorDB();
+    var meAccount =await tChatBaseScreen.getAccountDB();
     await FirebaseFirestore.instance.collection(FirebaseService.firebaseUsers).doc(userID).get().then((value){
       if(value.data()!=null){
         var json = value.data() as  Map<String, dynamic>;
@@ -253,7 +252,7 @@ class NotificationController {
         if(user.id!.isNotEmpty){
           if(type==1){
             //Navigator.push(context!,MaterialPageRoute(builder: (context) => ChatScreen1(meAccount: meAccount, toUser: user,)));
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatScreen1(meAccount: meAccount, toUser: user,)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatScreen(meAccount: meAccount, toUser: user,)));
             //tChatBaseScreen.addScreen(ChatScreen1(meAccount: meAccount, toUser: user,));
           }
           if(type==2){

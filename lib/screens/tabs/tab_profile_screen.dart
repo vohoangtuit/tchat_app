@@ -111,7 +111,8 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with Auto
         CustomRowSetting(
           onPressed: () {
             // floorDB.messageDao.deleteAllMessage();
-             floorDB.lastMessageDao!.deleteAllLastMessage();
+            messageBloc.deleteAllLastMessage();
+           // userBloc.
             // // todo handle clear on firebase
             // ProviderController(context).setReloadLastMessage(true);
           },
@@ -130,7 +131,7 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with Auto
     );
   }
   _getData()async{
-    initConfig();
+  //  initStore();
    // await getAccountFromFloorDB();
   }
 

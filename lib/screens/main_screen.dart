@@ -8,6 +8,7 @@ import 'package:tchat/screens/tabs/tab_contact_screen.dart';
 import 'package:tchat/screens/tabs/tab_last_message_screen.dart';
 import 'package:tchat/screens/tabs/tab_profile_screen.dart';
 import 'package:tchat/screens/tabs/tab_timeline_screen.dart';
+import 'package:tchat/shared_preferences/shared_preference.dart';
 import 'package:tchat/widgets/toolbar_main.dart';
 
 class MainScreen extends StatefulWidget {
@@ -85,11 +86,11 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
   void initState() {
     // TODO: implement initState
     super.initState();
-
     _init();
 
   }
   _init()async{
+   // SharedPre.getInstance();
     tabController = TabController(length: 4, vsync: this);
     tabController!.addListener(handleTabSelection);
     _registerFBToken();

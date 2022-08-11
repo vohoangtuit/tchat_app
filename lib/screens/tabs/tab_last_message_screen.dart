@@ -3,7 +3,6 @@ import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/chat/chat_screen.dart';
-import 'package:tchat/screens/chat/chat_screen1.dart';
 import 'package:tchat/shared_preferences/shared_preference.dart';
 import 'package:tchat/widgets/items/item_last_message.dart';
 
@@ -52,25 +51,23 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
 
   }
   _init()async{
-    //log('profile ${widget.profile.toString()}');
-    await initConfig();
+    SharedPre.getInstance();
      await SharedPre.getStringKey(SharedPre.sharedPreLanguageCode).then((value) {
       setState(() {
         languageCode =value!;
       });
     });
- //    log('languageCode $languageCode');
-   await _getListLastMessage();
+    getData();
   }
-  _getListLastMessage() async{
-    floorDB.lastMessageDao!.getSingleLastMessage(widget.profile.id!).then((value) {
-      listMessage.clear();
+  getData()async{
+   // log('${getNameScreenOpening()} getData()');
+    await messageBloc.getLastMessage(widget.profile.id!).then((value){
       if(mounted){
         setState(() {
+          listMessage.clear();
           listMessage.addAll(value);
-        });}
-     // log('listMessage ${listMessage.toString()}');
-
+        });
+      }
     });
   }
   _gotoChat(LastMessageModel message){
@@ -79,12 +76,12 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
     toUser.fullName =message.nameReceiver;
     toUser.photoUrl =message.photoReceiver;
     toUser.cover ="";
-    addScreen(ChatScreen1(meAccount: widget.profile, toUser: toUser));
+    addScreen(ChatScreen(meAccount: widget.profile, toUser: toUser));
   }
   @override
   void onResume() {
     super.onResume();
-    _getListLastMessage();
+    getData();
   }
 
 }

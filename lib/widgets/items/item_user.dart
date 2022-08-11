@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/models/user_model.dart';
-import 'package:tchat/screens/chat_page.dart';
 import 'package:tchat/utilities/keyboard_utils.dart';
 
 class ItemUser extends StatefulWidget {

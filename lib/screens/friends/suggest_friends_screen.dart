@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/chat/chat_screen.dart';
-import 'package:tchat/screens/chat/chat_screen1.dart';
 import 'package:tchat/widgets/general_widget.dart';
 import 'package:tchat/widgets/items/item_user.dart';
 
@@ -31,7 +30,6 @@ class _SuggestFriendsScreenState extends TChatBaseScreen<SuggestFriendsScreen> {
     getData();
   }
   getData() async {
-   await initConfig();
    firebaseService.getAllUser().then((value){
      setState(() {
        users =value;
@@ -50,7 +48,7 @@ class _SuggestFriendsScreenState extends TChatBaseScreen<SuggestFriendsScreen> {
             padding: const EdgeInsets.all(4.0),
             itemCount: listUser.length,
             itemBuilder: (context, index) => ItemUser(me: widget.profile, user: listUser[index],onSelected: (){
-              addScreen(ChatScreen1(meAccount: widget.profile, toUser: listUser[index]));
+              addScreen(ChatScreen(meAccount: widget.profile, toUser: listUser[index]));
             },),
           );
         }else{

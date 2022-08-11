@@ -17,14 +17,5 @@ class _TabContactScreenState extends TChatBaseScreen<TabContactScreen> {
     );
   }
 
-  @override
-  void initAll() {
-
-    super.initAll();
-    log('TabContact initAll');
-    if(account.id!=null){
-      log('TabContact account.id ${account.id}');
-    }
-  }
 
 }

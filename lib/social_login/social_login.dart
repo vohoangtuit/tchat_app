@@ -91,7 +91,7 @@ class SocialLoin{
       final UserCredential authResult =
       await _auth.signInWithCredential(credential);
       final User? user = authResult.user;
-      print('user $user');
+    //  print('user $user');
      // context!.showLoading(false);
       if(user!=null){
      //   print("_user email: " + user.email!);

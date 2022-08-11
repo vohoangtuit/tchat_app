@@ -4,28 +4,29 @@ import 'package:tchat/database/user_dao.dart';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:tchat/models/user_model.dart';
+
 class FloorDatabase {
-   FloorDatabase? _instance;
-   TChatDatabase? database;
-   UserDao? userDao;
-   LastMessageDao? lastMessageDao;
-   Future<FloorDatabase> getInstance() async {
-    _instance??=FloorDatabase();
-    database ??= await $FloorTChatDatabase.databaseBuilder('TChatApp.db').build();
+  static FloorDatabase? _instance;
+  static TChatDatabase? database;
+  UserDao? userDao;
+  LastMessageDao? messageDao;
+
+  Future<FloorDatabase> getInstance() async {
+    // print('FloorDatabase getInstance()');
+    _instance ??= FloorDatabase();
+    database ??=
+        await $FloorTChatDatabase.databaseBuilder('TChatApp.db').build();
     userDao ??= database!.userDao;
-    lastMessageDao ??= database!.lastMessageDao;
+    messageDao ??= database!.lastMessageDao;
+    // print('FloorDatabase getInstance() 1');
     return _instance!;
   }
-   _init()async{
+
+  init() async {
+    //  print('FloorDatabase init()');
     database = await $FloorTChatDatabase.databaseBuilder('TChatApp.db').build();
     userDao = database!.userDao;
+    messageDao = database!.lastMessageDao;
+    // print('FloorDatabase init() 1');
   }
-  // user() =>userDao;
-  // lastMessage() =>lastMessageDao;
-  // Future<UserModel?>findUserById(String id)async{
-  //  return await userDao!.findUserById(id);
-  // }
-  // insertUser(UserModel user)async{
-  //   await userDao!.insertUser(user);
-  // }
 }

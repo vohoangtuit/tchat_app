@@ -11,7 +11,7 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
   String currentUrl = '';
   Resume resume =  Resume();
   bool _isPaused = false;
-  LoadingView? loadingView;
+  LoadingView loadingView =LoadingView();
   // todo check status screen
   void onResume() {}
   void onReady() {}
@@ -19,8 +19,9 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
 
   @override
   void initState() {
-    initAll();
+
     super.initState();
+    initAll();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) => onReady());
   }
@@ -40,25 +41,20 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
       }
     }
   }
-  void initAll(){
-    loadingView = LoadingView();
-  }
+  void initAll(){}
   void disposeAll(){
     dismissLoading();
   }
   void dismissLoading() {
-    if (loadingView != null) {
-      loadingView!.hide();
-    }
+    loadingView.hide();
   }
   void showLoading(bool show) {
-    loadingView ??= LoadingView();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(mounted){
         if (show) {
-          loadingView!.show(context);
+          loadingView.show(context);
         } else {
-          loadingView!.hide();
+          loadingView.hide();
         }
       }
     });
@@ -82,7 +78,7 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
   String getNameScreenOpening(){
     return context.widget.toString();
   }
-  void log(String data){
+   log(String data){
     if (kDebugMode) {
       print('TChat::::: $data');
     }

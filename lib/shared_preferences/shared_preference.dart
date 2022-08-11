@@ -24,7 +24,6 @@ class SharedPre {
     return _instance!;
   }
 
-
   static Future<bool> saveBool(String key,bool value) async{
     //SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _preferences ??= await SharedPreferences.getInstance();

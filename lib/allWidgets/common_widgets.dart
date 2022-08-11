@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tchat/allConstants/color_constants.dart';
-import 'package:tchat/allConstants/size_constants.dart';
 
 Widget errorContainer() {
   return Container(
     clipBehavior: Clip.hardEdge,
     child: Image.asset(
       'assets/images/img_not_available.jpeg',
-      height: Sizes.dimen_200,
-      width: Sizes.dimen_200,
+      height: 200,
+      width: 200,
     ),
   );
 }
@@ -18,8 +17,8 @@ Widget chatImage({required String imageSrc, required Function onTap}) {
     onPressed: onTap(),
     child: Image.network(
       imageSrc,
-      width: Sizes.dimen_200,
-      height: Sizes.dimen_200,
+      width: 200,
+      height: 200,
       fit: BoxFit.cover,
       loadingBuilder:
           (BuildContext ctx, Widget child, ImageChunkEvent? loadingProgress) {
@@ -27,10 +26,10 @@ Widget chatImage({required String imageSrc, required Function onTap}) {
         return Container(
           decoration: BoxDecoration(
             color: AppColors.greyColor2,
-            borderRadius: BorderRadius.circular(Sizes.dimen_10),
+            borderRadius: BorderRadius.circular(10),
           ),
-          width: Sizes.dimen_200,
-          height: Sizes.dimen_200,
+          width: 200,
+          height: 200,
           child: Center(
             child: CircularProgressIndicator(
               color: AppColors.burgundy,
@@ -54,16 +53,16 @@ Widget messageBubble(
     Color? color,
     Color? textColor}) {
   return Container(
-    padding: const EdgeInsets.all(Sizes.dimen_10),
+    padding: const EdgeInsets.all(10),
     margin: margin,
-    width: Sizes.dimen_200,
+    width: 200,
     decoration: BoxDecoration(
       color: color,
-      borderRadius: BorderRadius.circular(Sizes.dimen_10),
+      borderRadius: BorderRadius.circular(10),
     ),
     child: Text(
       chatContent,
-      style: TextStyle(fontSize: Sizes.dimen_16, color: textColor),
+      style: TextStyle(fontSize: 16, color: textColor),
     ),
   );
 }

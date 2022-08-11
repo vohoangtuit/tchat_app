@@ -4,7 +4,7 @@ import 'package:tchat/dialogs/dialog_controller.dart';
 import 'package:tchat/models/friends_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
-import 'package:tchat/screens/chat/chat_screen1.dart';
+import 'package:tchat/screens/chat/chat_screen.dart';
 import 'package:tchat/screens/tabs/profile/profile_photos.dart';
 import 'package:tchat/screens/tabs/profile/profile_timeline.dart';
 import 'package:tchat/utilities/const.dart';
@@ -202,7 +202,7 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
                   colorText: Colors.blue,
                   sizeText: 13.0,
                   onPressed: () {
-                    addScreen(ChatScreen1(meAccount: widget.myProfile, toUser: widget.user));
+                    addScreen(ChatScreen(meAccount: widget.myProfile, toUser: widget.user));
                   },
                 ),
                 CustomButtonWithTitle(
@@ -277,7 +277,7 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
           child: RaisedButton(
             onPressed: () {
              // openScreenWithName(ChatScreen(user));
-              addScreen(ChatScreen1(meAccount: widget.myProfile, toUser: widget.user));
+              addScreen(ChatScreen(meAccount: widget.myProfile, toUser: widget.user));
             },
             color: Colors.white,
             shape: RoundedRectangleBorder(

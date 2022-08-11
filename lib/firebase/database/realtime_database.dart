@@ -8,7 +8,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/user_model.dart';
-import 'package:tchat/providers/chat_provider.dart';
 
 class RealTimeDatabase extends  ChangeNotifier{
   String tagTChatApp = 'TChatApp';

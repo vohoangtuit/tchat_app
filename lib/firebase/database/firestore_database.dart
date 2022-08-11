@@ -128,7 +128,6 @@ class FirebaseService{
          addUser(user);
        }
      });
-
   }
   addUser(UserModel user)async{
     String time =DateTime.now().millisecondsSinceEpoch.toString();
