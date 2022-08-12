@@ -44,7 +44,7 @@ const int choosePictureViewPicture =3;
 
 //
 const String pathAvatarNotAvailable ='assets/images/avatar_not_available.png';
-const String PATH_COVER_NOT_AVAILABLE ='assets/images/cover.png';
+const String pathCoverNotAvailable ='assets/images/cover.png';
 
 
 // todo route screen opening, using for notification

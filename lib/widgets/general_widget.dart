@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
@@ -97,5 +99,38 @@ CachedNetworkImage cachedImage (String url,double width, double height){
     width: width,
     height: height,
     fit: BoxFit.cover,
+  );
+}
+InputDecoration inputDecoratio(String hintText){
+  return InputDecoration.collapsed(
+    hintText: hintText,
+    border: InputBorder.none,
+  );
+}
+Container iconEditInfo(){
+  return Container(
+      alignment: Alignment.centerRight,
+      child: Image.asset('assets/icons/ic_pen_gray.png',width: 15,height: 15,)
+  );
+}
+
+Image avatarNotAvailable(double size){
+  return Image.asset(
+    pathAvatarNotAvailable,
+    width: size,height: size,
+  );
+}
+
+Material loadFileMaterial(File file, double width, double height){
+  return Material(
+    borderRadius:
+    const BorderRadius.all(Radius.circular(45.0)),
+    clipBehavior: Clip.hardEdge,
+    child: Image.file(
+      file,
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+    ),
   );
 }

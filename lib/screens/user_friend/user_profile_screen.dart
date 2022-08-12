@@ -8,6 +8,7 @@ import 'package:tchat/screens/chat/chat_screen.dart';
 import 'package:tchat/screens/tabs/profile/profile_photos.dart';
 import 'package:tchat/screens/tabs/profile/profile_timeline.dart';
 import 'package:tchat/utilities/const.dart';
+import 'package:tchat/utilities/utils.dart';
 import 'package:tchat/widgets/custom_button_with_title.dart';
 import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/general_widget.dart';
@@ -111,10 +112,10 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
                         ),
                       ),
                       // ignore: null_aware_in_condition
-                      background: widget.user.cover!.isEmpty
+                      background: Utils.isNotEmpty(widget.user.cover!)??false
                           ? InkWell(
                         child: Image.asset(
-                          PATH_COVER_NOT_AVAILABLE,
+                          pathCoverNotAvailable,
                           fit: BoxFit.cover,
                         ),
                         onTap: () {

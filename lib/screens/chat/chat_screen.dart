@@ -330,14 +330,10 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
     await _getProfileUser();
   }
   _getProfileUser()async{
-    await firebaseService.getInfoUserProfile(widget.toUser.id!).then((value) {
-      if (value.data() != null) {
-        Map<String, dynamic> json = value.data() as  Map<String, dynamic>;
-        UserModel userModel = UserModel.fromJson(json);
+    await getProfileFromFirebase(widget.toUser.id!,saveLocal: false).then((value){
+      if(mounted){
         setState(() {
-          if(mounted){
-           toUser = userModel;
-          }
+          toUser = value;
         });
       }
     });
@@ -440,7 +436,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
               message.type =change.data()[messageType];
               message.status =change.data()[messageStatus];
             });
-           // log('message ${message.toString()}');
+            log('message ${message.toString()}');
             if(message.idReceiver!=null){
               messageBloc.updateLastMessageByID(message);
             }else{

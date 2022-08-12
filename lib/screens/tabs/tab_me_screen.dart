@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/account/my_profile_screen.dart';
+import 'package:tchat/screens/account/update_account_screen.dart';
 import 'package:tchat/screens/friends/suggest_friends_screen.dart';
 import 'package:tchat/utilities/const.dart';
 import 'package:tchat/widgets/custom_row_setting.dart';
@@ -9,15 +10,15 @@ import 'package:tchat/widgets/general_widget.dart';
 
 import '../../widgets/custom_text.dart';
 
-class TabProfileScreen extends StatefulWidget {
-  final UserModel profile;
-  const TabProfileScreen({Key? key, required this.profile}) : super(key: key);
+class TabMeScreen extends StatefulWidget {
+   UserModel profile;
+   TabMeScreen({Key? key, required this.profile}) : super(key: key);
 
   @override
-  State<TabProfileScreen> createState() => _TabProfileScreenState();
+  State<TabMeScreen> createState() => _TabMeScreenState();
 }
 
-class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with AutomaticKeepAliveClientMixin{
+class _TabMeScreenState extends TChatBaseScreen<TabMeScreen> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -26,8 +27,7 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with Auto
   @override
   void initState() {
     super.initState();
-
-    _getData();
+    _init();
   }
 
   Widget _viewContent(){
@@ -86,7 +86,7 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with Auto
         ),
       ),
       onTap: () {
-        addScreen(const MyProfileScreen());
+        addScreen( MyProfileScreen(profile: widget.profile,));
       },
     );
   }
@@ -97,6 +97,12 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with Auto
           onPressed: () {
             // Navigator.pushNamed(context, TAG_UPDATE_ACCOUNT,
             //     arguments: account);
+            addScreen(UpdateAccountScreen(account:widget.profile,reload: (isUpdate){
+              log('isUpdate $isUpdate');
+              if(isUpdate){
+                _getDataLocal();
+              }
+            },));
           },
           title: 'Update Account',
           icon: 'assets/icons/ic_edit_blue.png',
@@ -130,11 +136,28 @@ class _TabProfileScreenState extends TChatBaseScreen<TabProfileScreen> with Auto
       ],
     );
   }
-  _getData()async{
-  //  initStore();
-   // await getAccountFromFloorDB();
+  _init(){
+    _getDataFireBase();
   }
-
+  _getDataFireBase()async{
+    getProfileFromFirebase(widget.profile.id!,saveLocal: true).then((value){
+      if(mounted){
+        setState(() {
+          widget.profile =value;
+        });
+      }
+    });
+  }
+  _getDataLocal()async{
+    getAccountDB().then((value){
+      if(mounted){
+        setState(() {
+          widget.profile =value;
+        });
+      }
+    });
+   // log(' widget.profile ${ widget.profile.toString()}');
+  }
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;

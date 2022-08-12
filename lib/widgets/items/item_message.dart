@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tchat/allConstants/color_constants.dart';
-import 'package:tchat/allWidgets/common_widgets.dart';
+import 'package:tchat/constants/color_constants.dart';
+import 'package:tchat/widgets/common_widgets.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/user_model.dart';
 

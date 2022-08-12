@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tchat/allConstants/color_constants.dart';
+import 'package:tchat/constants/color_constants.dart';
 
 Widget errorContainer() {
   return Container(

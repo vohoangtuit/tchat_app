@@ -58,6 +58,7 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
       });
     });
     getData();
+    //log('tab ${widget.profile.toString()}');
   }
   getData()async{
    // log('${getNameScreenOpening()} getData()');

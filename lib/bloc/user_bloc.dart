@@ -20,6 +20,13 @@ class UserBloc extends BaseBloc{
     print('UserBloc login');
    await firebaseService.userLogin(user);
   }
+  Future<UserModel?> getProfileFromFirebase(String uid)async{
+    UserModel? account;
+    await firebaseService.getProfile(uid).then((value){
+      account =value;
+    });
+    return account;
+  }
   Future<void> getAccountStream() async {
     UserModel? model;
     await floorDB.getInstance();
@@ -44,6 +51,7 @@ class UserBloc extends BaseBloc{
     }
     return account;
   }
+
   Future<void> saveAccount(UserModel user) async {
     await SharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
     await floorDB.getInstance();
@@ -56,9 +64,14 @@ class UserBloc extends BaseBloc{
     });
   }
   Future<void>updateUserDatabase(UserModel user)async{
+    String time =DateTime.now().millisecondsSinceEpoch.toString();
+    user.lastUpdated=time;
+    user.lastLogin=time;
+    user.isLogin =true;
     await SharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
     await floorDB.getInstance();
-    floorDB.userDao!.updateUser(user);
+    await floorDB.userDao!.updateUser(user);
+    await firebaseService.updateUser(user);
   }
 
 }

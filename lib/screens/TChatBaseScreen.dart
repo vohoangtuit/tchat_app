@@ -77,6 +77,22 @@ abstract class TChatBaseScreen<T extends StatefulWidget>
     });
     return account;
   }
+  Future<UserModel> getProfileFromFirebase(String uid,{required bool saveLocal} ) async {
+    UserModel? userModel;
+    await userBloc.getProfileFromFirebase(uid).then((value){
+      userModel = value;
+    });
+    if(saveLocal){
+      if(userModel!=null){
+        saveAccountToDB(userModel!);
+      }
+    }
+    return userModel!;
+  }
+   updateUserAccount(UserModel user)async{
+
+    await  userBloc.updateUserDatabase(user);
+  }
 
    logOut() async {
     await SharedPre.clearData();

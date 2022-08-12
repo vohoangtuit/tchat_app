@@ -101,6 +101,30 @@ class UserModel{
     latitude = json[userLatitude] ?? 0;
     longitude = json[userLongitude] ?? 0;
   }
+  UserModel.fromLogin(UserModel user){
+    id = user.id;
+    email = user.email ?? "";
+    userName = user.userName ?? "";
+    fullName = user.fullName ?? "";
+    birthday = user.birthday ?? "";
+    gender = user.gender ?? 0;
+    createdAt =  "";
+    photoUrl = user.photoUrl ?? "";
+    cover = user.cover ?? "";
+    statusAccount =  0;
+    phone = user.phone ?? "";
+    lastUpdated = "";
+    lastLogin = "";
+    deviceToken =  "";
+    isLogin = true;
+    address = user.address ?? "";
+    isOnline =true;
+    accountType = user.accountType ?? 0;
+    isOnlineChat =  false;
+    allowSearch =true;
+    latitude =  0;
+    longitude =  0;
+  }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data[userId] = id;

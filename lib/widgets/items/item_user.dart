@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tchat/allConstants/size_constants.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/utilities/keyboard_utils.dart';
 
@@ -28,7 +27,7 @@ class _ItemUserState extends State<ItemUser> {
       child: ListTile(
         leading: widget.user.photoUrl!.isNotEmpty
             ? ClipRRect(
-          borderRadius: BorderRadius.circular(Sizes.dimen_30),
+          borderRadius: BorderRadius.circular(30),
           child: Image.network(
             widget.user.photoUrl!,
             fit: BoxFit.cover,

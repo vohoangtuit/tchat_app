@@ -6,15 +6,14 @@ import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/tabs/tab_contact_screen.dart';
 import 'package:tchat/screens/tabs/tab_last_message_screen.dart';
-import 'package:tchat/screens/tabs/tab_profile_screen.dart';
+import 'package:tchat/screens/tabs/tab_me_screen.dart';
 import 'package:tchat/screens/tabs/tab_timeline_screen.dart';
-import 'package:tchat/shared_preferences/shared_preference.dart';
 import 'package:tchat/widgets/toolbar_main.dart';
 
 class MainScreen extends StatefulWidget {
   final bool synData;
-  final UserModel profile;
-  const MainScreen({
+   UserModel profile;
+   MainScreen({
     Key? key,
     required this.synData,
     required this.profile
@@ -51,7 +50,7 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
                             TabLastMessageScreen(profile: widget.profile),
                             TabContactScreen(),
                             TabTimeLineScreen(),
-                            TabProfileScreen(profile: widget.profile)
+                            TabMeScreen(profile: widget.profile)
                           ],
                         ),
                         bottomNavigationBar: Material(
@@ -94,6 +93,16 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
     tabController = TabController(length: 4, vsync: this);
     tabController!.addListener(handleTabSelection);
     _registerFBToken();
+
+   await getProfileFromFirebase(widget.profile.id!,saveLocal: true).then((value){
+      if(mounted){
+        setState(() {
+          widget.profile =value;
+        });
+       // log('main ${widget.profile.toString()}');
+      }
+    });
+
     NotificationController(tChatBaseScreen: this,context: context).intiSetup();
   }
   List<Tab> listTab() {

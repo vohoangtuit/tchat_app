@@ -66,6 +66,15 @@ class FirebaseService{
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection(firebaseUsers).doc(id).get();
     return documentSnapshot;
   }
+  Future<UserModel> getProfile(String id)async{
+    DocumentSnapshot value = await FirebaseFirestore.instance.collection(firebaseUsers).doc(id).get();
+   late UserModel userModel;
+    if(value.data()!=null){
+    var json = value.data() as  Map<String, dynamic>;
+     userModel = UserModel.fromJson(json);
+    }
+    return userModel;
+  }
   Future<DocumentSnapshot> checkUserIsFriend(String idMe,String idFriend)async{
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection(firebaseFriends).doc(idMe).collection(idMe).doc(idFriend).get();
@@ -142,10 +151,10 @@ class FirebaseService{
 
   }
   updateUser(UserModel user)async{
-    String time =DateTime.now().millisecondsSinceEpoch.toString();
-    user.lastUpdated=time;
-    user.lastLogin=time;
-    user.isLogin =true;
+    // String time =DateTime.now().millisecondsSinceEpoch.toString();
+    // user.lastUpdated=time;
+    // user.lastLogin=time;
+    // user.isLogin =true;
     firebaseFirestore.collection(firebaseUsers).doc(user.id).update(user.toJson()).then((data) async {
     }).catchError((err) {
       log('FirebaseDataFunc Error updateUser ${err.toString()}');

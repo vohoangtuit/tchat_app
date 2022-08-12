@@ -44,8 +44,7 @@ class MyRouter {
 
       case myRouterUpdateAccount:
         var user = settings.arguments as UserModel;
-        return MaterialPageRoute(
-            settings: settings, builder: (_) => UpdateAccountScreen(account:user));
+       // return MaterialPageRoute(settings: settings, builder: (_) => UpdateAccountScreen(account:user));
     }
     return null;
 
