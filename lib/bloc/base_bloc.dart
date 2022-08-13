@@ -1,4 +1,4 @@
-import 'package:tchat/config/base_config.dart';
+import 'package:tchat/bloc/base_config.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 
 class BaseBloc extends BaseConfig{

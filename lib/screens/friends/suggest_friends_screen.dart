@@ -42,7 +42,7 @@ class _SuggestFriendsScreenState extends TChatBaseScreen<SuggestFriendsScreen> {
       builder: (context, snapshot) {
         if(snapshot.hasData){
           listUser.clear();
-          listUser.addAll(UserModel().listFromSnapshot(snapshot.data!.docs));
+          listUser.addAll(UserModel.listFromSnapshot(snapshot.data!.docs));
           return ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.all(4.0),

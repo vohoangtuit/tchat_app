@@ -27,12 +27,12 @@ class FirebaseService{
   }
 
 
-  String getStringPathAvatar(String uid){// user id
+  static String getStringPathAvatar(String uid){// user id
     //String fileName =DateTime.now().millisecondsSinceEpoch.toString();
     String avatar_ ='avatar_';// todo gán cứng name file, lần sau update ghi đè, ko cần xóa file củ
     return '/$uid/$storeAvatar/$avatar_';
   }
-  String getStringPathCover(String uid){// user id
+  static String getStringPathCover(String uid){// user id
     // String fileName =DateTime.now().millisecondsSinceEpoch.toString();
     String cover_ ='cover_';
     return '/$uid/$storeCover/$cover_';
@@ -129,12 +129,16 @@ class FirebaseService{
     return  writeBatch.commit();
     // return  writeBatch;
   }
-   userLogin(UserModel user)async{
+   userLogin(UserModel user,ValueChanged<UserModel> valueUser)async{
      firebaseFirestore.collection(firebaseUsers).doc(user.id).get().then((value)  {
-       if(value.exists){
-         updateUser(user);
+       if(value.exists){// todo get data from firebase
+         var json = value.data() as  Map<String, dynamic>;
+         user =UserModel.fromJson(json);
+         valueUser(user);
+         //updateUser(user);
        }else{
          addUser(user);
+         valueUser(user);
        }
      });
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tchat/general/base_dialog.dart';
-import 'package:tchat/utilities/const.dart';
+import 'package:tchat/constants/const.dart';
 import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/general_widget.dart';
 
@@ -30,7 +30,7 @@ class DialogSelectPictures extends BaseDialog{
           padding: const EdgeInsets.only(left: 10,top:10,right: 10,bottom: 0),
           child:Column(
             children: [
-              Text(type==pictureTypeAvatar?'Avatar':'Cover',style: textGraysSmall(),),
+              Text(type==Const.pictureTypeAvatar?'Avatar':'Cover',style: textGraysSmall(),),
              spaceHeight(10),
 
               const Divider(height: 0.5,),
@@ -43,13 +43,13 @@ class DialogSelectPictures extends BaseDialog{
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(type==pictureTypeAvatar?'View profile picture':'View full cover',style: textBlackMedium(),),
+                        Text(type==Const.pictureTypeAvatar?'View profile picture':'View full cover',style: textBlackMedium(),),
                       ],
                     )),
                   ],
                 ),
                 onTap: (){
-                  callback(type,choosePictureViewPicture);
+                  callback(type,Const.choosePictureViewPicture);
                   dismiss();
                 },
               ),
@@ -70,7 +70,7 @@ class DialogSelectPictures extends BaseDialog{
                     ],
                   ),
                 onTap: (){
-                    callback(type,choosePictureCamera);
+                    callback(type,Const.choosePictureCamera);
                     dismiss();
                 },
               ),
@@ -91,7 +91,7 @@ class DialogSelectPictures extends BaseDialog{
                 ],
               ),
                 onTap: (){
-                  callback(type,choosePictureLibrary);
+                  callback(type,Const.choosePictureLibrary);
                   dismiss();
                 },
               ),

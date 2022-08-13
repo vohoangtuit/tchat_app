@@ -12,7 +12,7 @@ import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/user_friend/user_profile_screen.dart';
-import 'package:tchat/utilities/const.dart';
+import 'package:tchat/constants/const.dart';
 import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/general_widget.dart';
 import 'package:tchat/widgets/items/item_message.dart';
@@ -420,21 +420,21 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
               // }
               // print('groupChatId: $groupChatId');
              //log('change ${change.toString()}');
-              if(widget.meAccount.id!.contains(change.data()[messageIdSender])){// todo: is me
+              if(widget.meAccount.id!.contains(change.data()[Const.messageIdSender])){// todo: is me
                 //  print('message is me');
-                message.idReceiver =change.data()[messageIdReceiver];
-                message.nameReceiver =change.data()[messageNameReceiver];
-                message.photoReceiver =change.data()[messagePhotoReceiver];
+                message.idReceiver =change.data()[Const.messageIdReceiver];
+                message.nameReceiver =change.data()[Const.messageNameReceiver];
+                message.photoReceiver =change.data()[Const.messagePhotoReceiver];
               }else{
                 //print('message not me');
                 message.idReceiver =widget.toUser.id;
                 message.nameReceiver =widget.toUser.fullName;
                 message.photoReceiver =widget.toUser.photoUrl;
               }
-              message.timestamp =change.data()[messageTimestamp];
-              message.content =change.data()[messageContent];
-              message.type =change.data()[messageType];
-              message.status =change.data()[messageStatus];
+              message.timestamp =change.data()[Const.messageTimestamp];
+              message.content =change.data()[Const.messageContent];
+              message.type =change.data()[Const.messageType];
+              message.status =change.data()[Const.messageStatus];
             });
             log('message ${message.toString()}');
             if(message.idReceiver!=null){

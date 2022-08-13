@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:tchat/database/floor_init.dart';
-import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
-import 'package:tchat/screens/account/login_screen.dart';
 import 'package:tchat/screens/main_screen.dart';
-import 'package:tchat/shared_preferences/shared_preference.dart';
-import 'package:tchat/utilities/utils.dart';
+import 'package:tchat/utils/utils.dart';
 import 'package:tchat/widgets/general_widget.dart';
 
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tchat/utilities/colors.dart';
-import 'package:tchat/utilities/widget_size.dart';
+import 'package:tchat/utils/colors.dart';
+
+import '../utils/widget_size.dart';
+
 
 
 // todo custom text app default

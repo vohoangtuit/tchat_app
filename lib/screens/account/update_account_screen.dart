@@ -1,17 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:tchat/constants/const.dart';
+import 'package:tchat/dialogs/dialog_controller.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
-import 'package:tchat/utilities/format_datetime.dart';
 import 'package:tchat/widgets/base_button.dart';
+import 'package:tchat/widgets/cached_network_image.dart';
 import 'package:tchat/widgets/general_widget.dart';
 
-import '../../utilities/colors.dart';
+import '../../utils/format_datetime.dart';
+
 
 class UpdateAccountScreen extends StatefulWidget {
    UserModel account;
-   final ValueChanged<bool>?reload;
+   final ValueChanged<bool>reload;
    UpdateAccountScreen({Key? key, required this.account,required this.reload}) : super(key: key);
 
   @override
@@ -44,7 +47,7 @@ class _UpdateAccountScreenState extends TChatBaseScreen<UpdateAccountScreen> {
                   Container(
                     margin: const EdgeInsets.only(top: 50.0, bottom: 50.0),
                     child: BaseButton(title: 'Update',onPressed: (){
-                      handleUpdateData();
+                      _handleUpdateData();
                     },),
                   ),
                 ],
@@ -83,7 +86,12 @@ class _UpdateAccountScreenState extends TChatBaseScreen<UpdateAccountScreen> {
                         children: [
                           InkWell(
                             onTap: (){
-                             // DialogController(context).showDialogRequestUpdatePicture(dialog, PICTURE_TYPE_AVATAR, viewDialogPicture);
+                             // DialogController(context).showDialogRequestUpdatePicture(baseDialog, Const.pictureTypeAvatar, viewDialogPicture );
+                              DialogController(context).showDialogRequestUpdatePicture(baseDialog,  Const.pictureTypeAvatar, (type, chooseFrom) => {
+                                viewDialogPicture(type,chooseFrom,(){
+                                  _reload();
+                                })
+                              });
                             },
                             child: Stack(
                               children: <Widget>[
@@ -91,7 +99,8 @@ class _UpdateAccountScreenState extends TChatBaseScreen<UpdateAccountScreen> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(45.0)),
                                   clipBehavior: Clip.hardEdge,
-                                  child: cachedImage(widget.account.photoUrl!,70.0,70.0),
+                                  //child: cachedImage(widget.account.photoUrl!,70.0,70.0),
+                                  child: cachedAvatar(context,widget.account.photoUrl!,70.0),
                                 ) : avatarNotAvailable(70.0)) : loadFileMaterial(avatarImageFile!,70.0,70.0),
                                 Container(
                                   alignment: Alignment.bottomRight,
@@ -125,7 +134,7 @@ class _UpdateAccountScreenState extends TChatBaseScreen<UpdateAccountScreen> {
                                     children: [
                                       Expanded(
                                         child: TextField(
-                                          decoration: inputDecoratio('Full Name'),
+                                          decoration: inputDecoration('Full Name'),
                                           controller: controllerFullName,
                                           onChanged: (value) {
                                             widget.account.fullName = value;
@@ -237,7 +246,7 @@ class _UpdateAccountScreenState extends TChatBaseScreen<UpdateAccountScreen> {
       });
     }
   }
-   handleUpdateData()async {
+   _handleUpdateData()async {
     if(controllerFullName.text.isEmpty){
       return;
     }
@@ -248,9 +257,19 @@ class _UpdateAccountScreenState extends TChatBaseScreen<UpdateAccountScreen> {
       isLoading = true;
     });
     await  updateUserAccount(widget.account);
-    widget.reload!(true);
+    widget.reload(true);
     setState(() {
       isLoading = false;
+    });
+  }
+  _reload()async{
+    await getAccountDB().then((value) => {
+      if(mounted){
+        setState((){
+          widget.account =value;
+        })
+      },
+    widget.reload(true)
     });
   }
 }

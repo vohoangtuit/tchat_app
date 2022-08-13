@@ -6,7 +6,7 @@ import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tchat/widgets/custom_text.dart';
 
-import '../utilities/const.dart';
+import '../constants/const.dart';
 AppBar appBarWithTitle(BuildContext context, String title) {
   return AppBar(
     title: Text(title, style: textWhiteTitle()),
@@ -81,27 +81,8 @@ Widget loadingCenter() {
     ),
   );
 }
-CachedNetworkImage cachedImage (String url,double width, double height){
-  return CachedNetworkImage(
-    placeholder: (context, url) =>
-        Container(
-          width: width,
-          height: height,
-          padding: const EdgeInsets.all(20.0),
-          child: CircularProgressIndicator(
-            strokeWidth: 2.0,
-            valueColor:
-            AlwaysStoppedAnimation<Color>(
-                themeColor),
-          ),
-        ),
-    imageUrl: url,
-    width: width,
-    height: height,
-    fit: BoxFit.cover,
-  );
-}
-InputDecoration inputDecoratio(String hintText){
+
+InputDecoration inputDecoration(String hintText){
   return InputDecoration.collapsed(
     hintText: hintText,
     border: InputBorder.none,
@@ -113,10 +94,20 @@ Container iconEditInfo(){
       child: Image.asset('assets/icons/ic_pen_gray.png',width: 15,height: 15,)
   );
 }
-
+Widget loadingCenterSmall() {
+  return const Center(
+    child: SizedBox(
+      height: 16,
+      width: 16,
+      child: CircularProgressIndicator(
+        strokeWidth: 1.5,
+      ),
+    ),
+  );
+}
 Image avatarNotAvailable(double size){
   return Image.asset(
-    pathAvatarNotAvailable,
+    Const.pathAvatarNotAvailable,
     width: size,height: size,
   );
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
-import 'package:tchat/utilities/const.dart';
-import 'package:tchat/utilities/time_ago.dart';
+import 'package:tchat/constants/const.dart';
 import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/general_widget.dart';
+
+import '../../utils/time_ago.dart';
+import '../cached_network_image.dart';
+
 
 class ItemLastMessage extends StatefulWidget {
  final UserModel profile;
@@ -35,11 +38,12 @@ class _ItemLastMessageState extends State<ItemLastMessage> {
                     // child:  CircleAvatar(radius: 30.0, backgroundImage: message.photoReceiver.isEmpty ? AssetImage(PATH_AVATAR_NOT_AVAILABLE):NetworkImage(message.photoReceiver), backgroundColor: Colors.transparent,),
                     width: 45,height: 45,
                     // child:  CircleAvatar(radius: 30.0, backgroundImage: message.photoReceiver.isEmpty ? AssetImage(PATH_AVATAR_NOT_AVAILABLE):NetworkImage(message.photoReceiver), backgroundColor: Colors.transparent,),
-                    child: widget.message.photoReceiver!.isEmpty?const CircleAvatar(radius: 30.0,backgroundImage:AssetImage(pathAvatarNotAvailable)):Material(
+                    child: widget.message.photoReceiver!.isEmpty?const CircleAvatar(radius: 30.0,backgroundImage:AssetImage(Const.pathAvatarNotAvailable)):Material(
                       borderRadius: const BorderRadius.all(
                           Radius.circular(45.0)),
                       clipBehavior: Clip.hardEdge,
-                      child: cachedImage(widget.message.photoReceiver!,45.0,45.0),
+                      //child: cachedImage(widget.message.photoReceiver!,45.0,45.0),
+                      child: cachedAvatar(context,widget.message.photoReceiver!,45.0),
                     ),
                   ),
                   Flexible(

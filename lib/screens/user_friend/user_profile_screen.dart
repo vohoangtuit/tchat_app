@@ -7,8 +7,8 @@ import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/chat/chat_screen.dart';
 import 'package:tchat/screens/tabs/profile/profile_photos.dart';
 import 'package:tchat/screens/tabs/profile/profile_timeline.dart';
-import 'package:tchat/utilities/const.dart';
-import 'package:tchat/utilities/utils.dart';
+import 'package:tchat/constants/const.dart';
+import 'package:tchat/utils/utils.dart';
 import 'package:tchat/widgets/custom_button_with_title.dart';
 import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/general_widget.dart';
@@ -88,14 +88,14 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
                                 child: CircleAvatar(
                                   radius: 30.0,
                                   backgroundColor: Colors.transparent,
-                                  backgroundImage:  widget.user.photoUrl!.isEmpty ?const AssetImage(pathAvatarNotAvailable)as ImageProvider: NetworkImage(widget.user.photoUrl!),
+                                  backgroundImage:  widget.user.photoUrl!.isEmpty ?const AssetImage(Const.pathAvatarNotAvailable)as ImageProvider: NetworkImage(widget.user.photoUrl!),
 
                                 ),
                               ),
                               onTap: () {
                                 DialogController(context)
-                                    .ShowDialogViewSingleImage(
-                                    baseDialog!, widget.user.photoUrl!);
+                                    .showDialogViewSingleImage(
+                                    baseDialog, widget.user.photoUrl!);
                               },
                             ),
                             const SizedBox(
@@ -115,7 +115,7 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
                       background: Utils.isNotEmpty(widget.user.cover!)??false
                           ? InkWell(
                         child: Image.asset(
-                          pathCoverNotAvailable,
+                          Const.pathCoverNotAvailable,
                           fit: BoxFit.cover,
                         ),
                         onTap: () {
@@ -131,8 +131,8 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
                           ),
                           onTap: () {
                             DialogController(context)
-                                .ShowDialogViewSingleImage(
-                                baseDialog!, widget.user.cover!);
+                                .showDialogViewSingleImage(
+                                baseDialog, widget.user.cover!);
                           }),
                     ),
                   ),

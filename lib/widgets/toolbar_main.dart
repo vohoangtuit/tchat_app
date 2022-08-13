@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tchat/utilities/const.dart';
+import 'package:tchat/constants/const.dart';
 import 'package:tchat/widgets/custom_text.dart';
 
 class ToolBarMain extends StatefulWidget {
@@ -39,7 +39,7 @@ class _ToolBarMainState extends State<ToolBarMain> {
                 //    child: Text('Search ...',style: textHeaderBar(),)),
                     child: textWhite('Search')),
                 onPressed: (){
-                  widget.onClick(mainClickSearch);
+                  widget.onClick(Const.mainClickSearch);
                 },
               ),
             ),
@@ -51,22 +51,22 @@ class _ToolBarMainState extends State<ToolBarMain> {
               children: [
                 widget.position==0 ?GestureDetector(child: Image.asset('assets/icons/ic_plus.png',width: 22,height: 22,),onTap: (){// todo icon tab 1
                   setState(() {
-                    widget.onClick(mainClickAddTabMessage);
+                    widget.onClick(Const.mainClickAddTabMessage);
                   });
 
                 },):widget.position==1?GestureDetector(child: Image.asset('assets/icons/ic_add_user.png',width: 20,height: 20,),onTap: (){// todo icon tab 2
                   setState(() {
-                    widget.onClick(mainClickAddContact);
+                    widget.onClick(Const.mainClickAddContact);
                   });
 
                 },):widget.position==2?GestureDetector(child: Image.asset('assets/icons/ic_plus.png',width: 20,height: 20,),onTap: (){// todo icon tab 3
                   setState(() {
-                    widget.onClick(mainClickAddGroup);
+                    widget.onClick(Const.mainClickAddGroup);
                   });
 
                 },):GestureDetector(child: Image.asset('assets/icons/ic_settings.png',width: 20,height: 20,),onTap: (){// todo icon tab 5
                   setState(() {
-                    widget.onClick(mainClickSettingTabMore);
+                    widget.onClick(Const.mainClickSettingTabMore);
                   });
 
                 },),

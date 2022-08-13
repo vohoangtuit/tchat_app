@@ -51,7 +51,7 @@ class UserModel{
   bool? allowSearch ;
   double? latitude ;
   double? longitude;
-
+  UserModel._();
   UserModel({
       this.idDB,
       this.id,
@@ -152,7 +152,7 @@ class UserModel{
 
     return data;
   }
-  List<UserModel> listFromSnapshot(List<QueryDocumentSnapshot> snapshots){
+  static List<UserModel> listFromSnapshot(List<QueryDocumentSnapshot> snapshots){
     List<UserModel> list =<UserModel>[];
     if(snapshots.isNotEmpty){
       for (var item in snapshots) {

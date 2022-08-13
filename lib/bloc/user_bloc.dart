@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tchat/bloc/base_bloc.dart';
 import 'package:tchat/models/user_model.dart';
@@ -16,9 +17,11 @@ class UserBloc extends BaseBloc{
     super.dispose();
     getAccount.close();
   }
-  Future<void> userLogin(UserModel user)async{
-    print('UserBloc login');
-   await firebaseService.userLogin(user);
+  Future<void> userLogin(UserModel user,ValueChanged<UserModel>valueUser)async{
+    //print('UserBloc login');
+   await firebaseService.userLogin(user,(userLogin){
+     valueUser(userLogin);
+   });
   }
   Future<UserModel?> getProfileFromFirebase(String uid)async{
     UserModel? account;
@@ -63,15 +66,18 @@ class UserBloc extends BaseBloc{
       }
     });
   }
-  Future<void>updateUserDatabase(UserModel user)async{
+  updateUserDatabase(UserModel user)async{
     String time =DateTime.now().millisecondsSinceEpoch.toString();
     user.lastUpdated=time;
     user.lastLogin=time;
     user.isLogin =true;
+    await firebaseService.updateUser(user);
+    await updateUserLocalDB(user);
+  }
+ updateUserLocalDB(UserModel user)async{
     await SharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
     await floorDB.getInstance();
     await floorDB.userDao!.updateUser(user);
-    await firebaseService.updateUser(user);
   }
 
 }

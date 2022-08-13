@@ -1,17 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:tchat/dialogs/dialog_controller.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
-import 'package:tchat/utilities/const.dart';
-import 'package:tchat/utilities/utils.dart';
+import 'package:tchat/constants/const.dart';
+import 'package:tchat/utils/utils.dart';
+import 'package:tchat/widgets/cached_network_image.dart';
 import 'package:tchat/widgets/custom_text.dart';
 import 'package:tchat/widgets/general_widget.dart';
 import 'package:tchat/widgets/sliver_appbar_delegate.dart';
 
 class MyProfileScreen extends StatefulWidget {
-  final UserModel profile;
-  const MyProfileScreen({Key? key, required this.profile}) : super(key: key);
+  final ValueChanged<bool>reload;
+   UserModel profile;
+   MyProfileScreen({Key? key, required this.profile, required this.reload}) : super(key: key);
 
   @override
   State<MyProfileScreen> createState() => _MyProfileScreenState();
@@ -73,18 +76,25 @@ class _MyProfileScreenState extends TChatBaseScreen<MyProfileScreen> {
                           //crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             InkWell(
-                              child: SizedBox(
-                                width: 36.0,
-                                height: 36.0,
-                                child: CircleAvatar(
-                                  radius: 30.0,
-                                //  backgroundImage:  widget.profile.photoUrl!.isEmpty ? AssetImage(pathCoverNotAvailable):NetworkImage(widget.profile.photoUrl!),
-                                  backgroundImage:  widget.profile.photoUrl!.isEmpty ?const AssetImage(pathAvatarNotAvailable)as ImageProvider: NetworkImage(widget.profile.photoUrl!),
-                                  backgroundColor: Colors.transparent,
+                              child:
+                              SizedBox(
+                                width: 36,height: 36,
+                                // child:  CircleAvatar(radius: 30.0, backgroundImage: message.photoReceiver.isEmpty ? AssetImage(PATH_AVATAR_NOT_AVAILABLE):NetworkImage(message.photoReceiver), backgroundColor: Colors.transparent,),
+                                child: widget.profile.photoUrl!.isEmpty?const CircleAvatar(radius: 30.0,backgroundImage:AssetImage(Const.pathAvatarNotAvailable)):Material(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(45.0)),
+                                  clipBehavior: Clip.hardEdge,
+                                  //child: cachedImage(widget.message.photoReceiver!,45.0,45.0),
+                                  child: cachedAvatar(context,widget.profile.photoUrl!,36),
                                 ),
                               ),
                               onTap: () {
                                // DialogController(context).showDialogRequestUpdatePicture(dialog, pictureTypeAvatar, viewDialogPicture);
+                                DialogController(context).showDialogRequestUpdatePicture(baseDialog,  Const.pictureTypeAvatar, (type, chooseFrom) => {
+                                  viewDialogPicture(type,chooseFrom,(){
+                                    _reload();
+                                  })
+                                });
                               },
                             ),
                           spaceWidth(10),
@@ -92,23 +102,22 @@ class _MyProfileScreenState extends TChatBaseScreen<MyProfileScreen> {
                           ],
                         ),
                       ),
-                      background: Utils.isNotEmpty(widget.profile.cover)??true ?
-                          InkWell(
-                          child:
-                          //CachedNetworkImageProvider(userModel.cover),
-                          Image.network(widget.profile.cover!, fit: BoxFit.cover,),
-                          onTap: () {
-                         //   DialogController(context).showDialogRequestUpdatePicture(dialog, PICTURE_TYPE_COVER, viewDialogPicture);
-                          })
-                      :InkWell(
-                        child: Image.asset(
-                          pathCoverNotAvailable,
-                          fit: BoxFit.cover,
-                        ),
-                        onTap: () {
-                          // DialogController(context).showDialogRequestUpdatePicture(dialog, PICTURE_TYPE_COVER, viewDialogPicture);
+                      background: InkWell(
+                        onTap: (){
+                          DialogController(context).showDialogRequestUpdatePicture(baseDialog,  Const.pictureTypeCover, (type, chooseFrom) => {
+                            viewDialogPicture(type,chooseFrom,(){
+                              _reload();
+                            })
+                          });
                         },
-                      )
+                       // child: Utils.isNotEmpty(widget.profile.cover)??true ?Image.network(widget.profile.cover!, fit: BoxFit.cover,)
+                        child: Utils.isNotEmpty(widget.profile.cover)??true ? cachedImage(context, widget.profile.cover!, BoxFit.cover,)
+                        :Image.asset(
+                          Const.pathCoverNotAvailable,
+                          fit: BoxFit.cover,
+                        )
+                        ,
+                      ),
                     ),
                   ),
                   SliverPersistentHeader(
@@ -170,7 +179,7 @@ class _MyProfileScreenState extends TChatBaseScreen<MyProfileScreen> {
     _scrollController.addListener(_scrollListener);
   }
   initData() async {
-    log('ss ${widget.profile.toString()}');
+
 
   }
   bool get isShrink {
@@ -184,5 +193,15 @@ class _MyProfileScreenState extends TChatBaseScreen<MyProfileScreen> {
         lastStatus = isShrink;
       });
     }
+  }
+  _reload()async{
+    await getAccountDB().then((value) => {
+      if(mounted){
+        setState((){
+          widget.profile =value;
+        }),
+      },
+    });
+    widget.reload(true);
   }
 }

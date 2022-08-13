@@ -53,9 +53,12 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
   _init()async{
     SharedPre.getInstance();
      await SharedPre.getStringKey(SharedPre.sharedPreLanguageCode).then((value) {
-      setState(() {
-        languageCode =value!;
-      });
+       if(value!=null){
+         setState(() {
+           languageCode =value;
+         });
+       }
+
     });
     getData();
     //log('tab ${widget.profile.toString()}');

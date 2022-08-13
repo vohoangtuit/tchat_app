@@ -17,7 +17,7 @@ class DialogController{
         builder: (BuildContext context) => dialog
     );
   }
- showDialogRequestUpdatePicture(BaseDialog dialog,int type, Function(int type, int choose) callback){// todo define type 1 is avatar, 2 is cover; choose 1 take picture,2 is library
+ showDialogRequestUpdatePicture(BaseDialog dialog,int type, Function(int type, int chooseFrom) callback){// todo define type 1 is avatar, 2 is cover; choose 1 take picture,2 is library
    dialog = DialogSelectPictures(type:type,callback:callback);
    showDialog(
      // barrierDismissible: false,// touch outside dismiss
@@ -25,7 +25,7 @@ class DialogController{
        builder: (BuildContext context) => dialog
    );
  }
-ShowDialogViewSingleImage(BaseDialog dialog, String url){
+showDialogViewSingleImage(BaseDialog dialog, String url){
   dialog = DialogViewSingleImage(url: url);
   showDialog(
     // barrierDismissible: false,// touch outside dismiss

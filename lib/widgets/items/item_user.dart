@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tchat/models/user_model.dart';
-import 'package:tchat/utilities/keyboard_utils.dart';
+
+import '../../utils/keyboard_utils.dart';
 
 class ItemUser extends StatefulWidget {
   final UserModel me;

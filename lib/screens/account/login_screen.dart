@@ -3,7 +3,7 @@ import 'package:tchat/models/user_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/shared_preferences/shared_preference.dart';
 import 'package:tchat/social_login/social_login.dart';
-import 'package:tchat/utilities/colors.dart';
+import 'package:tchat/utils/colors.dart';
 import 'package:tchat/widgets/general_widget.dart';
 
 import '../main_screen.dart';
@@ -102,11 +102,12 @@ class _LoginScreenState extends TChatBaseScreen<LoginScreen> {
   //  initStore();
   }
   _logInSuccess(UserModel user)async{
-  //await firebaseService.userLogin(user);
-  await userBloc.userLogin(user);
-  await saveAccountToDB(UserModel.fromLogin(user));
-  await SharedPre.saveBool(SharedPre.sharedPreIsLogin,true);
- // replaceScreen(const HomeScreen());
-  replaceScreen( MainScreen(synData: false,profile: user,));
+  await userBloc.userLogin(user,(valueUser)async{
+    await saveAccountToDB(UserModel.fromLogin(valueUser));
+    await SharedPre.saveBool(SharedPre.sharedPreIsLogin,true);
+    // replaceScreen(const HomeScreen());
+    replaceScreen( MainScreen(synData: false,profile: valueUser,));
+  });
+
   }
 }
