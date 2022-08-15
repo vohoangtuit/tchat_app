@@ -82,10 +82,10 @@ abstract class TChatBaseScreen<T extends StatefulWidget>
     });
     return account;
   }
-  Future<UserModel> getProfileFromFirebase(String uid,{required bool saveLocal} ) async {
+  Future<UserModel> getProfileFromFirebase(UserModel user,{required bool saveLocal} ) async {
     UserModel? userModel;
-    await userBloc.getProfileFromFirebase(uid).then((value){
-      userModel = value;
+    await userBloc.getProfileFromFirebase(user).then((user){
+      userModel = user;
     });
     if(saveLocal){
       if(userModel!=null){

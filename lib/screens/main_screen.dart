@@ -94,15 +94,13 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
     tabController!.addListener(handleTabSelection);
     _registerFBToken();
 
-   await getProfileFromFirebase(widget.profile.id!,saveLocal: true).then((value){
+   await getProfileFromFirebase(widget.profile,saveLocal: true).then((user){
       if(mounted){
         setState(() {
-          widget.profile =value;
+          widget.profile =user;
         });
-       // log('main ${widget.profile.toString()}');
       }
     });
-
     NotificationController(tChatBaseScreen: this,context: context).intiSetup();
   }
   List<Tab> listTab() {

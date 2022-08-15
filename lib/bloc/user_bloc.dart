@@ -23,10 +23,10 @@ class UserBloc extends BaseBloc{
      valueUser(userLogin);
    });
   }
-  Future<UserModel?> getProfileFromFirebase(String uid)async{
+  Future<UserModel?> getProfileFromFirebase(UserModel userModel)async{
     UserModel? account;
-    await firebaseService.getProfile(uid).then((value){
-      account =value;
+    await firebaseService.getProfile(user: userModel).then((user){
+      account =user;
     });
     return account;
   }
@@ -78,6 +78,9 @@ class UserBloc extends BaseBloc{
     await SharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
     await floorDB.getInstance();
     await floorDB.userDao!.updateUser(user);
+  }
+  createUserOnline(String myId,UserModel user, bool online){
+    firebaseService.createUserOnline(myId, user, online);
   }
 
 }

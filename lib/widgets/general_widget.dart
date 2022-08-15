@@ -82,6 +82,7 @@ Widget loadingCenter() {
   );
 }
 
+
 InputDecoration inputDecoration(String hintText){
   return InputDecoration.collapsed(
     hintText: hintText,
@@ -123,5 +124,21 @@ Material loadFileMaterial(File file, double width, double height){
       height: height,
       fit: BoxFit.cover,
     ),
+  );
+}Widget statusOnline(bool isOnline ){
+  return isOnline?Container(
+    width: 8,height: 8,
+    decoration: const BoxDecoration(
+        color: Colors.green,
+        shape: BoxShape.circle
+    ),
+  ):Container(
+      width: 8,
+      height: 8,
+      decoration: BoxDecoration(
+        color: Colors.grey, // border color
+        shape: BoxShape.circle,
+          border: Border.all(width: 1, color: Colors.grey)
+      )
   );
 }

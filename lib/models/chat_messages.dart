@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatMessages {
 
+  static const messageCheckOnline ='checkOnline';
+
   static const messageIdSender ='idSender';
   static const messageNameSender ='nameSender';
   static const messagePhotoSender ='photoSender';

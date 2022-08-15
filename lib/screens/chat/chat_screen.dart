@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +9,7 @@ import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/user_model.dart';
+import 'package:tchat/models/user_online_model.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/user_friend/user_profile_screen.dart';
 import 'package:tchat/constants/const.dart';
@@ -19,15 +19,15 @@ import 'package:tchat/widgets/items/item_message.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserModel meAccount;
-  final UserModel toUser;
-   const ChatScreen({Key? key, required this.meAccount, required this.toUser}) : super(key: key);
+   late UserModel toUser;
+   ChatScreen({Key? key, required this.meAccount, required this.toUser})
+      : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
-
   List<ChatMessages> listMessage = <ChatMessages>[];
   int _limit = 20;
   final int _limitIncrement = 20;
@@ -48,19 +48,29 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        titleSpacing:-8.0,
-        title: SizedBox(// todo custom title
+        titleSpacing: -8.0,
+        title: SizedBox(
+          // todo custom title
           height: 54,
           child: InkWell(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                textWhiteLarge(toUser==null?'':toUser!.fullName!),
+                Row(
+                  children: [
+                    toUser==null?Container():statusOnline(toUser!.isOnlineChat!),
+                    spaceWidth(5),
+                    textWhiteLarge(toUser == null ? '' : toUser!.fullName!),
+                  ],
+                ),
               ],
             ),
-            onTap: (){
-              addScreen(UserProfileScreen(myProfile: widget.meAccount, user: widget.toUser,));
+            onTap: () {
+              addScreen(UserProfileScreen(
+                myProfile: widget.meAccount,
+                user: widget.toUser,
+              ));
             },
           ),
         ),
@@ -74,14 +84,14 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
                 child: Row(
                   children: [
                     IconButton(
-                        icon:  Image.asset(
+                        icon: Image.asset(
                           'assets/icons/phone_white.png',
                           width: 26,
                           height: 20,
                         ),
                         onPressed: () => _audioVideo()),
                     IconButton(
-                        icon:  Image.asset(
+                        icon: Image.asset(
                           'assets/icons/camera_white.png',
                           width: 25,
                           height: 25,
@@ -100,47 +110,63 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
             children: <Widget>[
               _listChat(),
               (isShowSticker ? _buildSticker() : Container()),
-
               _buildInput(),
             ],
           ),
-
           _buildLoading()
         ],
       ),
     );
   }
+
   @override
   void initState() {
     super.initState();
     _init();
   }
+  @override
+  void onPause() {
+    super.onPause();
+    _sendMeOnline(false);
+  }
+  @override
+  void onResume() {
+    super.onResume();
+    _sendMeOnline(true);
+  }
+  @override
+  void dispose() {
+    _sendMeOnline(false);
+    super.dispose();
+  }
+
   Widget _listChat() {
-    return Flexible(child: StreamBuilder<QuerySnapshot>(
+    return Flexible(
+        child: StreamBuilder<QuerySnapshot>(
       stream: chats,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           listMessage.clear();
-          listMessage.addAll(
-              ChatMessages.listFromSnapshot(snapshot.data!.docs));
+          listMessage
+              .addAll(ChatMessages.listFromSnapshot(snapshot.data!.docs));
           return ListView.builder(
             reverse: true,
             controller: listScrollController,
             padding: const EdgeInsets.all(4.0),
             itemCount: listMessage.length,
-
             itemBuilder: (context, index) => ItemMessage(
               item: listMessage[index],
               me: widget.meAccount,
-              toUser: widget.toUser,),
+              toUser: widget.toUser,
+            ),
           );
         } else {
           return Container();
         }
       },
-
     ));
   }
+
   Widget _buildSticker() {
     return Container(
       decoration: BoxDecoration(
@@ -251,11 +277,13 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       ),
     );
   }
+
   Widget _buildLoading() {
     return Positioned(
-      child: isLoading! ?  loadingCenter() : Container(),
+      child: isLoading! ? loadingCenter() : Container(),
     );
   }
+
   Widget _buildInput() {
     return Container(
       alignment: Alignment.bottomCenter,
@@ -322,41 +350,47 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       ),
     );
   }
-  _init()async{
+
+  _init() async {
     setState(() {
-      toUser =widget.toUser;
+      toUser = widget.toUser;
     });
     await _initData();
     await _getProfileUser();
+    await _checkUserOnline();
   }
-  _getProfileUser()async{
-    await getProfileFromFirebase(widget.toUser.id!,saveLocal: false).then((value){
-      if(mounted){
+
+  _getProfileUser() async {
+    await getProfileFromFirebase(widget.toUser, saveLocal: false).then((value) {
+      if (mounted) {
         setState(() {
+          widget.toUser =value;
           toUser = value;
         });
       }
     });
   }
+
   _scrollListener() {
     if (listScrollController.offset >=
-        listScrollController.position.maxScrollExtent &&
+            listScrollController.position.maxScrollExtent &&
         !listScrollController.position.outOfRange) {
-      print("reach the bottom");
+      log("reach the bottom");
       setState(() {
-        print("reach the bottom");
+        log("reach the bottom");
         _limit += _limitIncrement;
       });
     }
     if (listScrollController.offset <=
-        listScrollController.position.minScrollExtent &&
+            listScrollController.position.minScrollExtent &&
         !listScrollController.position.outOfRange) {
-      print("reach the top");
+      log("reach the top");
       setState(() {
-        print("reach the top");
+        log("reach the top");
       });
     }
   }
+
   _initData() async {
     focusNode.addListener(_onFocusChange);
     listScrollController.addListener(_scrollListener);
@@ -380,10 +414,11 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
     //     socketIO.sendMessage(SOCKET_STOP_TYPING, json.encode({SOCKET_GROUP_CHAT_ID: groupChatId,SOCKET_SENDER_CHAT_ID: account.id}));
     //   }
     // });
-   // checkUserOnline();
+
     _listenerData();
-   // sendMeOnline(true);
+    _sendMeOnline(true);
   }
+
   _onFocusChange() {
     if (focusNode.hasFocus) {
       // Hide sticker when keyboard appear
@@ -392,66 +427,95 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       });
     }
   }
-  _getMessage() async{
-    firebaseService.getMessageChat(widget.meAccount.id!, widget.toUser.id!)
+
+  _getMessage() async {
+    firebaseService
+        .getMessageChat(widget.meAccount.id!, widget.toUser.id!)
         .then((value) {
       setState(() {
         chats = value;
       });
     });
   }
-  _listenerData() async{
-    var userQuery=  firebaseService.chatListenerData(widget.meAccount.id!, widget.toUser.id!);
-      userQuery.snapshots().listen((data) {
-            LastMessageModel message = LastMessageModel();
-            //message.uid =account.id;
-            message.uid =widget.meAccount.id;
-            data.docs.forEach((change) {
-              // print('groupChatId $groupChatId');
-              // if(groupChatId.length==0){
-              //   if(change.data()[MESSAGE_GROUP_ID]!=null){
-              //     if(mounted){
-              //       setState(() {
-              //         groupChatId =change.data()[MESSAGE_GROUP_ID];
-              //       });
-              //     }
-              //   }
-              //   checkSocket();
-              // }
-              // print('groupChatId: $groupChatId');
-             //log('change ${change.toString()}');
-              if(widget.meAccount.id!.contains(change.data()[Const.messageIdSender])){// todo: is me
-                //  print('message is me');
-                message.idReceiver =change.data()[Const.messageIdReceiver];
-                message.nameReceiver =change.data()[Const.messageNameReceiver];
-                message.photoReceiver =change.data()[Const.messagePhotoReceiver];
-              }else{
-                //print('message not me');
-                message.idReceiver =widget.toUser.id;
-                message.nameReceiver =widget.toUser.fullName;
-                message.photoReceiver =widget.toUser.photoUrl;
-              }
-              message.timestamp =change.data()[Const.messageTimestamp];
-              message.content =change.data()[Const.messageContent];
-              message.type =change.data()[Const.messageType];
-              message.status =change.data()[Const.messageStatus];
-            });
-            log('message ${message.toString()}');
-            if(message.idReceiver!=null){
-              messageBloc.updateLastMessageByID(message);
-            }else{
-             // log('message null');
-            }
 
+  _checkUserOnline() async {
+    var check = FirebaseFirestore.instance
+        .collection(FirebaseService.firebaseMessages)
+        .doc(widget.meAccount.id)
+        .collection(widget.toUser.id!)
+        .doc(UserOnLineModel.userOnLineIsOnline);
+    check.snapshots().listen((data) {
+      if (data.data() != null) {
+        Map<String, dynamic>? json = data.data();
+        UserOnLineModel userOnLineModel = UserOnLineModel.fromJson(json!);
+        // print('userOnLineModel '+userOnLineModel.toString());
+        if (mounted) {
+          setState(() {
+            toUser!.isOnlineChat = userOnLineModel.isOnline;
+          });
+        }
+         log('1: ${toUser!.id} : ${toUser!.isOnlineChat}');
+      } else {
+        userBloc.createUserOnline(widget.meAccount.id!, toUser!, false);
+      }
+    });
+  }
+
+  _listenerData() async {
+    var userQuery = firebaseService.chatListenerData(
+        widget.meAccount.id!, widget.toUser.id!);
+    userQuery.snapshots().listen((data) {
+      LastMessageModel message = LastMessageModel();
+      //message.uid =account.id;
+      message.uid = widget.meAccount.id;
+      data.docs.forEach((change) {
+        // print('groupChatId $groupChatId');
+        // if(groupChatId.length==0){
+        //   if(change.data()[MESSAGE_GROUP_ID]!=null){
+        //     if(mounted){
+        //       setState(() {
+        //         groupChatId =change.data()[MESSAGE_GROUP_ID];
+        //       });
+        //     }
+        //   }
+        //   checkSocket();
+        // }
+        // print('groupChatId: $groupChatId');
+        //log('change ${change.toString()}');
+        if (widget.meAccount.id!
+            .contains(change.data()[Const.messageIdSender])) {
+          // todo: is me
+          //  print('message is me');
+          message.idReceiver = change.data()[Const.messageIdReceiver];
+          message.nameReceiver = change.data()[Const.messageNameReceiver];
+          message.photoReceiver = change.data()[Const.messagePhotoReceiver];
+        } else {
+          //print('message not me');
+          message.idReceiver = widget.toUser.id;
+          message.nameReceiver = widget.toUser.fullName;
+          message.photoReceiver = widget.toUser.photoUrl;
+        }
+        message.timestamp = change.data()[Const.messageTimestamp];
+        message.content = change.data()[Const.messageContent];
+        message.type = change.data()[Const.messageType];
+        message.status = change.data()[Const.messageStatus];
       });
 
-
+      if (message.idReceiver != null) {
+        messageBloc.updateLastMessageByID(message);
+      } else {
+        // log('message null');
+      }
+    });
   }
+
+  _sendMeOnline(bool online) {
+    userBloc.createUserOnline(toUser!.id!, widget.meAccount, online);
+  }
+
   _onSendMessage(String content, int type) async {
     // type: 0 = text, 1 = image, 2 = sticker
-    if (content
-        .trim()
-        .isNotEmpty) {
+    if (content.trim().isNotEmpty) {
       textEditingController.clear();
       // if(groupChatId.length==0){
       //   setState(() {
@@ -467,10 +531,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
         idReceiver: widget.toUser.id!,
         nameReceiver: widget.toUser.fullName!,
         photoReceiver: widget.toUser.photoUrl!,
-        timestamp: DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString(),
+        timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
         content: content,
         type: type,
         status: 0,
@@ -496,13 +557,15 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
         log(('create message error $onError'));
       });
       //  print('message insert '+messages.toString());
-        // await floorDB.me.insertMessage(messages);
-      //   print('toUser.isOnlineChat '+toUser.isOnlineChat.toString());
-      //   if(!toUser.isOnlineChat){
-      firebaseService.senNotificationNewMessage(widget.toUser.id!,widget.meAccount.fullName!,widget.meAccount.id!,content);
-      //   }
-        listScrollController.animateTo(0.0,
-            duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+      // await floorDB.me.insertMessage(messages);
+
+      log('2: ${toUser!.id} : ${toUser!.isOnlineChat}');
+      if (!toUser!.isOnlineChat!) {
+        firebaseService.senNotificationNewMessage(widget.toUser.id!,
+            widget.meAccount.fullName!, widget.meAccount.id!, content);
+      }
+      listScrollController.animateTo(0.0,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
       // } else {
       //   Fluttertoast.showToast(
       //       msg: 'Nothing to send',
@@ -511,10 +574,12 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       // }
     }
   }
+
   Future getImage() async {
     ImagePicker imagePicker = ImagePicker();
-   // PickedFile pickedFile;
-    XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    // PickedFile pickedFile;
+    XFile? pickedFile =
+        await imagePicker.pickImage(source: ImageSource.gallery);
     imageFile = File(pickedFile!.path);
     if (imageFile != null) {
       setState(() {
@@ -523,11 +588,11 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       _uploadFile();
     }
   }
-  Future _uploadFile() async {
 
-     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+  Future _uploadFile() async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-     UploadTask uploadTask = reference.putFile(imageFile!);
+    UploadTask uploadTask = reference.putFile(imageFile!);
     try {
       TaskSnapshot snapshot = await uploadTask;
       imageUrl = await snapshot.ref.getDownloadURL();
@@ -542,6 +607,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       Fluttertoast.showToast(msg: e.message ?? e.toString());
     }
   }
+
   void getSticker() {
     // Hide keyboard when sticker appear
     focusNode.unfocus();
@@ -549,10 +615,11 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       isShowSticker = !isShowSticker;
     });
   }
+
   _callVideo() async {
     log('call video');
-
   }
+
   _audioVideo() {
     log('audio call');
   }

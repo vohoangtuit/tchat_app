@@ -19,10 +19,10 @@ class TabMeScreen extends StatefulWidget {
   State<TabMeScreen> createState() => _TabMeScreenState();
 }
 
-class _TabMeScreenState extends TChatBaseScreen<TabMeScreen> with AutomaticKeepAliveClientMixin{
+class _TabMeScreenState extends TChatBaseScreen<TabMeScreen>{// with AutomaticKeepAliveClientMixin
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+
     return _viewContent();
   }
   @override
@@ -145,15 +145,13 @@ class _TabMeScreenState extends TChatBaseScreen<TabMeScreen> with AutomaticKeepA
     _getDataFireBase();
   }
   _getDataFireBase()async{
-    getProfileFromFirebase(widget.profile.id!,saveLocal: true).then((value){
-      log(value.toString());
+    getProfileFromFirebase(widget.profile,saveLocal: true).then((value){
       if(mounted){
         setState(() {
           widget.profile =value;
           userBloc.updateUserLocalDB(value);
         });
       }
-      log('pro ${widget.profile.photoUrl}');
     });
   }
   _getDataLocal()async{
@@ -164,12 +162,12 @@ class _TabMeScreenState extends TChatBaseScreen<TabMeScreen> with AutomaticKeepA
         });
       }
     });
-    log(' avatar ${widget.profile.photoUrl}');
-    log(' cover ${widget.profile.cover}');
+  //  log(' avatar ${widget.profile.photoUrl}');
+   // log(' cover ${widget.profile.cover}');
   }
   @override
   // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+ // bool get wantKeepAlive => true;
   @override
   void onResume() {
     super.onResume();

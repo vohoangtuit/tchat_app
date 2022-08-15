@@ -12,7 +12,7 @@ class UserOnLineModel{
   bool? isOnline;
   UserOnLineModel({this.uid,this.name,this.lastAccess,this.isOnline});
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data =  <String, dynamic>{};
     data[userOnLineUid] = uid;
     data[userOnLineName] = name;
     data[userOnLineLastAccess] = lastAccess;

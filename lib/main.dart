@@ -24,10 +24,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
-  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-
   @override
   Widget build(BuildContext context) {
     Locale? myLocale;

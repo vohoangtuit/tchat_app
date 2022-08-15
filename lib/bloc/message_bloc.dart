@@ -31,6 +31,7 @@ class MessageBloc extends BaseBloc{
   return list;
  }
  updateLastMessageByID(LastMessageModel message)async{
+
   await floorDB.getInstance();
   await floorDB.messageDao!.getLastMessageById(message.idReceiver!).then((value) {
    if (value != null) {

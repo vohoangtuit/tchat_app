@@ -6,6 +6,7 @@ import 'package:tchat/firebase/notification/sent/notification_sent.dart';
 import 'package:tchat/models/chat_messages.dart';
 import 'package:tchat/models/friends_model.dart';
 import 'package:tchat/models/user_model.dart';
+import 'package:tchat/models/user_online_model.dart';
 
 
 class FirebaseService{
@@ -66,14 +67,17 @@ class FirebaseService{
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection(firebaseUsers).doc(id).get();
     return documentSnapshot;
   }
-  Future<UserModel> getProfile(String id)async{
-    DocumentSnapshot value = await FirebaseFirestore.instance.collection(firebaseUsers).doc(id).get();
-   late UserModel userModel;
+  Future<UserModel> getProfile({required UserModel user})async{
+    DocumentSnapshot value = await FirebaseFirestore.instance.collection(firebaseUsers).doc(user.id).get();
+    UserModel? account;
     if(value.data()!=null){
     var json = value.data() as  Map<String, dynamic>;
-     userModel = UserModel.fromJson(json);
+    account = UserModel.fromJson(json);
+    if(user.idDB!=null){
+      account.idDB =user.idDB;
     }
-    return userModel;
+    }
+    return account!;
   }
   Future<DocumentSnapshot> checkUserIsFriend(String idMe,String idFriend)async{
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
@@ -197,7 +201,18 @@ class FirebaseService{
         .add(sent.toJson())
         .then((value) {});
   }
+  createUserOnline(String myId,UserModel user, bool online){
+    UserOnLineModel userOnLineModel = UserOnLineModel(uid: user.id,name: user.fullName,lastAccess: '',isOnline: online);
+    firebaseFirestore
+        .collection(firebaseMessages)
+        .doc(myId)
+        .collection(user.id!)
+        .doc(UserOnLineModel.userOnLineIsOnline).set(userOnLineModel.toJson()).then((value){
+
+    });
+  }
 }
+
 
 void log(String msg){
   if (kDebugMode) {

@@ -61,7 +61,6 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
 
     });
     getData();
-    //log('tab ${widget.profile.toString()}');
   }
   getData()async{
    // log('${getNameScreenOpening()} getData()');
@@ -80,6 +79,8 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
     toUser.fullName =message.nameReceiver;
     toUser.photoUrl =message.photoReceiver;
     toUser.cover ="";
+    toUser.isOnlineChat =false;
+    toUser.isOnline =false;
     addScreen(ChatScreen(meAccount: widget.profile, toUser: toUser));
   }
   @override
