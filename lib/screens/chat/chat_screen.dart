@@ -14,7 +14,9 @@ import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/user_friend/user_profile_screen.dart';
 import 'package:tchat/constants/const.dart';
 import 'package:tchat/widgets/custom_text.dart';
+import 'package:tchat/widgets/full_photo.dart';
 import 'package:tchat/widgets/general_widget.dart';
+import 'package:tchat/widgets/items/item_chatting.dart';
 import 'package:tchat/widgets/items/item_message.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -153,12 +155,20 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
             reverse: true,
             controller: listScrollController,
             padding: const EdgeInsets.all(4.0),
-            itemCount: listMessage.length,
-            itemBuilder: (context, index) => ItemMessage(
-              item: listMessage[index],
+            itemCount: listMessage.length, itemBuilder: (BuildContext context, int index) =>ItemChatting(
+              item:  listMessage[index],
               me: widget.meAccount,
               toUser: widget.toUser,
-            ),
+              index: index,
+              list:listMessage,
+              onClick: (){
+                addScreen(FullPhoto(url: listMessage[index].content,));
+          }),
+            // itemBuilder: (context, index) => ItemMessage(
+            //   item: listMessage[index],
+            //   me: widget.meAccount,
+            //   toUser: widget.toUser,
+            // ),
           );
         } else {
           return Container();
@@ -454,7 +464,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
             toUser!.isOnlineChat = userOnLineModel.isOnline;
           });
         }
-         log('1: ${toUser!.id} : ${toUser!.isOnlineChat}');
+       //  log('1: ${toUser!.id} : ${toUser!.isOnlineChat}');
       } else {
         userBloc.createUserOnline(widget.meAccount.id!, toUser!, false);
       }
