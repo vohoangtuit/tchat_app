@@ -2,8 +2,11 @@ import 'package:rxdart/subjects.dart';
 import 'package:tchat/bloc/base_bloc.dart';
 import 'package:tchat/models/last_message_model.dart';
 
+import '../screens/TChatBaseScreen.dart';
+
 class MessageBloc extends BaseBloc{
- MessageBloc({required super.screen});
+// MessageBloc({required super.screen});
+ MessageBloc({required TChatBaseScreen screen}) : super(screen: screen);
  final getMessage = PublishSubject<List<LastMessageModel>?>();
  Stream<List<LastMessageModel>?> get lastMessageStream => getMessage.stream;
  @override
