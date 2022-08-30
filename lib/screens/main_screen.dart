@@ -48,8 +48,8 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
                           controller: tabController,
                           children:   <Widget>[
                             TabLastMessageScreen(profile: widget.profile),
-                            TabContactScreen(),
-                            TabTimeLineScreen(),
+                            const TabContactScreen(),
+                            const TabTimeLineScreen(),
                             TabMeScreen(profile: widget.profile)
                           ],
                         ),
@@ -94,13 +94,13 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
     tabController!.addListener(handleTabSelection);
     _registerFBToken();
 
-   await getProfileFromFirebase(widget.profile,saveLocal: true).then((user){
-      if(mounted){
-        setState(() {
-          widget.profile =user;
-        });
-      }
-    });
+   // await getProfileFromFirebase(widget.profile,saveLocal: true).then((user){
+   //    if(mounted){
+   //      setState(() {
+   //        widget.profile =user;
+   //      });
+   //    }
+   //  });
     NotificationController(tChatBaseScreen: this,context: context).intiSetup();
   }
   List<Tab> listTab() {

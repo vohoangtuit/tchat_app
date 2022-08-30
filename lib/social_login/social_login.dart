@@ -94,8 +94,10 @@ class SocialLoin{
     //  print('user $user');
      // context!.showLoading(false);
       if(user!=null){
+
      //   print("_user email: " + user.email!);
         UserModel userModel =UserModel();
+
         userModel.id =user.uid;// todo 8AC6oXq9WAcGm4pZgKjMtqV09d53
         userModel.fullName =user.displayName;
         userModel.email =user.email;
@@ -104,6 +106,7 @@ class SocialLoin{
         userModel.phone='';
         userModel.address='';
         userModel.accountType=2;
+
         user_(userModel);
         context!.showLoading(false);
       }

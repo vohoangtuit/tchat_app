@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tchat/bloc/message_bloc.dart';
 import 'package:tchat/bloc/user_bloc.dart';
@@ -14,39 +15,45 @@ import 'package:tchat/firebase/upload.dart';
 import 'package:tchat/general/base_dialog.dart';
 import 'package:tchat/general/genneral_screen.dart';
 import 'package:tchat/models/user_model.dart';
+import 'package:tchat/providers/app_provider.dart';
 import 'package:tchat/screens/account/login_screen.dart';
 import 'package:tchat/shared_preferences/shared_preference.dart';
 import 'package:tchat/utils/camera_library_open.dart';
 
-abstract class TChatBaseScreen<T extends StatefulWidget>
-    extends GeneralScreen<T> {
+import '../providers/user_provider.dart';
+
+abstract class TChatBaseScreen<T extends StatefulWidget> extends GeneralScreen<T> {
   bool isOnline = true;
   bool? isLoading = false;
   bool firstLoad = true;
   bool endData = false;
 
   FirebaseService firebaseService = FirebaseService.getInstance();
+  late UserProvider userProvider;
+  late AppProvider appProvider;
+  late UserBloc userBloc;
+  late MessageBloc messageBloc;
+  late SharedPre sharedPre;
 
    UserModel account = UserModel();
-  SharedPre sharedPre = SharedPre();
-
   bool isLogin = false;
   Dialog? dialog;
   BaseDialog baseDialog=BaseDialog();
-  late UserBloc userBloc;
-  late MessageBloc messageBloc;
+  FloorDatabase floorDB = FloorDatabase();
   @override
   initAll(){
-    initBloc();
+    _initProviders();
     super.initAll();
-    initOther();
+  //  initOther();
   }
-   initBloc(){
-    userBloc =UserBloc(screen: this);
-    messageBloc =MessageBloc(screen: this);
-    SharedPre.getInstance();
-  //  log('${getNameScreenOpening()} initBloc()');
+  _initProviders()async{
+    appProvider = context.read<AppProvider>();
+    userProvider = context.read<UserProvider>();
+     userBloc =UserBloc(appProvider: appProvider,screen: this);
+     messageBloc =MessageBloc(appProvider: appProvider,screen: this);
+     sharedPre =appProvider.sharedPre;
   }
+
   initOther(){
     getAccountDB();
   }
@@ -60,11 +67,28 @@ abstract class TChatBaseScreen<T extends StatefulWidget>
   }
 
   Future<String?> getIdAccount() async {
-    return SharedPre.getStringKey(SharedPre.sharedPreID);
+    return sharedPre.getStringKey(SharedPre.sharedPreID);
   }
   saveAccountToDB(UserModel user) async {
-    await  userBloc.saveAccount(user);
-    getAccountDB();
+    //await  userBloc.saveAccount(user);
+   // await getAccountDB();
+    // todo
+    await floorDB.getInstance();
+    await floorDB.userDao!.findUserById(user.id!).then((value){
+      if(value!=null){
+        if(value.idDB!=null){
+          log('updateUser');
+          floorDB.userDao!.updateUser(user);
+        }else{
+          log('insertUser ');
+          floorDB.userDao!.insertUser(user);
+        }
+      }else{
+        log('insertUser 1');
+        floorDB.userDao!.insertUser(user);
+      }
+    });
+
   }
   updateUserDatabase(UserModel user) async {
     await userBloc.updateUserDatabase(user);
@@ -95,7 +119,6 @@ abstract class TChatBaseScreen<T extends StatefulWidget>
     return userModel!;
   }
    updateUserAccount(UserModel user)async{
-
     await  userBloc.updateUserDatabase(user);
   }
 

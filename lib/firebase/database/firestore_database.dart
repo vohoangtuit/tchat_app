@@ -134,24 +134,25 @@ class FirebaseService{
     // return  writeBatch;
   }
    userLogin(UserModel user,ValueChanged<UserModel> valueUser)async{
+     String time =DateTime.now().millisecondsSinceEpoch.toString();
      firebaseFirestore.collection(firebaseUsers).doc(user.id).get().then((value)  {
        if(value.exists){// todo get data from firebase
          var json = value.data() as  Map<String, dynamic>;
          user =UserModel.fromJson(json);
+         user.isLogin =true;
+         user.lastLogin =time;
          valueUser(user);
-         //updateUser(user);
        }else{
+         user.isLogin =true;
+         user.createdAt=time;
+         user.lastUpdated=time;
+         user.lastLogin =time;
          addUser(user);
          valueUser(user);
        }
      });
   }
   addUser(UserModel user)async{
-    String time =DateTime.now().millisecondsSinceEpoch.toString();
-    user.createdAt=time;
-    user.lastUpdated=time;
-    user.lastLogin=time;
-    user.isLogin =true;
     firebaseFirestore.collection(firebaseUsers).doc(user.id).set(user.toJson()).then((data) async {
     }).catchError((err) {
       log('FirebaseDataFunc Error addUser ${err.toString()}');

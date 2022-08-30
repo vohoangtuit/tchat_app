@@ -16,8 +16,7 @@ abstract class NetworkConfig {
   final String kTypeDefault = '2'; //1: android; 2: iOS
   String kDeviceCodeDefault = ''; //1: android; 2: iOS
   late ApiProvider restApi ;
-  FloorDatabase floorDB=FloorDatabase();
-  FirebaseService  firebaseService = FirebaseService.getInstance();
+
    Options cacheOptions= buildCacheOptions(const Duration(days: 3), maxStale: const Duration(days: 7),forceRefresh: true);
 
   String? token='';

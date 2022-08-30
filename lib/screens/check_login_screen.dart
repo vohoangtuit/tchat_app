@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tchat/database/floor_init.dart';
+import 'package:tchat/providers/app_provider.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 import 'package:tchat/screens/main_screen.dart';
+import 'package:tchat/shared_preferences/shared_preference.dart';
 import 'package:tchat/utils/utils.dart';
 import 'package:tchat/widgets/general_widget.dart';
 
@@ -36,16 +40,40 @@ class _CheckLoginScreenState extends TChatBaseScreen<CheckLoginScreen> {
     _checkLogin();
   }
   _checkLogin()async{
-   await  userBloc.getAccountNotStream().then((user){
-      if(user!=null){
-        if(Utils.isNotEmpty(user.id)??true){
-         replaceScreen(MainScreen(synData: false, profile: user));
-        }else{
-           openLoginScreen();
-        }
+    // FloorDatabase floorDatabase =FloorDatabase();
+     await floorDB.init();
+    // //openLoginScreen();
+    // await floorDatabase.userDao!.findUserById('8AC6oXq9WAcGm4pZgKjMtqV09d53').then((user) =>{
+    // log('user:::::: ${user.toString()}')
+    // });
+    getIdAccount().then((id) async {
+      if(Utils.isNotEmpty(id)??true){
+        log('id:::::: $id');
+        //replaceScreen(MainScreen(synData: false, profile: user));
+        await floorDB.userDao!.findUserById(id!).then((value) {
+         // log('value:::::: ${value.toString()}');
+          openLoginScreen();
+        });
       }else{
-         openLoginScreen();
+        log('Not login');
+        openLoginScreen();
       }
     });
+    // await userBloc.getAllUser().then((value) => {
+    // log('all User ::: ${value.toString()}')
+    // });
+
+   // await  userBloc.getAccountNotStream().then((user){
+   //   //log('user ${user.toString()}');
+   //    if(user!=null){
+   //      if(Utils.isNotEmpty(user.id)??true){
+   //       replaceScreen(MainScreen(synData: false, profile: user));
+   //      }else{
+   //         openLoginScreen();
+   //      }
+   //    }else{
+   //       openLoginScreen();
+   //    }
+   // });
   }
 }

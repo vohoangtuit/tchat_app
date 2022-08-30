@@ -19,9 +19,9 @@ abstract class GeneralScreen<T extends StatefulWidget> extends State<T> with Wid
 
   @override
   void initState() {
-
-    super.initState();
     initAll();
+    super.initState();
+
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) => onReady());
   }

@@ -6,8 +6,8 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:tchat/models/user_model.dart';
 
 class FloorDatabase {
-  static FloorDatabase? _instance;
-  static TChatDatabase? database;
+   FloorDatabase? _instance;
+   TChatDatabase? database;
   UserDao? userDao;
   LastMessageDao? messageDao;
 

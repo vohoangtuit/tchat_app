@@ -53,7 +53,7 @@ class UserModel{
   double? longitude;
   UserModel._();
   UserModel({
-      this.idDB,
+     // this.idDB,
       this.id,
       this.email,
       this.userName,
@@ -108,22 +108,22 @@ class UserModel{
     fullName = user.fullName ?? "";
     birthday = user.birthday ?? "";
     gender = user.gender ?? 0;
-    createdAt =  "";
+    createdAt =  user.createdAt??'';
     photoUrl = user.photoUrl ?? "";
     cover = user.cover ?? "";
     statusAccount =  0;
     phone = user.phone ?? "";
-    lastUpdated = "";
-    lastLogin = "";
-    deviceToken =  "";
+    lastUpdated = user.lastUpdated??"";
+    lastLogin = user.lastLogin??"";
+    deviceToken =  user.deviceToken??"";
     isLogin = true;
     address = user.address ?? "";
     isOnline =true;
     accountType = user.accountType ?? 0;
     isOnlineChat =  false;
     allowSearch =true;
-    latitude =  0;
-    longitude =  0;
+    latitude =  user.latitude??0;
+    longitude =  user.longitude??0;
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};

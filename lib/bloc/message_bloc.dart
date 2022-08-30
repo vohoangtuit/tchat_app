@@ -1,13 +1,15 @@
 import 'package:rxdart/subjects.dart';
 import 'package:tchat/bloc/base_bloc.dart';
 import 'package:tchat/models/last_message_model.dart';
+import 'package:tchat/providers/app_provider.dart';
 
 import '../screens/TChatBaseScreen.dart';
 
 class MessageBloc extends BaseBloc{
-// MessageBloc({required super.screen});
- MessageBloc({required TChatBaseScreen screen}) : super(screen: screen);
+ MessageBloc({required AppProvider appProvider, required TChatBaseScreen screen}) : super(appProvider:appProvider, screen:screen);
  final getMessage = PublishSubject<List<LastMessageModel>?>();
+
+//  MessageBloc({required super.appProvider, required super.screen});
  Stream<List<LastMessageModel>?> get lastMessageStream => getMessage.stream;
  @override
  void dispose() {
@@ -25,9 +27,7 @@ class MessageBloc extends BaseBloc{
   }
  }
  Future<List<LastMessageModel>> getLastMessage(String uid) async {
-  await floorDB.getInstance();
   List<LastMessageModel> list =<LastMessageModel>[];
-  await floorDB.getInstance();
   await  floorDB.messageDao!.getSingleLastMessage(uid).then((value){
    list =value;
   });
@@ -35,7 +35,6 @@ class MessageBloc extends BaseBloc{
  }
  updateLastMessageByID(LastMessageModel message)async{
 
-  await floorDB.getInstance();
   await floorDB.messageDao!.getLastMessageById(message.idReceiver!).then((value) {
    if (value != null) {
     message.idDB = value.idDB;
@@ -47,7 +46,6 @@ class MessageBloc extends BaseBloc{
  }
 
  deleteAllLastMessage()async{
-  await floorDB.getInstance();
   await floorDB.messageDao!.deleteAllLastMessage();
  }
 }

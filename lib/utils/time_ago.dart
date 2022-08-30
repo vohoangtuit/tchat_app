@@ -13,9 +13,9 @@ class TimeAgo {
     var date = DateTime.fromMillisecondsSinceEpoch(int.parse(dateTime));
     return date;
   }
- String getLanguageCode(){
+ String getLanguageCode(SharedPre sharedPre){
     String languageCode='vi';// default
-     SharedPre.getStringKey(SharedPre.sharedPreLanguageCode).then((value){
+    sharedPre.getStringKey(SharedPre.sharedPreLanguageCode).then((value){
        languageCode =value!;
        print('languageCode '+languageCode);
        return languageCode;

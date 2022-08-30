@@ -1,13 +1,19 @@
-import 'package:tchat/bloc/base_config.dart';
+import 'package:tchat/database/user_dao.dart';
 import 'package:tchat/network/network_config.dart';
+import 'package:tchat/providers/app_provider.dart';
 import 'package:tchat/screens/TChatBaseScreen.dart';
 
-class BaseBloc extends NetworkConfig{
+import '../database/floor_init.dart';
+import '../firebase/database/firestore_database.dart';
+import '../shared_preferences/shared_preference.dart';
 
+class BaseBloc extends NetworkConfig {
+  final AppProvider appProvider;
   final TChatBaseScreen screen;
-  BaseBloc({required this.screen}) : super.internal();
+  BaseBloc( {required this.appProvider,required this.screen}) : super.internal();
   void dispose() {}
-  //  inti()async {
-  //  await floorDB.init();
-  // }
+  FirebaseService get firebase =>appProvider.firebaseService;
+  FloorDatabase get floorDB =>appProvider.floorDatabase;
+  UserDao get userDao =>appProvider.floorDatabase.userDao!;
+  SharedPre get sharedPre =>appProvider.sharedPre;
 }

@@ -24,13 +24,13 @@ class SharedPre {
     return _instance!;
   }
 
-  static Future<bool> saveBool(String key,bool value) async{
+   Future<bool> saveBool(String key,bool value) async{
     //SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    _preferences ??= await SharedPreferences.getInstance();
+ //   _preferences ??= await SharedPreferences.getInstance();
     return await _preferences!.setBool(key, value);
   }
-  static Future<bool> saveString(String key,String value) async{
-    _preferences ??= await SharedPreferences.getInstance();
+   Future<bool> saveString(String key,String value) async{
+   // _preferences ??= await SharedPreferences.getInstance();
     return await _preferences!.setString(key, value);
   }
   static Future<bool> saveInt(String key,int value) async{
@@ -45,7 +45,7 @@ class SharedPre {
     return  _preferences!.getBool(key);
   }
 
-  static Future<String?> getStringKey(String key) async{
+   Future<String?> getStringKey(String key) async{
     //SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _preferences ??= await SharedPreferences.getInstance();
     return  _preferences!.getString(key);
