@@ -74,40 +74,10 @@ abstract class TChatBaseScreen<T extends StatefulWidget> extends GeneralScreen<T
     await  userBloc.saveAccount(user);
     await getAccountDB();
     // todo
-
-    // await floorDB.userDao!.findUserById(user.id!).then((value){
-    //   if(value!=null){
-    //     if(value.idDB!=null){
-    //       log('updateUser');
-    //       floorDB.userDao!.updateUser(user);
-    //     }else{
-    //       log('insertUser ');
-    //       floorDB.userDao!.insertUser(user);
-    //     }
-    //   }else{
-    //     log('insertUser 1');
-    //     floorDB.userDao!.insertUser(user);
-    //   }
-    // });
-    await userBloc.personDao.searchById(user.uid!).then((person){
-      PersonModel personModel = PersonModel.fromLogin(user);
-      if(person==null){
-        log('insertPerson 1');
-        userBloc.personDao.insertPerson(personModel);
-      }else if(person.id==null){
-        log('insertPerson 2');
-        userBloc.personDao.insertPerson(personModel);
-      }else{
-        log('updatePerson');
-        userBloc.personDao.updatePerson(personModel);
-      }
-    });
-
   }
   updateUserDatabase(UserModel user) async {
     await userBloc.updateUserDatabase(user);
   }
-
   Future<UserModel> getAccountDB() async {
     userBloc.getAccountNotStream().then((value){
       if(value!=null){

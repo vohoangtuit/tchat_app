@@ -18,8 +18,8 @@ class MessageBloc extends BaseBloc{
  }
  Future<void> getLastMessageStream(String uid) async {
   List<LastMessageModel> list =<LastMessageModel>[];
-  await floorDB.getInstance();
-  await  floorDB.messageDao!.getSingleLastMessage(uid).then((value){
+
+  await  messageDao.getSingleLastMessage(uid).then((value){
    list =value;
   });
   if(!getMessage.isClosed) {
@@ -28,24 +28,24 @@ class MessageBloc extends BaseBloc{
  }
  Future<List<LastMessageModel>> getLastMessage(String uid) async {
   List<LastMessageModel> list =<LastMessageModel>[];
-  await  floorDB.messageDao!.getSingleLastMessage(uid).then((value){
+  await  messageDao.getSingleLastMessage(uid).then((value){
    list =value;
   });
   return list;
  }
  updateLastMessageByID(LastMessageModel message)async{
 
-  await floorDB.messageDao!.getLastMessageById(message.idReceiver!).then((value) {
+  await messageDao.getLastMessageById(message.idReceiver!).then((value) {
    if (value != null) {
     message.idDB = value.idDB;
-    floorDB.messageDao!.updateLastMessageById(message).then((value) {});
+    messageDao.updateLastMessageById(message).then((value) {});
    } else {
-    floorDB.messageDao!.insertMessage(message).then((value) => {});
+   messageDao.insertMessage(message).then((value) => {});
    }
   });
  }
 
  deleteAllLastMessage()async{
-  await floorDB.messageDao!.deleteAllLastMessage();
+  await messageDao.deleteAllLastMessage();
  }
 }

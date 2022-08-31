@@ -101,12 +101,11 @@ class UserModel{
     accountType = user.accountType ?? 0;
     isOnlineChat =  false;
     allowSearch =true;
-    latitude =  user.latitude??0;
-    longitude =  user.longitude??0;
+    latitude =  user.latitude??0.0;
+    longitude =  user.longitude??.0;
   }
 
   Map<String, dynamic> toJson() {
-
     final data = <String, dynamic>{};
     data['uid'] = uid;
     data['email'] = email??'';
@@ -132,32 +131,12 @@ class UserModel{
     data['longitude'] = longitude??0.0;
     return data;
   }
-  static List<UserModel> listFromSnapshot(List<QueryDocumentSnapshot> snapshots){
+   List<UserModel> listFromSnapshot(List<QueryDocumentSnapshot> snapshots){
     List<UserModel> list =<UserModel>[];
     if(snapshots.isNotEmpty){
       for (var item in snapshots) {
         UserModel data =UserModel();
-        // this.uid,
-        // this.email,
-        // this.userName,
-        // this.fullName,
-        // this.birthday,
-        // this.gender,
-        // this.photoUrl,
-        // this.cover,
-        // this.statusAccount,
-        // this.phone,
-        // this.createdAt,
-        // this.lastUpdated,
-        // this.lastLogin,
-        // this.deviceToken,
-        // this.isLogin,
-        // this.address,
-        // this.isOnline,
-        // this.accountType,
-        // this.isOnlineChat,
-        // this.allowSearch,
-        // this.latitude,
+
         // this.longitude
         data.uid = item['uid'];
         data.email = item['email'] ?? '';

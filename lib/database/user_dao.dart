@@ -6,9 +6,8 @@ abstract class UserDao {
   @Query('SELECT * FROM UserModel')
   Future<List<UserModel>> findAllUsers();
 
-  //@Query('SELECT * FROM UserModel WHERE id = :id LIMIT 1')
-  @Query('SELECT userName FROM UserModel WHERE uid = :uid LIMIT 1')
-  Future<UserModel?> findUserById(String uid);
+  @Query('SELECT * FROM UserModel WHERE uid = :uid LIMIT 1')
+  Future<UserModel?> searchById(String uid);
 
   @Query('SELECT * FROM UserModel LIMIT 1')
   Future<UserModel?> getSingleUser();

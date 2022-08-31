@@ -40,41 +40,21 @@ class _CheckLoginScreenState extends TChatBaseScreen<CheckLoginScreen> {
     _checkLogin();
   }
   _checkLogin()async{
-    // FloorDatabase floorDatabase =FloorDatabase();
-    // await floorDatabase.userDao!.findUserById('8AC6oXq9WAcGm4pZgKjMtqV09d53').then((user) =>{
-    // log('user:::::: ${user.toString()}')
-    // });
     getIdAccount().then((id) async {
       if(Utils.isNotEmpty(id)??true){
-        log('id:::::: $id');
-        //replaceScreen(MainScreen(synData: false, profile: user));
-        await userBloc.personDao.searchById(id!).then((person) {
-          log('person:::::: ${person.toString()}');
-          //openLoginScreen();
-        });
-        await userBloc.userDao.findUserById(id).then((user){
-          log('user:::::: ${user.toString()}');
+        log('uid:::::: $id');
+        await userBloc.getAccountById(id!).then((user){
+         // log('user:::::: ${user.toString()}');
+          if(Utils.isNotEmpty(user!.uid!)??true){
+            replaceScreen(MainScreen(synData: false, profile: user));
+          }else{
+            openLoginScreen();
+          }
         });
       }else{
         log('Not login');
         openLoginScreen();
       }
     });
-    // await userBloc.getAllUser().then((value) => {
-    // log('all User ::: ${value.toString()}')
-    // });
-
-   // await  userBloc.getAccountNotStream().then((user){
-   //   //log('user ${user.toString()}');
-   //    if(user!=null){
-   //      if(Utils.isNotEmpty(user.id)??true){
-   //       replaceScreen(MainScreen(synData: false, profile: user));
-   //      }else{
-   //         openLoginScreen();
-   //      }
-   //    }else{
-   //       openLoginScreen();
-   //    }
-   // });
   }
 }

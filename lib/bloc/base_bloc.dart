@@ -1,4 +1,5 @@
-import 'package:tchat/database/personDao.dart';
+import 'package:tchat/database/last_message_dao.dart';
+import 'package:tchat/database/person_dao.dart';
 import 'package:tchat/database/user_dao.dart';
 import 'package:tchat/network/network_config.dart';
 import 'package:tchat/providers/app_provider.dart';
@@ -16,6 +17,7 @@ class BaseBloc extends NetworkConfig {
   FirebaseService get firebase =>appProvider.firebaseService;
   FloorDatabase get floorDB =>appProvider.floorDatabase;
   UserDao get userDao =>appProvider.floorDatabase.userDao!;
+  LastMessageDao get messageDao =>appProvider.floorDatabase.messageDao!;
   PersonDao get personDao =>appProvider.floorDatabase.personDao!;
   SharedPre get sharedPre =>appProvider.sharedPre;
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:floor/floor.dart';
 import 'package:tchat/database/last_message_dao.dart';
-import 'package:tchat/database/personDao.dart';
+import 'package:tchat/database/person_dao.dart';
 import 'package:tchat/database/user_dao.dart';
 import 'package:tchat/models/last_message_model.dart';
 import 'package:tchat/models/person_model.dart';

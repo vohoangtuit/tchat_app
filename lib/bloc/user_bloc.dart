@@ -57,28 +57,15 @@ class UserBloc extends BaseBloc with ChangeNotifier{
     return account;
   }
   Future<UserModel?> getAccountById(String id)async{
-    await floorDB.getInstance();
     UserModel? account;
-    await floorDB.userDao!.findUserById(id).then((value){
-      print('value findUserById ${value!.toString()}');
+    await userDao.searchById(id).then((value){
       account =value;
     });
-    // try {
-    //   await floorDB.userDao!.findUserById(id).then((value){
-    //     print('value findUserById ${value!.id!}');
-    //     account =value;
-    //   });
-    // } on Exception catch (exception) {
-    //   screen.log('Exception ${exception.toString()}');
-    // } catch (error) {
-    //   screen.log('error getAccountById ${error.toString()}');
-    // }
     return account;
   }
   Future<List<UserModel>> getAllUser()async{
-    await floorDB.getInstance();
     List<UserModel> list =<UserModel>[];
-    await floorDB.userDao!.findAllUsers().then((value){
+    await userDao.findAllUsers().then((value){
 
       list =value;
     });
@@ -87,23 +74,18 @@ class UserBloc extends BaseBloc with ChangeNotifier{
 
   Future<void> saveAccount(UserModel user) async {
     await  sharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
-    await floorDB.userDao!.findUserById(user.uid!).then((value) {
-     // print('value::::: ${value!.toString()}');
-      if (value != null) {
-        print('saveAccount value  ${value.toString()}');
-        if(value.id==null){
-          print('saveAccount insertUser  ${user.toString()}');
-          floorDB.userDao!.insertUser(user);
-        }else{
-          print('saveAccount Update ${user.toString()}');
-          user.id =value.id;
-          floorDB.userDao!.updateUser(user);
-        }
-      } else {
-        print('saveAccount insertUser 1 ${user.toString()}');
-        floorDB.userDao!.insertUser(user);
+    await getAccountById(user.uid!).then((value) {
+      if(value==null){
+        userDao.insertUser(user);
+      }else if(value.id==null){
+
+       userDao.insertUser(user);
+      }else{
+        user.id =value.id;
+        userDao.updateUser(user);
       }
     });
+
   }
   updateUserDatabase(UserModel user)async{
     String time =DateTime.now().millisecondsSinceEpoch.toString();
@@ -115,7 +97,7 @@ class UserBloc extends BaseBloc with ChangeNotifier{
   }
  updateUserLocalDB(UserModel user)async{
     await sharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
-    await floorDB.userDao!.updateUser(user);
+    await userDao.updateUser(user);
   }
   createUserOnline(String myId,UserModel user, bool online){
     firebase.createUserOnline(myId, user, online);
