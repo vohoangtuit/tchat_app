@@ -440,7 +440,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
 
   _getMessage() async {
     firebaseService
-        .getMessageChat(widget.meAccount.id!, widget.toUser.id!)
+        .getMessageChat(widget.meAccount.uid!, widget.toUser.uid!)
         .then((value) {
       setState(() {
         chats = value;
@@ -451,8 +451,8 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
   _checkUserOnline() async {
     var check = FirebaseFirestore.instance
         .collection(FirebaseService.firebaseMessages)
-        .doc(widget.meAccount.id)
-        .collection(widget.toUser.id!)
+        .doc(widget.meAccount.uid)
+        .collection(widget.toUser.uid!)
         .doc(UserOnLineModel.userOnLineIsOnline);
     check.snapshots().listen((data) {
       if (data.data() != null) {
@@ -466,18 +466,18 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
         }
        //  log('1: ${toUser!.id} : ${toUser!.isOnlineChat}');
       } else {
-        userBloc.createUserOnline(widget.meAccount.id!, toUser!, false);
+        userBloc.createUserOnline(widget.meAccount.uid!, toUser!, false);
       }
     });
   }
 
   _listenerData() async {
     var userQuery = firebaseService.chatListenerData(
-        widget.meAccount.id!, widget.toUser.id!);
+        widget.meAccount.uid!, widget.toUser.uid!);
     userQuery.snapshots().listen((data) {
       LastMessageModel message = LastMessageModel();
       //message.uid =account.id;
-      message.uid = widget.meAccount.id;
+      message.uid = widget.meAccount.uid;
       data.docs.forEach((change) {
         // print('groupChatId $groupChatId');
         // if(groupChatId.length==0){
@@ -492,7 +492,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
         // }
         // print('groupChatId: $groupChatId');
         //log('change ${change.toString()}');
-        if (widget.meAccount.id!
+        if (widget.meAccount.uid!
             .contains(change.data()[Const.messageIdSender])) {
           // todo: is me
           //  print('message is me');
@@ -501,7 +501,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
           message.photoReceiver = change.data()[Const.messagePhotoReceiver];
         } else {
           //print('message not me');
-          message.idReceiver = widget.toUser.id;
+          message.idReceiver = widget.toUser.uid;
           message.nameReceiver = widget.toUser.fullName;
           message.photoReceiver = widget.toUser.photoUrl;
         }
@@ -520,7 +520,7 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
   }
 
   _sendMeOnline(bool online) {
-    userBloc.createUserOnline(toUser!.id!, widget.meAccount, online);
+    userBloc.createUserOnline(toUser!.uid!, widget.meAccount, online);
   }
 
   _onSendMessage(String content, int type) async {
@@ -534,11 +534,11 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       //   checkSocket();
       // }
       ChatMessages messages = ChatMessages(
-        idSender: widget.meAccount.id!,
+        idSender: widget.meAccount.uid!,
         nameSender: widget.meAccount.fullName!,
         photoSender: widget.meAccount.photoUrl!,
 
-        idReceiver: widget.toUser.id!,
+        idReceiver: widget.toUser.uid!,
         nameReceiver: widget.toUser.fullName!,
         photoReceiver: widget.toUser.photoUrl!,
         timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -549,13 +549,13 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
       );
       var from = FirebaseFirestore.instance
           .collection(FirebaseService.firebaseMessages)
-          .doc(widget.meAccount.id!)
-          .collection(widget.toUser.id!)
+          .doc(widget.meAccount.uid!)
+          .collection(widget.toUser.uid!)
           .doc(); // end doc can use timestamp
       var to = FirebaseFirestore.instance
           .collection(FirebaseService.firebaseMessages)
-          .doc(widget.toUser.id!)
-          .collection(widget.meAccount.id!)
+          .doc(widget.toUser.uid!)
+          .collection(widget.meAccount.uid!)
           .doc(); // end doc can use timestamp
       WriteBatch writeBatch = FirebaseFirestore.instance.batch();
       writeBatch.set(from, messages.toJson_());
@@ -571,8 +571,8 @@ class _ChatScreenState extends TChatBaseScreen<ChatScreen> {
 
       log('2: ${toUser!.id} : ${toUser!.isOnlineChat}');
       if (!toUser!.isOnlineChat!) {
-        firebaseService.senNotificationNewMessage(widget.toUser.id!,
-            widget.meAccount.fullName!, widget.meAccount.id!, content);
+        firebaseService.senNotificationNewMessage(widget.toUser.uid!,
+            widget.meAccount.fullName!, widget.meAccount.uid!, content);
       }
       listScrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);

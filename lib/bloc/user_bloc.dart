@@ -87,16 +87,16 @@ class UserBloc extends BaseBloc with ChangeNotifier{
 
   Future<void> saveAccount(UserModel user) async {
     await  sharedPre.saveString(SharedPre.sharedPreUSer, jsonEncode(user));
-    await floorDB.userDao!.findUserById(user.id!).then((value) {
+    await floorDB.userDao!.findUserById(user.uid!).then((value) {
      // print('value::::: ${value!.toString()}');
       if (value != null) {
         print('saveAccount value  ${value.toString()}');
-        if(value.idDB==null){
+        if(value.id==null){
           print('saveAccount insertUser  ${user.toString()}');
           floorDB.userDao!.insertUser(user);
         }else{
           print('saveAccount Update ${user.toString()}');
-          user.idDB =value.idDB;
+          user.id =value.id;
           floorDB.userDao!.updateUser(user);
         }
       } else {

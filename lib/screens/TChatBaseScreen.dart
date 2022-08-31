@@ -14,6 +14,7 @@ import 'package:tchat/firebase/database/firestore_database.dart';
 import 'package:tchat/firebase/upload.dart';
 import 'package:tchat/general/base_dialog.dart';
 import 'package:tchat/general/genneral_screen.dart';
+import 'package:tchat/models/person_model.dart';
 import 'package:tchat/models/user_model.dart';
 import 'package:tchat/providers/app_provider.dart';
 import 'package:tchat/screens/account/login_screen.dart';
@@ -39,7 +40,7 @@ abstract class TChatBaseScreen<T extends StatefulWidget> extends GeneralScreen<T
   bool isLogin = false;
   Dialog? dialog;
   BaseDialog baseDialog=BaseDialog();
-  FloorDatabase floorDB = FloorDatabase();
+ // FloorDatabase floorDB = FloorDatabase();
   @override
   initAll(){
     _initProviders();
@@ -70,22 +71,35 @@ abstract class TChatBaseScreen<T extends StatefulWidget> extends GeneralScreen<T
     return sharedPre.getStringKey(SharedPre.sharedPreID);
   }
   saveAccountToDB(UserModel user) async {
-    //await  userBloc.saveAccount(user);
-   // await getAccountDB();
+    await  userBloc.saveAccount(user);
+    await getAccountDB();
     // todo
-    await floorDB.getInstance();
-    await floorDB.userDao!.findUserById(user.id!).then((value){
-      if(value!=null){
-        if(value.idDB!=null){
-          log('updateUser');
-          floorDB.userDao!.updateUser(user);
-        }else{
-          log('insertUser ');
-          floorDB.userDao!.insertUser(user);
-        }
+
+    // await floorDB.userDao!.findUserById(user.id!).then((value){
+    //   if(value!=null){
+    //     if(value.idDB!=null){
+    //       log('updateUser');
+    //       floorDB.userDao!.updateUser(user);
+    //     }else{
+    //       log('insertUser ');
+    //       floorDB.userDao!.insertUser(user);
+    //     }
+    //   }else{
+    //     log('insertUser 1');
+    //     floorDB.userDao!.insertUser(user);
+    //   }
+    // });
+    await userBloc.personDao.searchById(user.uid!).then((person){
+      PersonModel personModel = PersonModel.fromLogin(user);
+      if(person==null){
+        log('insertPerson 1');
+        userBloc.personDao.insertPerson(personModel);
+      }else if(person.id==null){
+        log('insertPerson 2');
+        userBloc.personDao.insertPerson(personModel);
       }else{
-        log('insertUser 1');
-        floorDB.userDao!.insertUser(user);
+        log('updatePerson');
+        userBloc.personDao.updatePerson(personModel);
       }
     });
 

@@ -68,13 +68,13 @@ class FirebaseService{
     return documentSnapshot;
   }
   Future<UserModel> getProfile({required UserModel user})async{
-    DocumentSnapshot value = await FirebaseFirestore.instance.collection(firebaseUsers).doc(user.id).get();
+    DocumentSnapshot value = await FirebaseFirestore.instance.collection(firebaseUsers).doc(user.uid).get();
     UserModel? account;
     if(value.data()!=null){
     var json = value.data() as  Map<String, dynamic>;
     account = UserModel.fromJson(json);
-    if(user.idDB!=null){
-      account.idDB =user.idDB;
+    if(user.id!=null){
+      account.id =user.id;
     }
     }
     return account!;
@@ -89,10 +89,10 @@ class FirebaseService{
   }
   requestAddFriend(UserModel myProfile,UserModel user,FriendModel fromRequest,FriendModel toRequest){
     WriteBatch writeBatch =  FirebaseFirestore.instance.batch();
-    DocumentReference from = FirebaseFirestore.instance.collection(firebaseFriends).doc(myProfile.id).collection(myProfile.id!).doc(user.id); // todo: lấy user id làm id trên firebase
+    DocumentReference from = FirebaseFirestore.instance.collection(firebaseFriends).doc(myProfile.uid).collection(myProfile.uid!).doc(user.uid); // todo: lấy user id làm id trên firebase
     //DocumentReference from = fireBaseStore.collection(FIREBASE_FRIENDS).doc(myProfile.id).collection(user.id).doc(user.id); // todo: lấy user id làm id trên firebase
     //DocumentReference from = fireBaseStore.collection(FIREBASE_FRIENDS).doc(myProfile.id).collection(user.id).doc();todo id tự generate on firebase
-    DocumentReference to = FirebaseFirestore.instance.collection(firebaseFriends).doc(user.id).collection(user.id!).doc(myProfile.id); // todo: lấy user id làm id trên firebase
+    DocumentReference to = FirebaseFirestore.instance.collection(firebaseFriends).doc(user.uid).collection(user.uid!).doc(myProfile.uid); // todo: lấy user id làm id trên firebase
     // DocumentReference to = fireBaseStore.collection(FIREBASE_FRIENDS).doc(user.id).collection(myProfile.id).doc(myProfile.id); // todo: lấy user id làm id trên firebase
     // DocumentReference to = fireBaseStore.collection(FIREBASE_FRIENDS).doc(user.id).collection(myProfile.id); todo id tự generate on firebase
     writeBatch.set(from, fromRequest.toJson());
@@ -135,7 +135,7 @@ class FirebaseService{
   }
    userLogin(UserModel user,ValueChanged<UserModel> valueUser)async{
      String time =DateTime.now().millisecondsSinceEpoch.toString();
-     firebaseFirestore.collection(firebaseUsers).doc(user.id).get().then((value)  {
+     firebaseFirestore.collection(firebaseUsers).doc(user.uid).get().then((value)  {
        if(value.exists){// todo get data from firebase
          var json = value.data() as  Map<String, dynamic>;
          user =UserModel.fromJson(json);
@@ -143,7 +143,7 @@ class FirebaseService{
          user.lastLogin =time;
          valueUser(user);
        }else{
-         user.isLogin =true;
+         //user.isLogin =true;
          user.createdAt=time;
          user.lastUpdated=time;
          user.lastLogin =time;
@@ -153,7 +153,7 @@ class FirebaseService{
      });
   }
   addUser(UserModel user)async{
-    firebaseFirestore.collection(firebaseUsers).doc(user.id).set(user.toJson()).then((data) async {
+    firebaseFirestore.collection(firebaseUsers).doc(user.uid).set(user.toJson()).then((data) async {
     }).catchError((err) {
       log('FirebaseDataFunc Error addUser ${err.toString()}');
     });
@@ -164,7 +164,7 @@ class FirebaseService{
     // user.lastUpdated=time;
     // user.lastLogin=time;
     // user.isLogin =true;
-    firebaseFirestore.collection(firebaseUsers).doc(user.id).update(user.toJson()).then((data) async {
+    firebaseFirestore.collection(firebaseUsers).doc(user.uid).update(user.toJson()).then((data) async {
     }).catchError((err) {
       log('FirebaseDataFunc Error updateUser ${err.toString()}');
     });
@@ -203,11 +203,11 @@ class FirebaseService{
         .then((value) {});
   }
   createUserOnline(String myId,UserModel user, bool online){
-    UserOnLineModel userOnLineModel = UserOnLineModel(uid: user.id,name: user.fullName,lastAccess: '',isOnline: online);
+    UserOnLineModel userOnLineModel = UserOnLineModel(uid: user.uid,name: user.fullName,lastAccess: '',isOnline: online);
     firebaseFirestore
         .collection(firebaseMessages)
         .doc(myId)
-        .collection(user.id!)
+        .collection(user.uid!)
         .doc(UserOnLineModel.userOnLineIsOnline).set(userOnLineModel.toJson()).then((value){
 
     });

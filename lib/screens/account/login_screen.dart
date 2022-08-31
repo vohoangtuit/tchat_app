@@ -109,7 +109,7 @@ class _LoginScreenState extends TChatBaseScreen<LoginScreen> {
   _logInSuccess(UserModel user) async {
     await userBloc.userLogin(user, (valueUser) async {
       await sharedPre.saveBool(SharedPre.sharedPreIsLogin, true);
-      await sharedPre.saveString(SharedPre.sharedPreID, user.id!);
+      await sharedPre.saveString(SharedPre.sharedPreID, user.uid!);
       await saveAccountToDB(UserModel.fromLogin(valueUser));
       replaceScreen(MainScreen(
         synData: false,

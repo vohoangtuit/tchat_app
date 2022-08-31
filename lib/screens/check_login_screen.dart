@@ -41,8 +41,6 @@ class _CheckLoginScreenState extends TChatBaseScreen<CheckLoginScreen> {
   }
   _checkLogin()async{
     // FloorDatabase floorDatabase =FloorDatabase();
-     await floorDB.init();
-    // //openLoginScreen();
     // await floorDatabase.userDao!.findUserById('8AC6oXq9WAcGm4pZgKjMtqV09d53').then((user) =>{
     // log('user:::::: ${user.toString()}')
     // });
@@ -50,9 +48,12 @@ class _CheckLoginScreenState extends TChatBaseScreen<CheckLoginScreen> {
       if(Utils.isNotEmpty(id)??true){
         log('id:::::: $id');
         //replaceScreen(MainScreen(synData: false, profile: user));
-        await floorDB.userDao!.findUserById(id!).then((value) {
-         // log('value:::::: ${value.toString()}');
-          openLoginScreen();
+        await userBloc.personDao.searchById(id!).then((person) {
+          log('person:::::: ${person.toString()}');
+          //openLoginScreen();
+        });
+        await userBloc.userDao.findUserById(id).then((user){
+          log('user:::::: ${user.toString()}');
         });
       }else{
         log('Not login');

@@ -56,7 +56,7 @@ class _ItemChattingState extends State<ItemChatting> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              isLastMessageLeft(widget.list,widget.index,widget.me.id!)
+              isLastMessageLeft(widget.list,widget.index,widget.me.uid!)
                   ? Material(// todo left show avatar
                 borderRadius: const BorderRadius.all(
                   Radius.circular(18.0),
@@ -94,7 +94,7 @@ class _ItemChattingState extends State<ItemChatting> {
         crossAxisAlignment:CrossAxisAlignment.start ,
         children: [
           textWhite(message.content),
-          isLastMessageLeft(widget.list,widget.index,widget.me.id!)
+          isLastMessageLeft(widget.list,widget.index,widget.me.uid!)
               ? _viewTimestamp(message.timestamp,AppColor.textColorLight)
               : Container()
         ],
@@ -152,7 +152,7 @@ class _ItemChattingState extends State<ItemChatting> {
               ),
             ),
           ),
-          isLastMessageLeft(widget.list,widget.index,widget.me.id!)
+          isLastMessageLeft(widget.list,widget.index,widget.me.uid!)
               ? _viewTimestamp(message.timestamp,AppColor.textColorLight)
               : Container()
         ],
@@ -162,7 +162,7 @@ class _ItemChattingState extends State<ItemChatting> {
     //todo 3 sticker
     Container(
       margin: EdgeInsets.only(
-          bottom: isLastMessageRight(widget.list,widget.index,widget.me.id!) ? 20.0 : 10.0,
+          bottom: isLastMessageRight(widget.list,widget.index,widget.me.uid!) ? 20.0 : 10.0,
           right: 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -174,7 +174,7 @@ class _ItemChattingState extends State<ItemChatting> {
             height: 100.0,
             fit: BoxFit.cover,
           ),
-          isLastMessageLeft(widget.list,widget.index,widget.me.id!)
+          isLastMessageLeft(widget.list,widget.index,widget.me.uid!)
               ? _viewTimestamp(message.timestamp,AppColor.textColorLight)
               : Container()
         ],
@@ -200,27 +200,27 @@ class _ItemChattingState extends State<ItemChatting> {
 
   }
   bool _checkIsMeSent(){
-    return widget.item.idSender.compareTo(widget.me.id!)==0;
+    return widget.item.idSender.compareTo(widget.me.uid!)==0;
   }
-  bool isLastMessageRight(List<ChatMessages> list,int index,String id) {
-    if (index > 0 && list.isNotEmpty && list[index-1].idSender.compareTo(id)!=0 || index == 0) {
+  bool isLastMessageRight(List<ChatMessages> list,int index,String idFirebase) {
+    if (index > 0 && list.isNotEmpty && list[index-1].idSender.compareTo(idFirebase)!=0 || index == 0) {
       return true;
     } else {
       return false;
     }
   }
-  bool isLastMessageLeft(List<ChatMessages> list,int index,String id) {
-    if(index>0 && list.isNotEmpty && list[index-1].idSender.compareTo(id)==0||index==0){
+  bool isLastMessageLeft(List<ChatMessages> list,int index,String idFirebase) {
+    if(index>0 && list.isNotEmpty && list[index-1].idSender.compareTo(idFirebase)==0||index==0){
 
       return true;
     }
     return false;
   }
-  bool isFirstMessageLeft(List<ChatMessages> list,int index,String id) {
+  bool isFirstMessageLeft(List<ChatMessages> list,int index,String idFirebase) {
     //todo: || index==list.length-1
     if(index>0&&index<list.length-1){
 
-      if(list[index+1].idSender.compareTo(id)==0){
+      if(list[index+1].idSender.compareTo(idFirebase)==0){
         return true;
       }
     }
@@ -229,7 +229,7 @@ class _ItemChattingState extends State<ItemChatting> {
     }
     return false;
     // todo last left
-    // if(index>0 && list[index-1].idSender.compareTo(id)==0){
+    // if(index>0 && list[index-1].idSender.compareTo(idFirebase)==0){
     //   return true;
     // }
     // return false;

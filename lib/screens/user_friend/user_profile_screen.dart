@@ -376,7 +376,7 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
       isLoading = true;
     });
     DocumentSnapshot variable =
-    await firebaseService.checkUserIsFriend(widget.myProfile.id!, widget.user.id!);
+    await firebaseService.checkUserIsFriend(widget.myProfile.uid!, widget.user.uid!);
     if (variable.data() != null) {
       //  print('variable ' + variable.data()['statusRequest'].toString());
       Map<String, dynamic> json = variable.data() as  Map<String, dynamic>;
@@ -399,13 +399,13 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
     });
     var timeRequest =DateTime.now().millisecondsSinceEpoch.toString();
     FriendModel fromRequest = FriendModel(
-        id: widget.user.id,
+        id: widget.user.uid,
         fullName: widget.user.fullName,
         photoURL: widget.user.photoUrl,
         timeRequest: timeRequest,
         statusRequest: FriendModel.friendSendRequest);
     FriendModel toRequest = FriendModel(
-        id: widget.myProfile.id,
+        id: widget.myProfile.uid,
         fullName: widget.myProfile.fullName,
         photoURL: widget.myProfile.photoUrl,
         timeRequest: timeRequest,
@@ -418,13 +418,13 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
         isLoading = false;
 
       });
-      firebaseService.sentNotificationRequestAddFriend(widget.user.id!,widget.myProfile.fullName!,widget.myProfile.id!);
+      firebaseService.sentNotificationRequestAddFriend(widget.user.uid!,widget.myProfile.fullName!,widget.myProfile.uid!);
     });
 
   }
 
   _undoRequest() async {
-    await firebaseService.removeFriend(widget.myProfile.id!, widget.user.id!).then((value){
+    await firebaseService.removeFriend(widget.myProfile.uid!, widget.user.uid!).then((value){
       if(mounted){
         setState(() {
           print('ok:222222222:');
@@ -441,7 +441,7 @@ class _UserProfileScreenState extends TChatBaseScreen<UserProfileScreen> {
     setState(() {
       isLoading = true;
     });
-    await firebaseService.acceptFriend(widget.myProfile.id!, widget.user.id!).then((value){
+    await firebaseService.acceptFriend(widget.myProfile.uid!, widget.user.uid!).then((value){
       setState(() {
         print('ok:::::::::::::');
         isLoading =false;

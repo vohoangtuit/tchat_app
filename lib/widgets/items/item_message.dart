@@ -181,6 +181,6 @@ class _ItemMessageState extends State<ItemMessage> {
     );
   }
  bool _checkIsMeSent(){
-    return widget.item.idSender.compareTo(widget.me.id!)==0;
+    return widget.item.idSender.compareTo(widget.me.uid!)==0;
   }
 }

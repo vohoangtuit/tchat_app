@@ -160,11 +160,10 @@ class _MainScreenState extends TChatBaseScreen<MainScreen>  with SingleTickerPro
      Future.delayed( const Duration(seconds: 4), () {
        FirebaseMessaging.instance.getToken().then((token) {
          log("token::: ${token!}");
-         if(token.isNotEmpty&&widget.profile.id!.isNotEmpty){
+         if(token.isNotEmpty&&widget.profile.uid!.isNotEmpty){
            widget.profile.deviceToken =token;
-           firebaseService.firebaseFirestore.collection(FirebaseService.firebaseUsers).doc(widget.profile.id).update(
-               {
-                 UserModel.userDeviceToken:token
+           firebaseService.firebaseFirestore.collection(FirebaseService.firebaseUsers).doc(widget.profile.uid).update({
+                 'deviceToken':token
                }
            );
          }

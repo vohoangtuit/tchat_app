@@ -63,7 +63,7 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
   }
   getData()async{
    // log('${getNameScreenOpening()} getData()');
-    await messageBloc.getLastMessage(widget.profile.id!).then((value){
+    await messageBloc.getLastMessage(widget.profile.uid!).then((value){
       if(mounted){
         setState(() {
           listMessage.clear();
@@ -74,7 +74,7 @@ class _TabLastMessageScreenState extends TChatBaseScreen<TabLastMessageScreen> {
   }
   _gotoChat(LastMessageModel message){
     UserModel toUser =UserModel();
-    toUser.id =message.idReceiver;
+    toUser.uid =message.idReceiver;
     toUser.fullName =message.nameReceiver;
     toUser.photoUrl =message.photoReceiver;
     toUser.cover ="";

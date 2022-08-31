@@ -249,7 +249,7 @@ class NotificationController {
         }else{
           print('cannot pop ');
         }
-        if(user.id!.isNotEmpty){
+        if(user.uid!.isNotEmpty){
           if(type==1){
             //Navigator.push(context!,MaterialPageRoute(builder: (context) => ChatScreen1(meAccount: meAccount, toUser: user,)));
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatScreen(meAccount: meAccount, toUser: user,)));

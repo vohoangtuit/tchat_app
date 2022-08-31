@@ -55,7 +55,7 @@ class SocialLoin{
       final profile = JSON.jsonDecode(graphResponse.body);
    //   print('profile facebook $profile');
       UserModel userModel =UserModel();
-      userModel.id =id;
+      userModel.uid =id;
       userModel.email =profile['email'];
       userModel.fullName =profile['name'];
       userModel.photoUrl=profile['picture']['data']['url'];
@@ -98,7 +98,7 @@ class SocialLoin{
      //   print("_user email: " + user.email!);
         UserModel userModel =UserModel();
 
-        userModel.id =user.uid;// todo 8AC6oXq9WAcGm4pZgKjMtqV09d53
+        userModel.uid =user.uid;// todo 8AC6oXq9WAcGm4pZgKjMtqV09d53
         userModel.fullName =user.displayName;
         userModel.email =user.email;
         userModel.photoUrl =user.photoURL;

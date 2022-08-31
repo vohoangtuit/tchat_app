@@ -18,7 +18,7 @@ class FirebaseUpload{
   final TChatBaseScreen screen;
   FirebaseUpload({required this.screen});
   Future uploadFileAvatar(UserBloc bloc,UserModel user,File avatarImageFile,VoidCallback success) async {
-    Reference reference = FirebaseStorage.instance.ref().child(FirebaseService.getStringPathAvatar(user.id!));
+    Reference reference = FirebaseStorage.instance.ref().child(FirebaseService.getStringPathAvatar(user.uid!));
     UploadTask uploadTask = reference.putFile(avatarImageFile);
     screen.showLoading(true);
     try {
@@ -39,7 +39,7 @@ class FirebaseUpload{
 
   }
    Future uploadFileCover(UserBloc bloc,UserModel user,File avatarImageFile,VoidCallback success) async {
-    Reference reference = FirebaseStorage.instance.ref().child(FirebaseService.getStringPathCover(user.id!));
+    Reference reference = FirebaseStorage.instance.ref().child(FirebaseService.getStringPathCover(user.uid!));
     UploadTask uploadTask = reference.putFile(avatarImageFile);
     screen.showLoading(true);
     try {
@@ -47,7 +47,7 @@ class FirebaseUpload{
       await snapshot.ref.getDownloadURL().then((value) {
        // print('value upload value ${value.toString()}');
         if(value.isNotEmpty){
-          user.cover =value;
+         // user.cover =value;
             bloc.updateUserDatabase(user);
           screen.showLoading(false);
           success();
